@@ -334,3 +334,4 @@ https://react.dev/link/hydration-mismatch
  GET /pt 200 in 58ms (next.js: 49ms, proxy.ts: 4ms, generate-params: 45ms, application-code: 5ms)
  GET /pt 200 in 74ms (next.js: 41ms, proxy.ts: 5ms, generate-params: 38ms, application-code: 28ms)
  GET /pt 200 in 12ms (next.js: 3ms, proxy.ts: 4ms, generate-params: 77µs, application-code: 6ms)
+✓ Compiled in 64ms

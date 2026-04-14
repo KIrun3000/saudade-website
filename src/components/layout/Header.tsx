@@ -72,10 +72,16 @@ export function Header({ locale }: HeaderProps) {
       <div className="mx-auto flex h-20 w-full max-w-7xl items-center justify-between gap-4 px-5 md:px-8">
         <Link
           href={`/${locale}`}
-          className="font-display text-lg font-light uppercase tracking-[0.42em] text-accent transition-colors duration-300 hover:text-accent-light"
           aria-label={tHeader("brandAria")}
+          className="shrink-0 transition-opacity duration-300 hover:opacity-80"
         >
-          SAUDADE
+          <img
+            src="/saudade-logo.svg"
+            alt="Saudade"
+            width={56}
+            height={56}
+            className="h-14 w-14 object-contain drop-shadow-md"
+          />
         </Link>
 
         <nav aria-label="Primary" className="hidden items-center gap-5 xl:flex">
