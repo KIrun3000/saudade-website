@@ -1,0 +1,108 @@
+
+> saudade-website@0.1.0 dev
+> next dev
+
+▲ Next.js 16.2.2 (Turbopack)
+- Local:         http://localhost:3000
+- Network:       http://172.20.0.18:3000
+✓ Ready in 278ms
+Attention: Next.js now collects completely anonymous telemetry regarding usage.
+This information is used to shape Next.js' roadmap and prioritize features.
+You can learn more, including how to opt-out if you'd not like to participate in this anonymous program, by visiting the following URL:
+https://nextjs.org/telemetry
+
+
+ GET /en 200 in 3.8s (next.js: 3.4s, proxy.ts: 7ms, generate-params: 363ms, application-code: 405ms)
+[browser] Uncaught Error: Hydration failed because the server rendered text didn't match the client. As a result this tree will be regenerated on the client. This can happen if a SSR-ed Client Component used:
+
+- A server/client branch `if (typeof window !== 'undefined')`.
+- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
+- Date formatting in a user's locale which doesn't match the server.
+- External changing data without sending a snapshot of it along with the HTML.
+- Invalid HTML tag nesting.
+
+It can also happen if the client has a browser extension installed which messes with the HTML before React loaded.
+
+https://react.dev/link/hydration-mismatch
+
+  ...
+    <HTTPAccessFallbackBoundary notFound={undefined} forbidden={undefined} unauthorized={undefined}>
+      <RedirectBoundary>
+        <RedirectErrorBoundary router={{...}}>
+          <InnerLayoutRouter url="/?_cb=1776..." tree={[...]} params={{locale:"en"}} cacheNode={{rsc:{...}, ...}} ...>
+            <SegmentViewNode type="page" pagePath="[locale]/p...">
+              <SegmentTrieNode>
+              <LocaleHomePage>
+                <main>
+                  <HeroSection>
+                  <IntroSection>
+                  <section>
+                  <section>
+                  <section>
+                  <EventHighlight>
+                    <section className="relative o...">
+                      <div>
+                      <div className="relative m...">
+                        <div>
+                          <p>
+                          <h2>
+                          <p>
+                          <p>
+                          <div className="mt-5 max-w-xl">
+                            <Countdown target={Date}>
+                              <div className="grid grid-...">
+                                <div>
+                                <div>
+                                <div>
+                                <div className="min-w-[60p...">
+                                  <div className="font-heading text-3xl font-light leading-none text-accent">
++                                   36
+-                                   44
+                                  ...
+                          ...
+                        ...
+                  ...
+            ...
+          ...
+
+    at <unknown> (https://react.dev/link/hydration-mismatch)
+    at div (<anonymous>)
+    at <unknown> (src/components/events/Countdown.tsx:54:11)
+    at Array.map (<anonymous>)
+    at Countdown (src/components/events/Countdown.tsx:49:14)
+    at EventHighlight (src/components/home/EventHighlight.tsx:42:13)
+    at LocaleHomePage (src/app/[locale]/page.tsx:26:7)
+  52 |           className="min-w-[60px] rounded-xl border border-accent/30 bg-primary-dark/35 px...
+  53 |         >
+> 54 |           <div className="font-heading text-3xl font-light leading-none text-accent">
+     |           ^
+  55 |             {String(unit.value).padStart(2, "0")}
+  56 |           </div>
+  57 |           <div className="mt-2 font-display text-[11px] font-light uppercase tracking-[0.1...
+⚠ Blocked cross-origin request to Next.js dev resource /__nextjs_font/geist-latin.woff2 from "3000-8cbfbd81-ef37-407f-ad81-f83c3fb5aec6.orchids.cloud".
+Cross-origin access to Next.js dev resources is blocked by default for safety.
+
+To allow this host in development, add it to "allowedDevOrigins" in next.config.js and restart the dev server:
+
+// next.config.js
+module.exports = {
+  allowedDevOrigins: ['3000-8cbfbd81-ef37-407f-ad81-f83c3fb5aec6.orchids.cloud'],
+}
+
+Read more: https://nextjs.org/docs/app/api-reference/config/next-config-js/allowedDevOrigins
+⚠ Blocked cross-origin request to Next.js dev resource /__nextjs_original-stack-frames from "3000-8cbfbd81-ef37-407f-ad81-f83c3fb5aec6.orchids.cloud".
+Cross-origin access to Next.js dev resources is blocked by default for safety.
+
+To allow this host in development, add it to "allowedDevOrigins" in next.config.js and restart the dev server:
+
+// next.config.js
+module.exports = {
+  allowedDevOrigins: ['3000-8cbfbd81-ef37-407f-ad81-f83c3fb5aec6.orchids.cloud'],
+}
+
+Read more: https://nextjs.org/docs/app/api-reference/config/next-config-js/allowedDevOrigins
+ GET /api/blog-image?src=https%3A%2F%2Fsaudadevoces.com%2Fwp-content%2Fuploads%2F2024%2F10%2Fjon-tyson-uEXc4WGAI2c-unsplash-768x1024.jpg 200 in 253ms (next.js: 145ms, application-code: 107ms)
+ GET /api/blog-image?src=https%3A%2F%2Fsaudadevoces.com%2Fwp-content%2Fuploads%2F2023%2F09%2FF56E23B8-D3FF-4BA1-BE97-73AC2B21B4CE_1_105_c-e1729254532272.jpeg 200 in 425ms (next.js: 210ms, application-code: 215ms)
+Failed to set fetch cache https://saudadevoces.com/wp-content/uploads/2023/09/volha-flaxeco-L8QuQqL1ZJ8-unsplash-1.jpeg Error: Failed to set Next.js data cache for https://saudadevoces.com/wp-content/uploads/2023/09/volha-flaxeco-L8QuQqL1ZJ8-unsplash-1.jpeg, items over 2MB can not be cached (2895870 bytes)
+    at ignore-listed frames
+ GET /api/blog-image?src=https%3A%2F%2Fsaudadevoces.com%2Fwp-content%2Fuploads%2F2023%2F09%2Fvolha-flaxeco-L8QuQqL1ZJ8-unsplash-1.jpeg 200 in 337ms (next.js: 1499µs, application-code: 335ms)
