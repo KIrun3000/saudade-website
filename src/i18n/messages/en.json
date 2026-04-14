@@ -1,0 +1,276 @@
+{
+  "header": {
+    "brandAria": "Go to Saudade homepage",
+    "openMenu": "Open navigation menu",
+    "closeMenu": "Close navigation menu",
+    "switchLanguage": "Switch to {lang}",
+    "openCart": "Open cart"
+  },
+  "nav": {
+    "about": "About",
+    "shop": "Shop",
+    "events": "Events",
+    "blog": "Blog",
+    "community": "Community",
+    "saudadeLand": "Saudade Land",
+    "contact": "Contact"
+  },
+  "hero": {
+    "tagline": "THE ART THAT MADE US",
+    "title": "SAUDADE",
+    "subtitle": "HIGH FREQUENCY LIVING",
+    "description": "Growing international community of free-thinkers and nature lovers. A tribe dedicated to respecting nature, healing, and raising vibrations.",
+    "explore": "EXPLORE",
+    "shop": "SHOP",
+    "certification": "CERTIFIED ORGANIC GOTS AND GLOBAL RECYCLED STANDARD"
+  },
+  "intro": {
+    "label": "HIGH FREQUENCY LIVING",
+    "title": "International Club For The Future",
+    "text": "We cannot change the world, but we can inspire and show that a different way of living is possible - one rooted in love and harmony with nature."
+  },
+  "pillars": {
+    "label": "THREE PILLARS",
+    "title": "Fashion, community, and regenerative living in one connected movement.",
+    "fashion": {
+      "title": "High Frequency Fashion",
+      "description": "Ethical fashion made in Portugal without chemicals, with zero waste fabric and maximum water waste reduction."
+    },
+    "community": {
+      "title": "International Community",
+      "description": "Artists, musicians, DJs, yoga teachers, healers, coaches, investors, entrepreneurs and dreamers."
+    },
+    "land": {
+      "title": "Saudade Land",
+      "description": "A regenerative vision starting in Brazil and expanding from Latin America to the world."
+    },
+    "cta": "EXPLORE"
+  },
+  "mayka": {
+    "label": "FOUNDER STORY",
+    "title": "Mayka, traveler, dreamer, and visionary.",
+    "text": "The Saudade Wear is an Ethical fashion brand made without chemicals, 0 waste fabric and maximum water waste reduction. Made in Portugal, inspired in nature and love for all.",
+    "quote": "Voçes! - Everyone has saudade within!",
+    "cta": "READ MAYKA'S STORY",
+    "imageAlt": "Mayka portrait"
+  },
+  "shopPreview": {
+    "label": "HIGH FREQUENCY FASHION",
+    "title": "Shop Preview",
+    "viewAll": "VIEW ALL",
+    "certification": "CERTIFIED ORGANIC GOTS AND GLOBAL RECYCLED STANDARD",
+    "product1": "Linen Frequency Piece",
+    "product1Material": "Linen - 5000 mHz",
+    "product2": "Hemp Frequency Piece",
+    "product2Material": "Hemp - High Frequency Fiber",
+    "product3": "Organic Cotton Piece",
+    "product3Material": "Organic Cotton - Conscious Comfort",
+    "product4": "Wool Frequency Piece",
+    "product4Material": "Wool - Natural Warmth",
+    "certLogoAlt": "Certification logo"
+  },
+  "eventHighlight": {
+    "label": "EVENT HIGHLIGHT",
+    "title": "Saudade Festival - Portugal",
+    "description": "Join us for a day where music, dance, art, fashion, and nature unite under the open sky. Witness the debut of Saudade's first fashion line and join the Seeds of Light workshop.",
+    "countdown": "Next gathering countdown for festival season:",
+    "exploreCta": "EXPLORE EVENTS",
+    "collaborateCta": "VOLUNTEER OR COLLABORATE",
+    "imageAlt": "Saudade Festival in Portugal"
+  },
+  "countdown": {
+    "days": "DAYS",
+    "hours": "HOURS",
+    "minutes": "MINUTES",
+    "seconds": "SECONDS"
+  },
+  "blogPreview": {
+    "label": "ARTICLES",
+    "title": "Latest Stories",
+    "viewAll": "VIEW ALL ARTICLES",
+    "readMore": "READ MORE",
+    "post1Title": "Saudade Meaning",
+    "post1Excerpt": "It is more than a word; it is a feeling, a sensation, and a call for awareness.",
+    "post2Title": "Textile Frequency",
+    "post2Excerpt": "Understand the frequency of clothing, which fabrics have the highest and lowest frequency, and how this affects health and the planet.",
+    "post3Title": "Who Made My Clothes?",
+    "post3Excerpt": "Important facts to understand how clothes are made and how fast fashion differs from sustainable fashion."
+  },
+  "communityCta": {
+    "label": "JOIN THE MOVEMENT",
+    "title": "Beautiful souls, united in joy and purpose, ready to build a new world together.",
+    "text": "Collaborations welcome: artists, musicians, DJs, yoga teachers, healers, coaches, investors, entrepreneurs and dreamers.",
+    "exploreCta": "EXPLORE COMMUNITY",
+    "contactCta": "CONTACT"
+  },
+  "newsletter": {
+    "label": "Email",
+    "placeholder": "your@email.com",
+    "required": "Please enter your email.",
+    "invalid": "Please enter a valid email address.",
+    "submit": "JOIN THE MOVEMENT",
+    "success": "Thank you for joining the Saudade movement."
+  },
+  "footer": {
+    "tagline": "Beautiful souls, united in joy and purpose, ready to build a new world together.",
+    "brandText": "The Saudade Wear is an ethical fashion brand made without chemicals, with zero waste fabric and maximum water waste reduction. Made in Portugal and inspired by nature and love for all.",
+    "contact": "CONTACT",
+    "explore": "EXPLORE",
+    "highFrequencyFashion": "High Frequency Fashion",
+    "saudadeFestival": "Saudade Festival Portugal",
+    "articles": "Articles",
+    "impressum": "Impressum",
+    "privacyPolicy": "Privacy Policy",
+    "refundReturns": "Refund & Returns"
+  },
+  "about": {
+    "heroLabel": "ABOUT",
+    "heroTitle": "ABOUT SAUDADE",
+    "welcomeLabel": "WELCOME TO SAUDADE",
+    "welcomeTitle": "Saudade is a movement.",
+    "welcomeText1": "Saudade is not only a sustainable fashion brand dedicated to elevate the spirit and inspire conscious living; Saudade is a movement!",
+    "welcomeText2": "Saudade is a gathering of kindred spirits, united by a shared passion for celebrating life, making a meaningful impact, and inspiring others to live sustainably and consciously.",
+    "meaningLabel": "WHAT DOES SAUDADE MEAN",
+    "meaningTitle": "A feeling, a sensation, a call for awareness.",
+    "meaningText1": "Saudade has no direct translation; it is more than a word. It is the deep longing for meaningful connection, the will to reach out, and the energy that bridges the distance between hearts.",
+    "meaningText2": "It can be longing, nostalgia, love, even heartbreak - always profound and immensely powerful. Saudade is the aspiration for greatness and genuine connection with ourselves, nature, and the universe itself.",
+    "meaningText3": "With love and joy, Mayka presents this vision: a future of integrity, tolerance, harmony, determination, and love.",
+    "exploreLabel": "EXPLORE",
+    "gridFashion": "High Frequency Fashion",
+    "gridCommunity": "International Community",
+    "gridEvents": "Events",
+    "gridSustainable": "Sustainable Development",
+    "visionLabel": "THE VISION OF SAUDADE LAND",
+    "visionTitle": "A conscious living sanctuary and regenerative community.",
+    "visionText1": "The vision is to establish self-sustaining hubs across the world, starting in Brazil and eventually expanding to every continent.",
+    "visionText2": "These sanctuaries become living examples where renewable energy, permaculture, and circular economies replace exploitation and waste.",
+    "inspirationTitle": "The project is inspired by the need for positive change, unity, and transcendence into a new world.",
+    "inspirationText": "With love for nature and the cultures that brought us to this present moment."
+  },
+  "saudadeLand": {
+    "heroLabel": "SAUDADE",
+    "heroTitle": "SAUDADE LAND",
+    "heroImageAlt": "Saudade Land mountain landscape",
+    "consciousTitle": "CONSCIOUS LIVING",
+    "consciousText": "This base is a safe space for free thinkers and enthusiasts who recognize the power of unity and are ready to advocate for better futures for children, animals, and nature.",
+    "visionLabel": "THE VISION",
+    "visionTitle": "We cannot change the world alone, but we can build sanctuaries.",
+    "visionText": "A land in Brazil is the first node in a global network: a homebase for free thinkers, healers, and warriors of light.",
+    "bullet1": "Children's futures over profit",
+    "bullet2": "Animal kinship over exploitation",
+    "bullet3": "Nature's intelligence over extraction",
+    "thriveTitle": "HERE WE THRIVE",
+    "thrive1Title": "A Living Example",
+    "thrive1Text": "Proof that communities rooted in truth can generate income while healing the Earth.",
+    "thrive2Title": "A Launchpad",
+    "thrive2Text": "From here, we expand to Latino-America and then every continent.",
+    "thrive3Title": "A Safe Harbor",
+    "thrive3Text": "Where ideas find family, labor finds purpose, and the soul finds rest.",
+    "quoteTitle": "This isn't real estate. It's a standing invitation to: Live differently, Give fiercely, Connect deeply.",
+    "hashtags": "#SanctuariesNotEmpires #WeAreTheNow #TruthPrevails",
+    "contactLabel": "Best way to get in contact:",
+    "contactEmail": "communitysaudade@gmail.com",
+    "visionImageAlt": "Brazil beach for Saudade Land"
+  },
+  "eventsPage": {
+    "heroLabel": "EVENTS",
+    "heroTitle": "EVENTS",
+    "introTitle": "Saudade Sustainable Events",
+    "introText": "Join our vibrant events and dance to the rhythm of your soul. Featuring art, workshops and wellness for a transformative community experience.",
+    "festivalTitle": "Saudade Festival",
+    "festivalText": "Join us for a magical day where music, dance, art, fashion, and nature unite under the open sky in perfect harmony. Witness the debut of Saudade's first fashion line and participate in the Seeds of Light workshop.",
+    "festivalImageAlt": "Saudade Festival scene",
+    "spaceTitle": "Space",
+    "spaceText": "The first event takes place in Portugal to create a magical experience.",
+    "spaceCta": "Interested in volunteering? Drop a message.",
+    "musicTitle": "Music",
+    "musicText": "There is dancing for everyone in this event.",
+    "musicCta": "Would you like to play at the festival? Send us a message.",
+    "yogaTitle": "Yoga & Meditation",
+    "yogaImageAlt": "Yoga and meditation in nature",
+    "workshopTitle": "Workshop",
+    "workshopText": "Art, Crafts & Engaging Experiences.",
+    "workshopCta": "Want to collaborate? Don't hesitate to contact us."
+  },
+  "communityPage": {
+    "heroLabel": "COMMUNITY",
+    "heroTitle": "COMMUNITY",
+    "introTitle": "Does Saudade speak to your soul?",
+    "introText": "Growing international community of free-thinkers and nature lovers. A tribe dedicated to respecting nature, healing, and raising vibrations.",
+    "artists": "Artists",
+    "musicians": "Musicians & DJs",
+    "yoga": "Yoga Teachers, Healers & Coaches",
+    "builders": "Builders",
+    "investors": "Investors",
+    "entrepreneurs": "Entrepreneurs, Dreamers & Freedom Seekers",
+    "joinTitle": "Join the Saudade Community Today!",
+    "contactEmail": "communitysaudade@gmail.com"
+  },
+  "contactPage": {
+    "heroLabel": "CONTACT",
+    "heroTitle": "CONTACT",
+    "title": "Let's connect",
+    "text": "We'd love to hear from you. Reach out and let's create something beautiful together.",
+    "email": "Email: saudadestyle@gmail.com",
+    "phone": "Phone: (+351) 968179500",
+    "location": "Location: Portugal",
+    "brandAccount": "@saudadevoces",
+    "personalAccount": "@maykalien"
+  },
+  "contactForm": {
+    "nameLabel": "Name",
+    "emailLabel": "Email",
+    "messageLabel": "Message",
+    "nameRequired": "Please enter your name.",
+    "emailRequired": "Please enter your email.",
+    "emailInvalid": "Please enter a valid email address.",
+    "messageRequired": "Please enter your message.",
+    "submit": "SEND MESSAGE",
+    "success": "Thank you. We will get back to you soon."
+  },
+  "shopPage": {
+    "heroLabel": "SHOP",
+    "title": "High Frequency Fashion",
+    "subtitle": "Discover art prints, magnets, and conscious clothing from the Saudade store.",
+    "all": "All",
+    "backToShop": "BACK TO SHOP",
+    "selectImage": "Select image",
+    "addToCart": "ADD TO CART",
+    "addedToCart": "ADDED",
+    "soldOut": "SOLD OUT",
+    "relatedTitle": "You may also like",
+    "certification": "CERTIFIED ORGANIC GOTS AND GLOBAL RECYCLED STANDARD",
+    "certLogoAlt": "Certification logo"
+  },
+  "cart": {
+    "title": "Cart",
+    "close": "Close cart",
+    "empty": "Your cart is empty.",
+    "remove": "Remove",
+    "subtotal": "Subtotal",
+    "checkout": "Checkout",
+    "redirecting": "Redirecting...",
+    "continueShopping": "Continue Shopping",
+    "increase": "Increase quantity",
+    "decrease": "Decrease quantity"
+  },
+  "blogPage": {
+    "heroLabel": "BLOG",
+    "title": "ARTICLES",
+    "post1Title": "Saudade Meaning",
+    "post1Excerpt": "It is more than a word; it is a feeling, a sensation, and a call for awareness.",
+    "post2Title": "Textile Frequency",
+    "post2Excerpt": "Understand the frequency of fabrics and its impact on health and the planet.",
+    "post3Title": "Who Made My Clothes?",
+    "post3Excerpt": "Important facts about the clothing industry and conscious alternatives.",
+    "readMore": "READ MORE"
+  },
+  "blogArticle": {
+    "by": "By",
+    "backToBlog": "BACK TO BLOG",
+    "readMoreLabel": "READ MORE",
+    "readMoreTitle": "Continue Reading",
+    "readArticle": "READ ARTICLE",
+    "exploreShop": "EXPLORE SHOP"
+  }
+}

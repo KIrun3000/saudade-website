@@ -1,0 +1,77 @@
+@import "tailwindcss";
+
+:root {
+  /* === DARK-FIRST Palette === */
+  --color-primary: #0d2b30;
+  --color-primary-light: #143d43;
+  --color-primary-dark: #091e22;
+
+  --color-accent: #d2bbb2;
+  --color-accent-light: #e8dad4;
+  --color-accent-muted: #9a8a82;
+
+  --color-sage: #6a8b5b;
+  --color-sage-light: #e8f0e5;
+
+  --color-text-on-dark: #d2bbb2;
+  --color-text-on-light: #2f3b40;
+  --color-bg-light: #fdfcfa;
+  --color-bg-alt: #f5f0eb;
+
+}
+
+@theme inline {
+  --color-primary: var(--color-primary);
+  --color-primary-light: var(--color-primary-light);
+  --color-primary-dark: var(--color-primary-dark);
+  --color-accent: var(--color-accent);
+  --color-accent-light: var(--color-accent-light);
+  --color-accent-muted: var(--color-accent-muted);
+  --color-sage: var(--color-sage);
+  --color-sage-light: var(--color-sage-light);
+  --color-text-on-dark: var(--color-text-on-dark);
+  --color-text-on-light: var(--color-text-on-light);
+  --color-bg-light: var(--color-bg-light);
+  --color-bg-alt: var(--color-bg-alt);
+
+  --font-heading: var(--font-heading);
+  --font-display: var(--font-display);
+  --font-subheading: var(--font-display);
+  --font-body: var(--font-body);
+  --font-accent: var(--font-accent);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  min-height: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--color-primary);
+  color: var(--color-text-on-dark);
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.5;
+  text-rendering: optimizeLegibility;
+}
+
+input,
+textarea,
+select,
+button {
+  font-size: 16px;
+}
+
+@layer utilities {
+  .luxury-label {
+    font-family: var(--font-display);
+    font-weight: 300;
+    letter-spacing: 0.36em;
+    text-transform: uppercase;
+  }
+}

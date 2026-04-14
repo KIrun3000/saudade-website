@@ -1,0 +1,51 @@
+# Saudade Website — Cursor Rules
+
+## Skill-Referenz
+Bei JEDER Frontend-Arbeit: Lies zuerst `.claude-skills/skills/frontend-design/SKILL.md`
+und befolge die Richtlinien darin. Kein generisches AI-Design.
+
+## Brand Identity
+- Brand: Saudade — Sustainable Fashion, Conscious Community, Regenerative Living
+- Gruenderin: Mayka (Portugal, multilingual)
+- Ton: Poetisch, warm, erdverbunden, rebellisch-positiv, nature-connected
+- Keine Emojis im UI — nur Lucide React SVG Icons oder reine Typografie
+
+## Design Tokens (IMMER diese Werte verwenden)
+### Farben (aus echtem CSS der bestehenden Website extrahiert)
+- Primary: #6A8B5B (Sage Green — die echte Brand-Farbe)
+- Primary Dark: #3F5934 (Deep Forest)
+- Primary Light: #E8F0E5 (Zartes Salbei)
+- Accent: #D2BBB2 (Dusty Rose)
+- Accent Light: #F5EEEB (Zartes Rosa)
+- Teal: #195E60 (Dark Teal)
+- Teal Dark: #0F3B47 (Very Dark Teal)
+- Dark: #2F3B40 (Dark Slate — Text)
+- Dark BG: #0B2B33 (Near Black Teal — Footer/Dark Sections)
+- BG: #FDFCFA (Warmes Off-White)
+- BG Alt: #F5F2ED (Warmes Hellbeige)
+
+### Typografie (aus bestehender Website identifiziert)
+- Heading: 'Playfair Display', serif (poetisch, editorial)
+- Subheading: 'Red Hat Display', sans-serif (modern, warm)
+- Body: 'Plus Jakarta Sans', sans-serif (Upgrade von Inter/Roboto)
+- Accent: 'Courgette', cursive (handschriftliche Akzente fuer Zitate)
+
+### Animationen
+- Scroll-Reveal: Framer Motion mit IntersectionObserver
+- Hover States: 200-300ms Transitions auf allen interaktiven Elementen
+- Header: Transparent -> Solid on Scroll (300ms)
+- Keine aggressiven Fly-ins, subtile fade + translateY
+
+## Tech-Regeln
+- Framework: Next.js 14+ App Router, TypeScript strict
+- Styling: Tailwind CSS + CSS Custom Properties (NIEMALS Farben hard-coden)
+- i18n: next-intl mit /[locale]/ Routing (EN/PT/ES)
+- Bilder: next/image mit proper alt texts
+- Server Components bevorzugen, 'use client' nur wenn noetig
+- Mobile-first responsive, minimum 44x44px Touch Targets
+- Semantic HTML: proper heading hierarchy, landmark elements
+- KEIN Lorem ipsum — nur echter Content aus dem Briefing-Dokument
+
+## Projekt-Briefing
+Das vollstaendige Briefing mit allem Content, allen Bildern und der kompletten Analyse
+liegt in `docs/saudade-relaunch-brief-v2.md`. Bei Fragen zum Content immer dort nachsehen.
