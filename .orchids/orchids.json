@@ -3,5 +3,7 @@
     "npm install; npm run dev"
   ],
   "projectId": "ef081ac0-ee2a-4f03-983f-09b5a4b9e27f",
-  "templateId": "any"
+  "templateId": "any",
+  "vercelProjectId": "prj_4TtbVrpOdmLKT4NnhYL4z5zIXQUz",
+  "deployedWithUserToken": false
 }

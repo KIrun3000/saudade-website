@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { Suspense } from "react";
 
 import { ShopGridClient } from "@/components/shop/ShopGridClient";
 import { getAllProducts, getCollections } from "@/lib/shopify";
@@ -88,7 +89,9 @@ export default async function ShopPage({ params }: ShopPageProps) {
         </Link>
       </section>
 
-      <ShopGridClient locale={locale} products={products} collections={collections} />
+      <Suspense fallback={null}>
+        <ShopGridClient locale={locale} products={products} collections={collections} />
+      </Suspense>
     </main>
   );
 }
