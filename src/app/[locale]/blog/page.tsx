@@ -2,7 +2,6 @@ import Link from "next/link";
 import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
 
-import { LeafDecoration } from "@/components/ui/LeafDecoration";
 import { BLOG_ARTICLES, getProxiedBlogImageSrc } from "@/lib/blog-articles";
 
 export const metadata: Metadata = {
@@ -41,7 +40,6 @@ export default async function BlogPage({ params }: Props) {
       </section>
 
       <section className="relative overflow-hidden bg-bg-alt py-20">
-        <LeafDecoration position="bottom-right" />
         <div className="relative mx-auto grid max-w-6xl gap-6 px-5 md:px-8 lg:grid-cols-3">
           {posts.map((post, index) => (
             <article

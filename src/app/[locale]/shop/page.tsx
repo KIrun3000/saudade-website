@@ -1,8 +1,7 @@
 import type { Metadata } from "next";
-import { getTranslations } from "next-intl/server";
+import Link from "next/link";
 
 import { ShopGridClient } from "@/components/shop/ShopGridClient";
-import { LeafDecoration } from "@/components/ui/LeafDecoration";
 import { getAllProducts, getCollections } from "@/lib/shopify";
 
 export const metadata: Metadata = {
@@ -17,7 +16,6 @@ type ShopPageProps = {
 
 export default async function ShopPage({ params }: ShopPageProps) {
   const { locale } = await params;
-  const t = await getTranslations("shopPage");
   let products = [] as Awaited<ReturnType<typeof getAllProducts>>;
   let collections = [] as Awaited<ReturnType<typeof getCollections>>;
 
@@ -30,13 +28,64 @@ export default async function ShopPage({ params }: ShopPageProps) {
 
   return (
     <main>
-      <section className="relative overflow-hidden bg-primary-dark px-5 pb-16 pt-32 text-center text-accent md:px-8 md:pb-20 md:pt-36">
-        <LeafDecoration position="bottom-right" />
-        <p className="luxury-label text-sm text-accent-muted md:text-[11px]">{t("heroLabel")}</p>
-        <h1 className="mt-4 font-display text-[2.25rem] font-light uppercase tracking-[0.2em] md:mt-6 md:text-7xl md:tracking-[0.3em]">
-          {t("title")}
-        </h1>
-        <p className="mt-6 text-accent-muted">{t("subtitle")}</p>
+      {/* 2-column hero — clickable collection entries */}
+      <section className="grid min-h-[80vh] grid-cols-1 pt-20 md:grid-cols-2">
+        {/* Art column */}
+        <Link
+          href={`/${locale}/shop?category=art`}
+          className="group relative flex flex-col items-center justify-end overflow-hidden bg-primary-dark pb-14 text-accent"
+          style={{ minHeight: "50vh" }}
+        >
+          {/* background image */}
+          <div
+            className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-105"
+            style={{
+              backgroundImage:
+                "url('https://saudadevoces.com/wp-content/uploads/2025/08/fest-1.jpg')",
+            }}
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-primary-dark/90 via-primary/50 to-transparent" />
+          <div className="relative px-8 text-center">
+            <p className="luxury-label text-[10px] text-accent-muted">Collection</p>
+            <h2 className="mt-3 font-display text-4xl font-light uppercase tracking-[0.22em] md:text-5xl">
+              Art
+            </h2>
+            <p className="mt-3 text-sm text-accent/80">
+              Prints, canvas & home décor
+            </p>
+            <span className="mt-6 inline-flex items-center gap-2 font-display text-[11px] uppercase tracking-[0.2em] text-accent/90 transition-colors duration-300 group-hover:text-accent-light">
+              Shop Art →
+            </span>
+          </div>
+        </Link>
+
+        {/* Clothing column */}
+        <Link
+          href={`/${locale}/shop?category=clothing`}
+          className="group relative flex flex-col items-center justify-end overflow-hidden bg-primary pb-14 text-accent"
+          style={{ minHeight: "50vh" }}
+        >
+          <div
+            className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-105"
+            style={{
+              backgroundImage:
+                "url('https://saudadevoces.com/wp-content/uploads/2025/08/48771295762_d6f7813a78_c-799x460-1.jpg')",
+            }}
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-primary-dark/90 via-primary/50 to-transparent" />
+          <div className="relative px-8 text-center">
+            <p className="luxury-label text-[10px] text-accent-muted">Collection</p>
+            <h2 className="mt-3 font-display text-4xl font-light uppercase tracking-[0.22em] md:text-5xl">
+              High Frequency Clothing
+            </h2>
+            <p className="mt-3 text-sm text-accent/80">
+              Conscious fashion for elevated living
+            </p>
+            <span className="mt-6 inline-flex items-center gap-2 font-display text-[11px] uppercase tracking-[0.2em] text-accent/90 transition-colors duration-300 group-hover:text-accent-light">
+              Shop Clothing →
+            </span>
+          </div>
+        </Link>
       </section>
 
       <ShopGridClient locale={locale} products={products} collections={collections} />

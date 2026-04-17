@@ -1,16 +1,15 @@
 "use client";
 
-import { Menu, ShoppingBag, X } from "lucide-react";
+import { ChevronDown, Menu, ShoppingBag, X } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import { useCart } from "@/components/shop/CartProvider";
 
 const navigation = [
   { key: "about", href: "/about" },
-  { key: "shop", href: "/shop" },
   { key: "events", href: "/events" },
   { key: "blog", href: "/blog" },
   { key: "community", href: "/community" },
@@ -18,7 +17,18 @@ const navigation = [
   { key: "contact", href: "/contact" },
 ];
 
-const locales = ["EN", "PT", "ES"] as const;
+const shopDropdown = [
+  { label: "Shop Art", href: "/shop?category=art" },
+  { label: "Shop High Frequency Clothing", href: "/shop?category=clothing" },
+];
+
+const locales = [
+  { code: "en", label: "EN", flag: "🇬🇧", name: "English" },
+  { code: "pt", label: "PT", flag: "🇧🇷", name: "Português" },
+  { code: "es", label: "ES", flag: "🇪🇸", name: "Español" },
+] as const;
+
+type LocaleCode = (typeof locales)[number]["code"];
 
 type HeaderProps = {
   locale: string;
@@ -30,18 +40,38 @@ export function Header({ locale }: HeaderProps) {
   const pathname = usePathname();
   const [isSolid, setIsSolid] = useState(false);
   const [isMobileOpen, setIsMobileOpen] = useState(false);
+  const [isShopOpen, setIsShopOpen] = useState(false);
+  const [isMobileShopOpen, setIsMobileShopOpen] = useState(false);
+  const [isLangOpen, setIsLangOpen] = useState(false);
+  const shopRef = useRef<HTMLDivElement>(null);
+  const langRef = useRef<HTMLDivElement>(null);
   const { cartCount, toggleCart } = useCart();
+
+  useEffect(() => {
+    function handleClickOutside(e: MouseEvent) {
+      if (shopRef.current && !shopRef.current.contains(e.target as Node)) {
+        setIsShopOpen(false);
+      }
+      if (langRef.current && !langRef.current.contains(e.target as Node)) {
+        setIsLangOpen(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   const toLocalePath = (lang: string) => {
     const path = pathname || `/${locale}`;
     const parts = path.split("/").filter(Boolean);
     if (parts.length === 0) return `/${lang}`;
-    if (["en", "pt", "es"].includes(parts[0])) {
+    if (locales.map((l) => l.code).includes(parts[0] as LocaleCode)) {
       parts[0] = lang;
       return `/${parts.join("/")}`;
     }
     return `/${lang}${path.startsWith("/") ? path : `/${path}`}`;
   };
+
+  const activeLocale = locales.find((l) => l.code === locale.toLowerCase()) ?? locales[0];
 
   useEffect(() => {
     const onScroll = () => setIsSolid(window.scrollY > 24);
@@ -76,7 +106,7 @@ export function Header({ locale }: HeaderProps) {
           className="shrink-0 transition-opacity duration-300 hover:opacity-80"
         >
           <img
-            src="/saudade-logo.svg"
+            src="/saudade-logo-transparent.svg"
             alt="Saudade"
             width={56}
             height={56}
@@ -85,6 +115,39 @@ export function Header({ locale }: HeaderProps) {
         </Link>
 
         <nav aria-label="Primary" className="hidden items-center gap-5 xl:flex">
+          <Link
+            href={`/${locale}/about`}
+            className="luxury-label text-[10px] text-accent/88 transition-all duration-300 hover:text-accent-light"
+          >
+            {tNav("about")}
+          </Link>
+
+          {/* Shop dropdown */}
+          <div ref={shopRef} className="relative">
+            <button
+              type="button"
+              onClick={() => setIsShopOpen((o) => !o)}
+              className="luxury-label flex items-center gap-1 text-[10px] text-accent/88 transition-all duration-300 hover:text-accent-light"
+            >
+              {tNav("shop")}
+              <ChevronDown className={`h-3 w-3 transition-transform duration-200 ${isShopOpen ? "rotate-180" : ""}`} />
+            </button>
+            {isShopOpen && (
+              <div className="absolute left-1/2 top-full z-50 mt-3 w-56 -translate-x-1/2 overflow-hidden rounded-xl border border-accent/20 bg-primary-dark/95 shadow-xl backdrop-blur-md">
+                {shopDropdown.map((item) => (
+                  <Link
+                    key={item.href}
+                    href={`/${locale}${item.href}`}
+                    onClick={() => setIsShopOpen(false)}
+                    className="block px-4 py-3 font-display text-[10px] font-light uppercase tracking-[0.18em] text-accent/88 transition-colors duration-200 hover:bg-accent/10 hover:text-accent-light"
+                  >
+                    {item.label}
+                  </Link>
+                ))}
+              </div>
+            )}
+          </div>
+
           {navigation.map((item) => (
             <Link
               key={item.key}
@@ -121,25 +184,40 @@ export function Header({ locale }: HeaderProps) {
             {isMobileOpen ? <X className="h-4 w-4" /> : <Menu className="h-4 w-4" />}
           </button>
 
-          <div className="flex items-center gap-1 rounded-full border border-accent/35 bg-primary-dark/40 p-1">
-          {locales.map((lang) => {
-            const active = locale.toUpperCase() === lang;
-            return (
-              <Link
-                key={lang}
-                href={toLocalePath(lang.toLowerCase())}
-                className={`flex min-h-11 min-w-11 items-center justify-center rounded-full px-3 font-display text-[10px] font-light tracking-[0.22em] transition-colors duration-300 ${
-                  active
-                    ? "bg-accent text-primary-dark"
-                    : "text-accent-muted hover:bg-accent/15 hover:text-accent-light"
-                }`}
-                aria-label={tHeader("switchLanguage", { lang })}
-                aria-current={active ? "page" : undefined}
-              >
-                {lang}
-              </Link>
-            );
-          })}
+          {/* Language dropdown */}
+          <div ref={langRef} className="relative">
+            <button
+              type="button"
+              onClick={() => setIsLangOpen((o) => !o)}
+              className="flex min-h-11 items-center gap-1.5 rounded-full border border-accent/35 bg-primary-dark/40 px-3 font-display text-[10px] font-light tracking-[0.18em] text-accent transition-colors duration-300 hover:bg-accent/10 hover:text-accent-light"
+              aria-expanded={isLangOpen}
+            >
+              <span>{activeLocale.flag}</span>
+              <span>{activeLocale.label}</span>
+              <ChevronDown className={`h-3 w-3 transition-transform duration-200 ${isLangOpen ? "rotate-180" : ""}`} />
+            </button>
+            {isLangOpen && (
+              <div className="absolute right-0 top-full z-50 mt-2 w-44 overflow-hidden rounded-xl border border-accent/20 bg-primary-dark/95 shadow-xl backdrop-blur-md">
+                {locales.map((lang) => {
+                  const active = locale.toLowerCase() === lang.code;
+                  return (
+                    <Link
+                      key={lang.code}
+                      href={toLocalePath(lang.code)}
+                      onClick={() => setIsLangOpen(false)}
+                      className={`flex items-center gap-3 px-4 py-2.5 font-display text-[10px] font-light uppercase tracking-[0.18em] transition-colors duration-200 ${
+                        active
+                          ? "bg-accent/15 text-accent-light"
+                          : "text-accent/80 hover:bg-accent/10 hover:text-accent-light"
+                      }`}
+                    >
+                      <span className="text-base">{lang.flag}</span>
+                      <span>{lang.name}</span>
+                    </Link>
+                  );
+                })}
+              </div>
+            )}
           </div>
         </div>
       </div>
@@ -160,6 +238,40 @@ export function Header({ locale }: HeaderProps) {
             </div>
 
             <nav aria-label="Mobile primary" className="mt-6 grid gap-2">
+              <Link
+                href={`/${locale}/about`}
+                onClick={() => setIsMobileOpen(false)}
+                className="luxury-label inline-flex min-h-11 items-center rounded-lg px-3 text-sm text-accent/92 transition-colors duration-300 hover:bg-accent/10 hover:text-accent-light"
+              >
+                {tNav("about")}
+              </Link>
+
+              {/* Mobile shop dropdown */}
+              <div>
+                <button
+                  type="button"
+                  onClick={() => setIsMobileShopOpen((o) => !o)}
+                  className="luxury-label inline-flex min-h-11 w-full items-center justify-between rounded-lg px-3 text-sm text-accent/92 transition-colors duration-300 hover:bg-accent/10 hover:text-accent-light"
+                >
+                  {tNav("shop")}
+                  <ChevronDown className={`h-4 w-4 transition-transform duration-200 ${isMobileShopOpen ? "rotate-180" : ""}`} />
+                </button>
+                {isMobileShopOpen && (
+                  <div className="ml-4 mt-1 grid gap-1 border-l border-accent/20 pl-3">
+                    {shopDropdown.map((item) => (
+                      <Link
+                        key={item.href}
+                        href={`/${locale}${item.href}`}
+                        onClick={() => setIsMobileOpen(false)}
+                        className="luxury-label inline-flex min-h-10 items-center rounded-lg px-3 text-sm text-accent/80 transition-colors duration-300 hover:bg-accent/10 hover:text-accent-light"
+                      >
+                        {item.label}
+                      </Link>
+                    ))}
+                  </div>
+                )}
+              </div>
+
               {navigation.map((item) => (
                 <Link
                   key={item.key}

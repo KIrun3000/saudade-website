@@ -3,8 +3,6 @@ import Link from "next/link";
 import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
 
-import { LeafDecoration } from "@/components/ui/LeafDecoration";
-
 export const metadata: Metadata = {
   title: "Saudade Land",
   description:
@@ -41,7 +39,6 @@ export default async function SaudadeLandPage({ params }: Props) {
       </section>
 
       <section className="relative overflow-hidden bg-bg-light py-20">
-        <LeafDecoration position="top-left" />
         <div className="relative mx-auto max-w-4xl px-5 text-center md:px-8">
           <p className="luxury-label text-[10px] text-accent-muted">
             {t("consciousTitle")}

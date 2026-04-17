@@ -1,7 +1,5 @@
 import Image from "next/image";
 
-import { LeafDecoration } from "@/components/ui/LeafDecoration";
-
 export default function AboutPage() {
   return (
     <main>
@@ -15,7 +13,6 @@ export default function AboutPage() {
       </section>
 
       <section className="relative overflow-hidden bg-bg-light py-20">
-        <LeafDecoration position="top-left" />
         <div className="relative mx-auto grid max-w-6xl gap-8 px-5 md:px-8 lg:grid-cols-[0.95fr_1.05fr]">
           <div className="relative overflow-hidden rounded-[1.7rem] border border-primary-light/15">
             <Image
@@ -148,7 +145,6 @@ export default function AboutPage() {
       </section>
 
       <section className="relative overflow-hidden bg-primary-light py-20 text-accent">
-        <LeafDecoration position="bottom-right" />
         <div className="relative mx-auto grid max-w-6xl gap-8 px-5 md:px-8 lg:grid-cols-[1.1fr_0.9fr] lg:items-center">
           <article>
             <p className="luxury-label text-[10px] text-accent-muted">

@@ -2,8 +2,9 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useMemo, useState } from "react";
+import { useMemo, useState, useEffect } from "react";
 import { useTranslations } from "next-intl";
+import { useSearchParams } from "next/navigation";
 
 import { formatPrice, getFirstImage, type ShopifyCollection, type ShopifyProduct } from "@/lib/shopify";
 
@@ -46,6 +47,17 @@ export function ShopGridClient({ locale, products, collections }: ShopGridClient
   }, [collections, products, t]);
 
   const [activeFilter, setActiveFilter] = useState("all");
+  const searchParams = useSearchParams();
+
+  useEffect(() => {
+    const category = searchParams.get("category");
+    if (!category) return;
+    const match = tabs.find((tab) =>
+      tab.label.toLowerCase().includes(category.toLowerCase()) ||
+      tab.key.toLowerCase().includes(category.toLowerCase())
+    );
+    if (match) setActiveFilter(match.key);
+  }, [searchParams, tabs]);
 
   const collectionMap = useMemo(() => {
     const map = new Map<string, Set<string>>();
@@ -76,9 +88,54 @@ export function ShopGridClient({ locale, products, collections }: ShopGridClient
     return products;
   }, [activeFilter, collectionMap, products]);
 
+  // First 8 products as "featured"
+  const featuredProducts = useMemo(() => products.slice(0, 8), [products]);
+
   return (
     <section className="bg-bg-alt py-14">
       <div className="mx-auto max-w-7xl px-6 md:px-8">
+
+        {/* Featured products carousel */}
+        <div className="mb-14">
+          <p className="luxury-label text-[10px] text-accent-muted">Featured &amp; Best Sellers</p>
+          <div className="mt-6 flex gap-4 overflow-x-auto pb-4 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden snap-x snap-mandatory">
+            {featuredProducts.map((product) => {
+              const image = getFirstImage(product);
+              return (
+                <article
+                  key={product.id}
+                  className="group w-48 shrink-0 snap-start overflow-hidden rounded-[1.25rem] border border-primary-light/25 bg-bg-light shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
+                >
+                  <Link href={`/${locale}/shop/${product.handle}`} className="block">
+                    <div className="relative aspect-[4/5] overflow-hidden bg-primary-dark/8">
+                      {image ? (
+                        <Image
+                          src={image.url}
+                          alt={image.altText || product.title}
+                          fill
+                          className="object-cover transition-transform duration-500 group-hover:scale-105"
+                          sizes="192px"
+                        />
+                      ) : null}
+                    </div>
+                    <div className="p-3">
+                      <h3 className="line-clamp-2 font-heading text-base font-light text-text-on-light">
+                        {product.title}
+                      </h3>
+                      <p className="mt-1 text-xs text-primary">
+                        {formatPrice(
+                          product.priceRange.minVariantPrice.amount,
+                          product.priceRange.minVariantPrice.currencyCode,
+                        )}
+                      </p>
+                    </div>
+                  </Link>
+                </article>
+              );
+            })}
+          </div>
+        </div>
+
         <div className="flex flex-wrap gap-2">
           {tabs.map((tab) => (
             <button

@@ -3,7 +3,6 @@ import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
 
 import { ContactForm } from "@/components/contact/ContactForm";
-import { LeafDecoration } from "@/components/ui/LeafDecoration";
 
 export const metadata: Metadata = {
   title: "Contact",
@@ -24,7 +23,6 @@ export default async function ContactPage() {
       </section>
 
       <section className="relative overflow-hidden bg-bg-light py-20">
-        <LeafDecoration position="top-left" />
         <div className="relative mx-auto grid max-w-6xl gap-12 px-5 md:px-8 lg:grid-cols-2">
           <article>
             <h2 className="font-heading text-4xl font-light text-text-on-light md:text-5xl">
