@@ -39,6 +39,7 @@
   --font-subheading: var(--font-display);
   --font-body: var(--font-body);
   --font-accent: var(--font-accent);
+  --font-wordmark: var(--font-wordmark);
 }
 
 * {

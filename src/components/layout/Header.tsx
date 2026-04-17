@@ -7,6 +7,7 @@ import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 
 import { useCart } from "@/components/shop/CartProvider";
+import { SaudadeWordmark } from "@/components/ui/SaudadeWordmark";
 
 const navigation = [
   { key: "about", href: "/about" },
@@ -105,13 +106,7 @@ export function Header({ locale }: HeaderProps) {
           aria-label={tHeader("brandAria")}
           className="shrink-0 transition-opacity duration-300 hover:opacity-80"
         >
-          <img
-            src="/saudade-logo-transparent.svg"
-            alt="Saudade"
-            width={56}
-            height={56}
-            className="h-14 w-14 object-contain drop-shadow-md"
-          />
+          <SaudadeWordmark size="nav" className="h-10 w-auto text-accent" />
         </Link>
 
         <nav aria-label="Primary" className="hidden items-center gap-5 xl:flex">

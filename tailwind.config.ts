@@ -24,6 +24,7 @@ const config: Config = {
         subheading: ["var(--font-display)"],
         body: ["var(--font-body)"],
         accent: ["var(--font-accent)"],
+        wordmark: ["var(--font-wordmark)"],
       },
     },
   },

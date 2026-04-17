@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Cormorant_Garamond, Courgette, Plus_Jakarta_Sans, Red_Hat_Display } from "next/font/google";
+import localFont from "next/font/local";
 import "./globals.css";
 
 const headingFont = Cormorant_Garamond({
@@ -28,6 +29,28 @@ const accentFont = Courgette({
   weight: ["400"],
   display: "swap",
   variable: "--font-accent",
+});
+
+const wordmarkFont = localFont({
+  src: [
+    {
+      path: "../../public/fonts/Cocomat-Pro-Thin-trial.ttf",
+      weight: "100",
+      style: "normal",
+    },
+    {
+      path: "../../public/fonts/Cocomat-Pro-Extralight-trial.ttf",
+      weight: "200",
+      style: "normal",
+    },
+    {
+      path: "../../public/fonts/Cocomat-Pro-Light-trial.ttf",
+      weight: "300",
+      style: "normal",
+    },
+  ],
+  display: "swap",
+  variable: "--font-wordmark",
 });
 
 export const metadata: Metadata = {
@@ -103,7 +126,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${headingFont.variable} ${displayFont.variable} ${bodyFont.variable} ${accentFont.variable} h-full antialiased`}
+      className={`${headingFont.variable} ${displayFont.variable} ${bodyFont.variable} ${accentFont.variable} ${wordmarkFont.variable} h-full antialiased`}
     >
       <body className="flex min-h-full flex-col bg-primary text-text-on-dark">
         <script
