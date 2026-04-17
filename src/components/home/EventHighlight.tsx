@@ -1,4 +1,4 @@
-import Image from "next/image";
+import { getProxiedBlogImageSrc } from "@/lib/blog-articles";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
 
@@ -58,13 +58,13 @@ export function EventHighlight({ locale }: EventHighlightProps) {
         </div>
 
         <div className="relative overflow-hidden rounded-[2rem] border border-accent/20">
-          <Image
-            src="https://saudadevoces.com/wp-content/uploads/2025/08/fest-1.jpg"
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={getProxiedBlogImageSrc("https://saudadevoces.com/wp-content/uploads/2025/08/fest-1.jpg")}
             alt={t("imageAlt")}
-            width={1200}
-            height={900}
+            loading="lazy"
+            decoding="async"
             className="h-[300px] w-full object-cover md:h-full"
-            sizes="(max-width: 1024px) 100vw, 40vw"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-primary-dark/65 via-transparent to-transparent" />
         </div>

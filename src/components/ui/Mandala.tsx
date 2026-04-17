@@ -1,10 +1,11 @@
 type MandalaProps = { className?: string };
 
+// Rounded leaf / almond petal — two quadratic bezier arcs, both ends pointed
 function petal(cx: number, cy: number, R: number, w: number): string {
   return (
     `M ${cx} ${cy - R} ` +
-    `C ${cx - w} ${cy - R * 0.5} ${cx - w} ${cy + R * 0.5} ${cx} ${cy + R} ` +
-    `C ${cx + w} ${cy + R * 0.5} ${cx + w} ${cy - R * 0.5} ${cx} ${cy - R} Z`
+    `Q ${cx + w} ${cy} ${cx} ${cy + R} ` +
+    `Q ${cx - w} ${cy} ${cx} ${cy - R} Z`
   );
 }
 
@@ -12,12 +13,13 @@ const CX = 100, CY = 100;
 
 // [R, w, count, rotationOffset°]
 const RINGS: [number, number, number, number][] = [
-  [46, 20,  8,  0   ],
-  [46, 20,  8,  22.5],
-  [33, 14,  8,  0   ],
-  [33, 14,  8,  22.5],
-  [22,  9,  8,  11.25],
-  [12,  4, 16,  0   ],
+  [78, 39, 8,  0   ],   // outer A
+  [78, 39, 8, 22.5 ],   // outer B
+  [55, 28, 8,  0   ],   // mid A
+  [55, 28, 8, 22.5 ],   // mid B
+  [35, 18, 8,  0   ],   // inner A
+  [35, 18, 8, 22.5 ],   // inner B
+  [20, 10, 8,  0   ],   // core
 ];
 
 export function Mandala({ className }: MandalaProps) {
@@ -32,8 +34,8 @@ export function Mandala({ className }: MandalaProps) {
             </g>
           ))
         )}
-        <circle cx={CX} cy={CY} r="6" />
-        <circle cx={CX} cy={CY} r="2.8" fill="currentColor" stroke="none" />
+        <circle cx={CX} cy={CY} r="7" />
+        <circle cx={CX} cy={CY} r="3" fill="currentColor" stroke="none" />
       </g>
     </svg>
   );

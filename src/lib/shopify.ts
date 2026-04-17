@@ -352,6 +352,51 @@ const COLLECTIONS_QUERY = `
   }
 `;
 
+const COLLECTION_BY_HANDLE_QUERY = `
+  query CollectionByHandle($handle: String!) {
+    collectionByHandle(handle: $handle) {
+      id
+      title
+      handle
+      description
+      image { url altText width height }
+      products(first: 50) {
+        edges {
+          node {
+            id
+            title
+            handle
+            description
+            descriptionHtml
+            availableForSale
+            productType
+            tags
+            priceRange {
+              minVariantPrice { amount currencyCode }
+              maxVariantPrice { amount currencyCode }
+            }
+            images(first: 5) {
+              edges { node { url altText width height } }
+            }
+            variants(first: 10) {
+              edges {
+                node {
+                  id
+                  title
+                  price { amount currencyCode }
+                  availableForSale
+                  image { url altText width height }
+                  selectedOptions { name value }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+`;
+
 const CREATE_CHECKOUT_QUERY = `
   mutation CreateCheckout($input: CheckoutCreateInput!) {
     checkoutCreate(input: $input) {
@@ -454,6 +499,35 @@ export async function getCollections(first = 10) {
           products: { edges: typeProducts.map((node) => ({ node })) },
         };
       });
+  }
+}
+
+export async function getCollectionByHandle(handle: string): Promise<ShopifyCollection | null> {
+  try {
+    const data = await shopifyFetch<{ collectionByHandle: ShopifyCollection | null }>({
+      query: COLLECTION_BY_HANDLE_QUERY,
+      variables: { handle },
+    });
+    return data.collectionByHandle;
+  } catch (error) {
+    if (!isAuthError(error)) {
+      throw error;
+    }
+    // Fallback: filter products by type matching the handle
+    const products = await fetchPublicProducts(250);
+    const filtered = products.filter(
+      (p) => p.productType.toLowerCase().replace(/[^a-z0-9]+/g, "-") === handle ||
+             p.tags.some((t) => t.toLowerCase().replace(/[^a-z0-9]+/g, "-") === handle)
+    );
+    if (filtered.length === 0) return null;
+    return {
+      id: `fallback-${handle}`,
+      title: handle.replace(/-/g, " ").replace(/\b\w/g, (c) => c.toUpperCase()),
+      handle,
+      description: "",
+      image: getFirstImage(filtered[0]),
+      products: { edges: filtered.map((node) => ({ node })) },
+    };
   }
 }
 

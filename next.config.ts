@@ -4,21 +4,11 @@ import createNextIntlPlugin from "next-intl/plugin";
 const nextConfig: NextConfig = {
   images: {
     remotePatterns: [
-      {
-        protocol: "https",
-        hostname: "saudadevoces.com",
-        pathname: "/wp-content/uploads/**",
-      },
-      {
-        protocol: "https",
-        hostname: "www.saudadevoces.com",
-        pathname: "/wp-content/uploads/**",
-      },
-      {
-        protocol: "https",
-        hostname: "cdn.shopify.com",
-        pathname: "/s/files/**",
-      },
+      { protocol: "https", hostname: "saudadevoces.com" },
+      { protocol: "https", hostname: "www.saudadevoces.com" },
+      { protocol: "https", hostname: "cdn.shopify.com" },
+      { protocol: "https", hostname: "**.shopify.com" },
+      { protocol: "https", hostname: "**.shopifycdn.com" },
     ],
   },
 };

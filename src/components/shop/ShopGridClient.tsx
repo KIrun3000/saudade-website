@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
 import { useMemo, useState, useEffect } from "react";
 import { useTranslations } from "next-intl";
@@ -109,12 +108,14 @@ export function ShopGridClient({ locale, products, collections }: ShopGridClient
                   <Link href={`/${locale}/shop/${product.handle}`} className="block">
                     <div className="relative aspect-[4/5] overflow-hidden bg-primary-dark/8">
                       {image ? (
-                        <Image
+                        // eslint-disable-next-line @next/next/no-img-element
+                        <img
                           src={image.url}
                           alt={image.altText || product.title}
-                          fill
-                          className="object-cover transition-transform duration-500 group-hover:scale-105"
-                          sizes="192px"
+                          loading="lazy"
+                          decoding="async"
+                          referrerPolicy="no-referrer"
+                          className="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
                         />
                       ) : null}
                     </div>
@@ -164,12 +165,14 @@ export function ShopGridClient({ locale, products, collections }: ShopGridClient
                 <Link href={`/${locale}/shop/${product.handle}`} className="block">
                   <div className="relative aspect-[4/5] overflow-hidden bg-primary-dark/8">
                     {image ? (
-                      <Image
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img
                         src={image.url}
                         alt={image.altText || product.title}
-                        fill
-                        className="object-cover transition-transform duration-500 group-hover:scale-105"
-                        sizes="(max-width: 768px) 50vw, (max-width: 1200px) 33vw, 25vw"
+                        loading="lazy"
+                        decoding="async"
+                        referrerPolicy="no-referrer"
+                        className="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
                       />
                     ) : null}
                   </div>
@@ -194,13 +197,15 @@ export function ShopGridClient({ locale, products, collections }: ShopGridClient
           <p className="luxury-label text-[10px] text-accent-muted">{t("certification")}</p>
           <div className="flex flex-wrap items-center gap-6">
             {trustLogos.map((logo) => (
-              <Image
+              // eslint-disable-next-line @next/next/no-img-element
+              <img
                 key={logo}
                 src={logo}
                 alt={t("certLogoAlt")}
-                width={120}
-                height={52}
-                className="h-auto w-auto max-h-10 object-contain"
+                loading="lazy"
+                decoding="async"
+                referrerPolicy="no-referrer"
+                className="h-auto max-h-10 w-auto object-contain"
               />
             ))}
           </div>

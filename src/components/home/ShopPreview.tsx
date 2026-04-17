@@ -1,8 +1,8 @@
 import Link from "next/link";
-import Image from "next/image";
 import { getTranslations } from "next-intl/server";
 
 import { formatPrice, getAllProducts, getFirstImage } from "@/lib/shopify";
+import { getProxiedBlogImageSrc } from "@/lib/blog-articles";
 
 const trustLogos = [
   "https://saudadevoces.com/wp-content/uploads/2023/09/client-logo-1.png",
@@ -53,16 +53,20 @@ export async function ShopPreview({ locale }: ShopPreviewProps) {
               className="overflow-hidden rounded-[1.5rem] border border-accent/35 bg-primary-dark/75"
             >
               <Link href={`/${locale}/shop/${product.handle}`} className="block">
-                <div className="relative h-56">
+                <div className="relative h-56 overflow-hidden">
                   {image ? (
-                    <Image
+                    /* eslint-disable-next-line @next/next/no-img-element */
+                    <img
                       src={image.url}
                       alt={image.altText || product.title}
-                      fill
-                      className="object-cover"
-                      sizes="(max-width: 1280px) 50vw, 25vw"
+                      loading="lazy"
+                      decoding="async"
+                      referrerPolicy="no-referrer"
+                      className="absolute inset-0 h-full w-full object-cover"
                     />
-                  ) : null}
+                  ) : (
+                    <div className="absolute inset-0 bg-primary-dark/50" />
+                  )}
                 </div>
                 <div className="p-5">
                   <h3 className="font-display text-sm font-light uppercase tracking-[0.12em] text-accent">
@@ -81,7 +85,7 @@ export async function ShopPreview({ locale }: ShopPreviewProps) {
           })}
           {products.length === 0 && (
             <div className="rounded-[1.5rem] border border-accent/25 bg-primary-dark/60 px-5 py-8 text-sm text-accent-muted md:col-span-2 xl:col-span-4">
-              Produkte werden in Kuerze geladen.
+              Products coming soon.
             </div>
           )}
         </div>
@@ -92,13 +96,14 @@ export async function ShopPreview({ locale }: ShopPreviewProps) {
           </p>
           <div className="flex w-full items-center gap-4 overflow-x-auto pb-1 md:w-auto md:flex-wrap md:gap-6 md:overflow-visible">
             {trustLogos.map((logo) => (
-              <Image
+              /* eslint-disable-next-line @next/next/no-img-element */
+              <img
                 key={logo}
-                src={logo}
+                src={getProxiedBlogImageSrc(logo)}
                 alt={t("certLogoAlt")}
-                width={120}
-                height={52}
-                className="h-auto w-auto max-h-8 flex-shrink-0 object-contain md:max-h-10"
+                loading="lazy"
+                decoding="async"
+                className="h-auto max-h-8 w-auto flex-shrink-0 object-contain md:max-h-10"
               />
             ))}
           </div>

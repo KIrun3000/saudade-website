@@ -26,35 +26,36 @@ export function HeroSection({ locale }: HeroSectionProps) {
 
       <div className="relative mx-auto flex w-full max-w-6xl flex-col items-center px-5 py-10 text-center md:px-8 md:py-24">
 
-        {/* ── Tagline above ── */}
-        <motion.p
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          className="luxury-label text-[11px] tracking-[0.38em] text-accent/70 md:text-[13px]"
-        >
-          {t("tagline")}
-        </motion.p>
+        {/* ── Tagline + wordmark + subtitle — all constrained to the same width ── */}
+        <div className="flex w-full max-w-[min(90vw,820px)] flex-col items-center text-accent">
+          <motion.p
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            className="luxury-label w-full text-center text-[22px] tracking-[0.38em] text-accent/70 md:text-[26px]"
+          >
+            {t("tagline")}
+          </motion.p>
 
-        {/* ── SAUDADE wordmark with petal mandala on D ── */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.1 }}
-          className="w-full max-w-[min(90vw,820px)] text-accent"
-        >
-          <SaudadeWordmark size="hero" className="w-full h-auto" />
-        </motion.div>
+          {/* ── SAUDADE wordmark with official logo mandala on D ── */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.1 }}
+            className="w-full"
+          >
+            <SaudadeWordmark size="hero" className="w-full h-auto" />
+          </motion.div>
 
-        {/* ── Subtitle below ── */}
-        <motion.p
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.18 }}
-          className="luxury-label text-[11px] tracking-[0.38em] text-accent/70 md:text-[13px]"
-        >
-          {t("subtitle")}
-        </motion.p>
+          <motion.p
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.18 }}
+            className="luxury-label w-full text-center text-[22px] tracking-[0.38em] text-accent/70 md:text-[26px]"
+          >
+            {t("subtitle")}
+          </motion.p>
+        </div>
 
         {/* ── Description ── */}
         <motion.p
