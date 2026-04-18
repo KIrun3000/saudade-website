@@ -11,14 +11,32 @@ type NewsletterValues = {
 export function Newsletter() {
   const t = useTranslations("newsletter");
   const [isDone, setIsDone] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const {
     register,
     handleSubmit,
+    reset,
     formState: { errors },
   } = useForm<NewsletterValues>();
 
-  const onSubmit = () => {
-    setIsDone(true);
+  const onSubmit = async (data: NewsletterValues) => {
+    setIsLoading(true);
+    setError(null);
+    try {
+      const res = await fetch("/api/subscribe", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      });
+      if (!res.ok) throw new Error("Failed");
+      setIsDone(true);
+      reset();
+    } catch {
+      setError("Something went wrong. Please try again.");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -44,14 +62,16 @@ export function Newsletter() {
       ) : null}
       <button
         type="submit"
-        className="inline-flex min-h-11 w-full items-center justify-center rounded-full border border-accent/65 bg-transparent px-6 py-2 font-display text-[11px] font-light uppercase tracking-[0.22em] text-accent transition-colors duration-300 hover:border-accent-light hover:text-accent-light sm:w-auto"
+        disabled={isLoading}
+        className="inline-flex min-h-11 w-full items-center justify-center rounded-full border border-accent/65 bg-transparent px-6 py-2 font-display text-[11px] font-light uppercase tracking-[0.22em] text-accent transition-colors duration-300 hover:border-accent-light hover:text-accent-light disabled:opacity-60 sm:w-auto"
       >
-        {t("submit")}
+        {isLoading ? "…" : t("submit")}
       </button>
       {isDone ? (
-        <p className="text-sm text-sage-light">
-          {t("success")}
-        </p>
+        <p className="text-sm text-sage-light">{t("success")}</p>
+      ) : null}
+      {error ? (
+        <p className="text-sm text-[#8d2f2f]">{error}</p>
       ) : null}
     </form>
   );

@@ -13,13 +13,33 @@ type ContactValues = {
 export function ContactForm() {
   const t = useTranslations("contactForm");
   const [isDone, setIsDone] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const {
     register,
     handleSubmit,
+    reset,
     formState: { errors },
   } = useForm<ContactValues>();
 
-  const onSubmit = () => setIsDone(true);
+  const onSubmit = async (data: ContactValues) => {
+    setIsLoading(true);
+    setError(null);
+    try {
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      });
+      if (!res.ok) throw new Error("Failed");
+      setIsDone(true);
+      reset();
+    } catch {
+      setError("Something went wrong. Please try again.");
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
@@ -71,13 +91,17 @@ export function ContactForm() {
 
       <button
         type="submit"
-        className="inline-flex min-h-11 items-center rounded-full border border-primary-light bg-primary-light px-7 py-3 font-display text-[11px] font-light uppercase tracking-[0.22em] text-accent-light transition-colors duration-300 hover:bg-primary"
+        disabled={isLoading}
+        className="inline-flex min-h-11 items-center rounded-full border border-primary-light bg-primary-light px-7 py-3 font-display text-[11px] font-light uppercase tracking-[0.22em] text-accent-light transition-colors duration-300 hover:bg-primary disabled:opacity-60"
       >
-        {t("submit")}
+        {isLoading ? "Sending…" : t("submit")}
       </button>
 
       {isDone ? (
         <p className="text-sm text-primary-light">{t("success")}</p>
+      ) : null}
+      {error ? (
+        <p className="text-sm text-[#8d2f2f]">{error}</p>
       ) : null}
     </form>
   );
