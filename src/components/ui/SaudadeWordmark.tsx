@@ -37,20 +37,21 @@ function LogoMandala({ cx, cy, radius, id }: { cx: number; cy: number; radius: n
   return (
     <>
       <defs>
-        <filter id={filterId} x="-40%" y="-40%" width="180%" height="180%">
-          <feGaussianBlur stdDeviation="2.5" result="blur" />
+        <filter id={filterId} x="-50%" y="-50%" width="200%" height="200%">
+          <feGaussianBlur stdDeviation="3" result="blur" />
+          <feColorMatrix type="saturate" values="1.4" in="blur" result="saturatedBlur" />
           <feMerge>
-            <feMergeNode in="blur" />
+            <feMergeNode in="saturatedBlur" />
             <feMergeNode in="SourceGraphic" />
           </feMerge>
         </filter>
       </defs>
       <g
-        stroke="#b8cee0"
-        strokeWidth={0.5 / scale}
+        stroke="#f0e2da"
+        strokeWidth={0.85 / scale}
         strokeMiterlimit="10"
         fill="none"
-        opacity="0.55"
+        opacity="0.78"
         filter={`url(#${filterId})`}
         transform={`translate(${cx}, ${cy}) scale(${scale}) translate(${-MANDALA_CX}, ${-MANDALA_CY})`}
       >
@@ -75,11 +76,12 @@ export function SaudadeWordmark({ size = "hero", className = "" }: Props) {
 
   // Chrome includes trailing letterSpacing in textAnchor="middle" width calc,
   // shifting the whole string left by ls/2. Compensate so D (4th of 7) is centred.
-  const mandalaX = MX - Math.round(ls / 2);
-  const mandalaY = size === "nav" ? 200 : 300;
+  // Extra -6 nudges mandala slightly left; -8 on Y brings it slightly up.
+  const mandalaX = MX - Math.round(ls / 2) - 6;
+  const mandalaY = size === "nav" ? 193 : 292;
 
   // Mandala radius scaled to context
-  const mandalaRadius = size === "nav" ? 110 : 185;
+  const mandalaRadius = size === "nav" ? 118 : 198;
 
   // Baseline sits so cap-height centre aligns with mandala centre
   // cap-height ≈ 0.70 × fontSize  →  baseline = mandalaY + 0.35 × fontSize
