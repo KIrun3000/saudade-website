@@ -9,17 +9,13 @@ import { useEffect, useRef, useState } from "react";
 import { useCart } from "@/components/shop/CartProvider";
 
 const navigation = [
-  { key: "about", href: "/about" },
-  { key: "events", href: "/events" },
-  { key: "blog", href: "/blog" },
-  { key: "community", href: "/community" },
+  { key: "shop",       href: "/shop" },
+  { key: "about",      href: "/about" },
+  { key: "events",     href: "/events" },
+  { key: "blog",       href: "/blog" },
+  { key: "community",  href: "/community" },
   { key: "saudadeLand", href: "/saudade-land" },
-  { key: "contact", href: "/contact" },
-];
-
-const shopDropdown = [
-  { label: "Shop Art", href: "/shop?category=art" },
-  { label: "Shop High Frequency Clothing", href: "/shop?category=clothing" },
+  { key: "contact",    href: "/contact" },
 ];
 
 const locales = [
@@ -40,18 +36,12 @@ export function Header({ locale }: HeaderProps) {
   const pathname = usePathname();
   const [isSolid, setIsSolid] = useState(false);
   const [isMobileOpen, setIsMobileOpen] = useState(false);
-  const [isShopOpen, setIsShopOpen] = useState(false);
-  const [isMobileShopOpen, setIsMobileShopOpen] = useState(false);
   const [isLangOpen, setIsLangOpen] = useState(false);
-  const shopRef = useRef<HTMLDivElement>(null);
   const langRef = useRef<HTMLDivElement>(null);
   const { cartCount, toggleCart } = useCart();
 
   useEffect(() => {
     function handleClickOutside(e: MouseEvent) {
-      if (shopRef.current && !shopRef.current.contains(e.target as Node)) {
-        setIsShopOpen(false);
-      }
       if (langRef.current && !langRef.current.contains(e.target as Node)) {
         setIsLangOpen(false);
       }
@@ -113,33 +103,8 @@ export function Header({ locale }: HeaderProps) {
           />
         </Link>
 
-        <nav aria-label="Primary" className="hidden items-center gap-5 xl:flex">
-          {/* Shop dropdown */}
-          <div ref={shopRef} className="relative">
-            <button
-              type="button"
-              onClick={() => setIsShopOpen((o) => !o)}
-              className="luxury-label flex items-center gap-1 text-[10px] text-accent/88 transition-all duration-300 hover:text-accent-light"
-            >
-              {tNav("shop")}
-              <ChevronDown className={`h-3 w-3 transition-transform duration-200 ${isShopOpen ? "rotate-180" : ""}`} />
-            </button>
-            {isShopOpen && (
-              <div className="absolute left-1/2 top-full z-50 mt-3 w-56 -translate-x-1/2 overflow-hidden rounded-xl border border-accent/20 bg-primary-dark/95 shadow-xl backdrop-blur-md">
-                {shopDropdown.map((item) => (
-                  <Link
-                    key={item.href}
-                    href={`/${locale}${item.href}`}
-                    onClick={() => setIsShopOpen(false)}
-                    className="block px-4 py-3 font-display text-[10px] font-light uppercase tracking-[0.18em] text-accent/88 transition-colors duration-200 hover:bg-accent/10 hover:text-accent-light"
-                  >
-                    {item.label}
-                  </Link>
-                ))}
-              </div>
-            )}
-          </div>
-
+        {/* Horizontal nav — visible from md up */}
+        <nav aria-label="Primary" className="hidden items-center gap-5 md:flex">
           {navigation.map((item) => (
             <Link
               key={item.key}
@@ -151,7 +116,7 @@ export function Header({ locale }: HeaderProps) {
           ))}
         </nav>
 
-        <div className="ml-auto flex items-center gap-2 xl:ml-0">
+        <div className="ml-auto flex items-center gap-2 md:ml-0">
           <button
             type="button"
             onClick={toggleCart}
@@ -166,10 +131,11 @@ export function Header({ locale }: HeaderProps) {
             ) : null}
           </button>
 
+          {/* Hamburger — only on small mobile screens */}
           <button
             type="button"
             onClick={() => setIsMobileOpen((open) => !open)}
-            className="inline-flex min-h-11 min-w-11 items-center justify-center rounded-full border border-accent/35 bg-primary-dark/40 text-accent xl:hidden"
+            className="inline-flex min-h-11 min-w-11 items-center justify-center rounded-full border border-accent/35 bg-primary-dark/40 text-accent md:hidden"
             aria-label={isMobileOpen ? tHeader("closeMenu") : tHeader("openMenu")}
             aria-expanded={isMobileOpen}
           >
@@ -215,7 +181,7 @@ export function Header({ locale }: HeaderProps) {
       </div>
 
       {isMobileOpen ? (
-        <div className="fixed inset-0 z-[60] bg-primary/95 text-accent xl:hidden">
+        <div className="fixed inset-0 z-[60] bg-primary/95 text-accent md:hidden">
           <div className="mx-auto flex h-full w-full max-w-7xl flex-col px-5 py-5 md:px-8">
             <div className="flex items-center justify-between">
               <p className="luxury-label text-sm text-accent-muted">Menu</p>
@@ -230,32 +196,6 @@ export function Header({ locale }: HeaderProps) {
             </div>
 
             <nav aria-label="Mobile primary" className="mt-6 grid gap-2">
-              {/* Mobile shop dropdown */}
-              <div>
-                <button
-                  type="button"
-                  onClick={() => setIsMobileShopOpen((o) => !o)}
-                  className="luxury-label inline-flex min-h-11 w-full items-center justify-between rounded-lg px-3 text-sm text-accent/92 transition-colors duration-300 hover:bg-accent/10 hover:text-accent-light"
-                >
-                  {tNav("shop")}
-                  <ChevronDown className={`h-4 w-4 transition-transform duration-200 ${isMobileShopOpen ? "rotate-180" : ""}`} />
-                </button>
-                {isMobileShopOpen && (
-                  <div className="ml-4 mt-1 grid gap-1 border-l border-accent/20 pl-3">
-                    {shopDropdown.map((item) => (
-                      <Link
-                        key={item.href}
-                        href={`/${locale}${item.href}`}
-                        onClick={() => setIsMobileOpen(false)}
-                        className="luxury-label inline-flex min-h-10 items-center rounded-lg px-3 text-sm text-accent/80 transition-colors duration-300 hover:bg-accent/10 hover:text-accent-light"
-                      >
-                        {item.label}
-                      </Link>
-                    ))}
-                  </div>
-                )}
-              </div>
-
               {navigation.map((item) => (
                 <Link
                   key={item.key}
