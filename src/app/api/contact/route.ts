@@ -1,21 +1,21 @@
 import { NextRequest, NextResponse } from "next/server";
 
-const SHOPIFY_DOMAIN = process.env.NEXT_PUBLIC_SHOPIFY_STORE_DOMAIN!;
-const SHOPIFY_TOKEN = process.env.SHOPIFY_ADMIN_ACCESS_TOKEN!;
-const API_VERSION = "2024-10";
+const RESEND_API_KEY = process.env.RESEND_API_KEY!;
 
-async function shopifyRequest(path: string, method: string, body?: object) {
-  const res = await fetch(
-    `https://${SHOPIFY_DOMAIN}/admin/api/${API_VERSION}${path}`,
-    {
-      method,
-      headers: {
-        "X-Shopify-Access-Token": SHOPIFY_TOKEN,
-        "Content-Type": "application/json",
-      },
-      body: body ? JSON.stringify(body) : undefined,
-    }
-  );
+async function sendEmail(to: string, subject: string, html: string) {
+  const res = await fetch("https://api.resend.com/emails", {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${RESEND_API_KEY}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      from: "Saudade Voces <info@saudadevoces.com>",
+      to,
+      subject,
+      html,
+    }),
+  });
   return res;
 }
 
@@ -27,47 +27,28 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Missing fields" }, { status: 400 });
     }
 
-    const note = `[Contact Form] ${new Date().toISOString()}\n${message}`;
-    const firstName = name.split(" ")[0];
-    const lastName = name.split(" ").slice(1).join(" ") || "";
+    // Notify you
+    await sendEmail(
+      "hello@saudadevoces.com",
+      `New message from ${name}`,
+      `<h2>New Contact Form Submission</h2>
+       <p><strong>Name:</strong> ${name}</p>
+       <p><strong>Email:</strong> <a href="mailto:${email}">${email}</a></p>
+       <p><strong>Message:</strong></p>
+       <p>${message.replace(/\n/g, "<br>")}</p>`
+    );
 
-    // Try to create customer
-    const createRes = await shopifyRequest("/customers.json", "POST", {
-      customer: {
-        first_name: firstName,
-        last_name: lastName,
-        email,
-        note,
-        tags: "contact-form",
-        verified_email: true,
-      },
-    });
-
-    if (createRes.status === 422) {
-      // Customer already exists — search and update with new note
-      const searchRes = await shopifyRequest(
-        `/customers/search.json?query=email:${encodeURIComponent(email)}`,
-        "GET"
-      );
-      const searchData = await searchRes.json();
-      const existing = searchData.customers?.[0];
-
-      if (existing) {
-        const updatedNote = existing.note
-          ? `${existing.note}\n\n${note}`
-          : note;
-
-        await shopifyRequest(`/customers/${existing.id}.json`, "PUT", {
-          customer: {
-            id: existing.id,
-            note: updatedNote,
-            tags: existing.tags
-              ? `${existing.tags},contact-form`
-              : "contact-form",
-          },
-        });
-      }
-    }
+    // Auto-reply to visitor
+    await sendEmail(
+      email,
+      "Thank you for reaching out — Saudade Voces",
+      `<p>Dear ${name},</p>
+       <p>Thank you for reaching out to us. We have received your message and will get back to you within 48 hours.</p>
+       <p>In the meantime, feel free to explore our world at <a href="https://www.saudadevoces.com">saudadevoces.com</a>.</p>
+       <br>
+       <p>With love,</p>
+       <p><strong>Saudade Voces</strong></p>`
+    );
 
     return NextResponse.json({ success: true });
   } catch (err) {

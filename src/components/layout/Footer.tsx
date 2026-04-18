@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { useTranslations } from "next-intl";
-import { AtSign, Mail, Phone } from "lucide-react";
+import { AtSign, Mail } from "lucide-react";
 
 import { Mandala } from "@/components/ui/Mandala";
 
@@ -37,28 +37,19 @@ export function Footer({ locale }: FooterProps) {
             <li className="flex items-start gap-3">
               <Mail className="mt-0.5 h-4 w-4 text-accent-muted" />
               <a
-                href="mailto:saudadestyle@gmail.com"
+                href="mailto:hello@saudadevoces.com"
                 className="inline-flex min-h-11 items-center transition-colors duration-300 hover:text-accent-light"
               >
-                saudadestyle@gmail.com
+                hello@saudadevoces.com
               </a>
             </li>
             <li className="flex items-start gap-3">
               <Mail className="mt-0.5 h-4 w-4 text-accent-muted" />
               <a
-                href="mailto:communitysaudade@gmail.com"
+                href="mailto:support@saudadevoces.com"
                 className="inline-flex min-h-11 items-center transition-colors duration-300 hover:text-accent-light"
               >
-                communitysaudade@gmail.com
-              </a>
-            </li>
-            <li className="flex items-start gap-3">
-              <Phone className="mt-0.5 h-4 w-4 text-accent-muted" />
-              <a
-                href="tel:+351968179500"
-                className="inline-flex min-h-11 items-center transition-colors duration-300 hover:text-accent-light"
-              >
-                (+351) 968179500
+                support@saudadevoces.com
               </a>
             </li>
             <li className="flex items-start gap-3">

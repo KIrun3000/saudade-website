@@ -104,7 +104,8 @@ function isAuthError(error: unknown) {
   return (
     error.message.includes("401") ||
     error.message.toLowerCase().includes("unauthorized") ||
-    error.message.toLowerCase().includes("graphql error")
+    error.message.toLowerCase().includes("graphql error") ||
+    error.message.toLowerCase().includes("missing shopify")
   );
 }
 

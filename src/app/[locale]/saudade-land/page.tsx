@@ -31,8 +31,7 @@ export default async function SaudadeLandPage({ params }: Props) {
         />
         <div className="absolute inset-0 bg-gradient-to-b from-primary-dark/60 via-primary/55 to-primary/85" />
         <div className="relative px-5 text-center text-accent md:px-8">
-          <p className="luxury-label text-sm text-accent-muted md:text-[11px]">{t("heroLabel")}</p>
-          <h1 className="mt-4 font-display text-[2.25rem] font-light uppercase tracking-[0.2em] md:mt-6 md:text-7xl md:tracking-[0.3em]">
+          <h1 className="font-display text-[2.25rem] font-light uppercase tracking-[0.2em] md:text-7xl md:tracking-[0.3em]">
             {t("heroTitle")}
           </h1>
         </div>
