@@ -57,15 +57,8 @@ export function HeroSection({ locale }: HeroSectionProps) {
           </motion.p>
         </div>
 
-        {/* ── Description ── */}
-        <motion.p
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7, delay: 0.26 }}
-          className="mt-8 max-w-2xl text-sm leading-relaxed text-accent/80 md:mt-10 md:text-base"
-        >
-          {t("description")}
-        </motion.p>
+        {/* ── Description spacer (text removed — repeated below) ── */}
+        <div className="mt-8 md:mt-10" />
 
         {/* ── CTA buttons ── */}
         <motion.div
@@ -88,17 +81,8 @@ export function HeroSection({ locale }: HeroSectionProps) {
           </Link>
         </motion.div>
 
-        {/* ── Certification ── */}
-        <div className="mt-10 border-t border-accent/15 pt-5 md:mt-14">
-          <motion.p
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.8, delay: 0.4 }}
-            className="luxury-label text-[9px] text-accent-muted md:text-[10px]"
-          >
-            {t("certification")}
-          </motion.p>
-        </div>
+        {/* ── Certification spacer (text removed — repeated below) ── */}
+        <div className="mt-10 border-t border-accent/15 pt-5 md:mt-14" />
       </div>
     </section>
   );
