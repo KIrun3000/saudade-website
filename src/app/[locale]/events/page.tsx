@@ -47,10 +47,10 @@ export default async function EventsPage({ params }: Props) {
 
           <div className="mt-8 grid gap-4 grid-cols-1 md:grid-cols-2">
             {[
-              "https://saudadevoces.com/wp-content/uploads/2025/08/fest-1.jpg",
-              "https://saudadevoces.com/wp-content/uploads/2025/08/fest-3.jpg",
-              "https://saudadevoces.com/wp-content/uploads/2025/08/48771295762_d6f7813a78_c-799x460-1.jpg",
-              "https://saudadevoces.com/wp-content/uploads/2025/08/istockphoto-1141427484-612x612-1.jpg",
+              "/wp-content/uploads/2025/08/fest-1.jpg",
+              "/wp-content/uploads/2025/08/fest-3.jpg",
+              "/wp-content/uploads/2025/08/48771295762_d6f7813a78_c-799x460-1.jpg",
+              "/wp-content/uploads/2025/08/istockphoto-1141427484-612x612-1.jpg",
             ].map((image) => (
               <div key={image} className="relative h-56 overflow-hidden rounded-2xl border border-accent/20">
                 <Image
@@ -91,7 +91,7 @@ export default async function EventsPage({ params }: Props) {
             <h4 className="font-heading text-3xl font-light text-text-on-light">{t("yogaTitle")}</h4>
             <div className="relative mt-4 h-40 overflow-hidden rounded-xl">
               <Image
-                src="https://saudadevoces.com/wp-content/uploads/2025/08/yoga_with_nature_at_the_sharpham_trust_1200px_10.jpg"
+                src="/wp-content/uploads/2025/08/yoga_with_nature_at_the_sharpham_trust_1200px_10.jpg"
                 alt={t("yogaImageAlt")}
                 fill
                 className="object-cover"

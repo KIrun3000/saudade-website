@@ -97,7 +97,7 @@ export default function RootLayout({
     name: "Saudade",
     description: "Sustainable fashion brand and conscious living community",
     url: "https://saudade-website.vercel.app",
-    logo: "https://saudadevoces.com/wp-content/uploads/2026/03/cropped-cropped-saudade_round_logo-removebg-preview.png",
+    logo: "/wp-content/uploads/2026/03/cropped-cropped-saudade_round_logo-removebg-preview.png",
     contactPoint: {
       "@type": "ContactPoint",
       email: "saudadestyle@gmail.com",

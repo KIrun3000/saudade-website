@@ -60,7 +60,7 @@ export function EventHighlight({ locale }: EventHighlightProps) {
         <div className="relative overflow-hidden rounded-[2rem] border border-accent/20">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
-            src={getProxiedBlogImageSrc("https://saudadevoces.com/wp-content/uploads/2025/08/fest-1.jpg")}
+            src={getProxiedBlogImageSrc("/wp-content/uploads/2025/08/fest-1.jpg")}
             alt={t("imageAlt")}
             loading="lazy"
             decoding="async"

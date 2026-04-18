@@ -22,7 +22,7 @@ export default async function SaudadeLandPage({ params }: Props) {
     <main>
       <section className="relative flex min-h-screen items-center justify-center overflow-hidden">
         <Image
-          src="https://saudadevoces.com/wp-content/uploads/2026/01/mateus-campos-felipe-_fzl2PQH6kw-unsplash-scaled.jpg"
+          src="/wp-content/uploads/2026/01/mateus-campos-felipe-_fzl2PQH6kw-unsplash-scaled.jpg"
           alt={t("heroImageAlt")}
           fill
           priority
@@ -69,7 +69,7 @@ export default async function SaudadeLandPage({ params }: Props) {
           </article>
           <div className="relative order-1 overflow-hidden rounded-[1.7rem] border border-accent/25 lg:order-2">
             <Image
-              src="https://saudadevoces.com/wp-content/uploads/2026/01/mateus-pontes-x2TDul-JMl8-unsplash-scaled.jpg"
+              src="/wp-content/uploads/2026/01/mateus-pontes-x2TDul-JMl8-unsplash-scaled.jpg"
               alt={t("visionImageAlt")}
               width={1200}
               height={900}

@@ -30,9 +30,9 @@ export const BLOG_ARTICLES: BlogArticle[] = [
     description:
       "Saudade is more than a word. It is a feeling, a sensation, and a call for awareness rooted in longing, love, and human connection.",
     cardImage:
-      "https://saudadevoces.com/wp-content/uploads/2023/09/F56E23B8-D3FF-4BA1-BE97-73AC2B21B4CE_1_105_c-e1729254532272.jpeg",
+      "/wp-content/uploads/2023/09/F56E23B8-D3FF-4BA1-BE97-73AC2B21B4CE_1_105_c-e1729254532272.jpeg",
     heroImage:
-      "https://saudadevoces.com/wp-content/uploads/2023/09/pexels-tellez-erik-12747153.jpg",
+      "/wp-content/uploads/2023/09/pexels-tellez-erik-12747153.jpg",
     quote: '"When I think of saudade I think of the ocean"',
     sections: [
       {
@@ -58,11 +58,11 @@ export const BLOG_ARTICLES: BlogArticle[] = [
     description:
       "How linen, cotton, wool, and hemp carry different vibrational frequencies and why natural fibers matter for wellness and the planet.",
     cardImage:
-      "https://saudadevoces.com/wp-content/uploads/2023/09/volha-flaxeco-L8QuQqL1ZJ8-unsplash-1.jpeg",
+      "/wp-content/uploads/2023/09/volha-flaxeco-L8QuQqL1ZJ8-unsplash-1.jpeg",
     heroImage:
-      "https://saudadevoces.com/wp-content/uploads/2023/09/volha-flaxeco-L8QuQqL1ZJ8-unsplash-1.jpeg",
+      "/wp-content/uploads/2023/09/volha-flaxeco-L8QuQqL1ZJ8-unsplash-1.jpeg",
     extraImages: [
-      "https://saudadevoces.com/wp-content/uploads/2024/10/pexels-photo-4405941-4405941-2.jpg",
+      "/wp-content/uploads/2024/10/pexels-photo-4405941-4405941-2.jpg",
     ],
     sections: [
       {
@@ -115,11 +115,11 @@ export const BLOG_ARTICLES: BlogArticle[] = [
     description:
       "A closer look at who makes our clothes, why fast fashion harms people and ecosystems, and why natural fibers are a conscious alternative.",
     cardImage:
-      "https://saudadevoces.com/wp-content/uploads/2024/10/jon-tyson-uEXc4WGAI2c-unsplash-768x1024.jpg",
+      "/wp-content/uploads/2024/10/jon-tyson-uEXc4WGAI2c-unsplash-768x1024.jpg",
     heroImage:
-      "https://saudadevoces.com/wp-content/uploads/2024/10/jon-tyson-uEXc4WGAI2c-unsplash-768x1024.jpg",
+      "/wp-content/uploads/2024/10/jon-tyson-uEXc4WGAI2c-unsplash-768x1024.jpg",
     extraImages: [
-      "https://saudadevoces.com/wp-content/uploads/2024/10/fast-fashion.webp",
+      "/wp-content/uploads/2024/10/fast-fashion.webp",
     ],
     sections: [
       {

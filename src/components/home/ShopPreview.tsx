@@ -5,9 +5,9 @@ import { formatPrice, getAllProducts, getFirstImage } from "@/lib/shopify";
 import { getProxiedBlogImageSrc } from "@/lib/blog-articles";
 
 const trustLogos = [
-  "https://saudadevoces.com/wp-content/uploads/2023/09/client-logo-1.png",
-  "https://saudadevoces.com/wp-content/uploads/2023/09/client-logo-2.png",
-  "https://saudadevoces.com/wp-content/uploads/2023/09/client-logo-4.png",
+  "/wp-content/uploads/2023/09/client-logo-1.png",
+  "/wp-content/uploads/2023/09/client-logo-2.png",
+  "/wp-content/uploads/2023/09/client-logo-4.png",
 ];
 
 type ShopPreviewProps = {

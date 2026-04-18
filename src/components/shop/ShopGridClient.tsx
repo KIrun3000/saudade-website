@@ -14,9 +14,9 @@ type ShopGridClientProps = {
 };
 
 const trustLogos = [
-  "https://saudadevoces.com/wp-content/uploads/2023/09/client-logo-1.png",
-  "https://saudadevoces.com/wp-content/uploads/2023/09/client-logo-2.png",
-  "https://saudadevoces.com/wp-content/uploads/2023/09/client-logo-4.png",
+  "/wp-content/uploads/2023/09/client-logo-1.png",
+  "/wp-content/uploads/2023/09/client-logo-2.png",
+  "/wp-content/uploads/2023/09/client-logo-4.png",
 ];
 
 export function ShopGridClient({ locale, products, collections }: ShopGridClientProps) {

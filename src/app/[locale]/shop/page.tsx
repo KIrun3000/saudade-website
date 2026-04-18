@@ -77,7 +77,7 @@ export default async function ShopPage({ params }: ShopPageProps) {
             className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-105"
             style={{
               backgroundImage:
-                "url('https://saudadevoces.com/wp-content/uploads/2025/08/fest-1.jpg')",
+                "url('/wp-content/uploads/2025/08/fest-1.jpg')",
             }}
           />
           <div className="absolute inset-0 bg-gradient-to-t from-primary-dark/90 via-primary/50 to-transparent" />
@@ -103,7 +103,7 @@ export default async function ShopPage({ params }: ShopPageProps) {
             className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-105"
             style={{
               backgroundImage:
-                "url('https://saudadevoces.com/wp-content/uploads/2025/08/48771295762_d6f7813a78_c-799x460-1.jpg')",
+                "url('/wp-content/uploads/2025/08/48771295762_d6f7813a78_c-799x460-1.jpg')",
             }}
           />
           <div className="absolute inset-0 bg-gradient-to-t from-primary-dark/90 via-primary/50 to-transparent" />

@@ -16,7 +16,7 @@ export function LeafDecoration({ position }: LeafDecorationProps) {
       aria-hidden="true"
     >
       <Image
-        src="https://saudadevoces.com/wp-content/uploads/2025/08/pexels-photo-1353938-1353938-scaled-e1772064748884.jpg"
+        src="/wp-content/uploads/2025/08/pexels-photo-1353938-1353938-scaled-e1772064748884.jpg"
         alt=""
         fill
         className="object-cover"

@@ -13,21 +13,21 @@ export function PillarsSection({ locale }: PillarsSectionProps) {
       title: t("fashion.title"),
       body: t("fashion.description"),
       image:
-        "https://saudadevoces.com/wp-content/uploads/2023/09/volha-flaxeco-L8QuQqL1ZJ8-unsplash-1.jpeg",
+        "/wp-content/uploads/2023/09/volha-flaxeco-L8QuQqL1ZJ8-unsplash-1.jpeg",
       href: "/shop",
     },
     {
       title: t("community.title"),
       body: t("community.description"),
       image:
-        "https://saudadevoces.com/wp-content/uploads/2025/08/yoga_with_nature_at_the_sharpham_trust_1200px_10-1024x681.jpg",
+        "/wp-content/uploads/2025/08/yoga_with_nature_at_the_sharpham_trust_1200px_10-1024x681.jpg",
       href: "/community",
     },
     {
       title: t("land.title"),
       body: t("land.description"),
       image:
-        "https://saudadevoces.com/wp-content/uploads/2026/01/mateus-pontes-x2TDul-JMl8-unsplash-scaled.jpg",
+        "/wp-content/uploads/2026/01/mateus-pontes-x2TDul-JMl8-unsplash-scaled.jpg",
       href: "/saudade-land",
     },
   ];

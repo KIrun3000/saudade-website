@@ -16,7 +16,7 @@ export default function AboutPage() {
         <div className="relative mx-auto grid max-w-6xl gap-8 px-5 md:px-8 lg:grid-cols-[0.95fr_1.05fr]">
           <div className="relative overflow-hidden rounded-[1.7rem] border border-primary-light/15">
             <Image
-              src="https://saudadevoces.com/wp-content/uploads/2024/10/Copia-de-20180203_143657.jpg"
+              src="/wp-content/uploads/2024/10/Copia-de-20180203_143657.jpg"
               alt="Mayka in nature"
               width={1000}
               height={1200}
@@ -79,7 +79,7 @@ export default function AboutPage() {
             <article className="overflow-hidden rounded-[1.4rem] border border-primary-light/20 bg-bg-light">
               <div className="relative h-56">
                 <Image
-                  src="https://saudadevoces.com/wp-content/uploads/2025/08/fest-1.jpg"
+                  src="/wp-content/uploads/2025/08/fest-1.jpg"
                   alt="High Frequency Fashion"
                   fill
                   className="object-cover"
@@ -95,7 +95,7 @@ export default function AboutPage() {
             <article className="overflow-hidden rounded-[1.4rem] border border-primary-light/20 bg-bg-light">
               <div className="relative h-56">
                 <Image
-                  src="https://saudadevoces.com/wp-content/uploads/2024/10/adairatr1.jpg"
+                  src="/wp-content/uploads/2024/10/adairatr1.jpg"
                   alt="International Community"
                   fill
                   className="object-cover"
@@ -111,7 +111,7 @@ export default function AboutPage() {
             <article className="overflow-hidden rounded-[1.4rem] border border-primary-light/20 bg-bg-light">
               <div className="relative h-56">
                 <Image
-                  src="https://saudadevoces.com/wp-content/uploads/2025/08/fest-1.jpg"
+                  src="/wp-content/uploads/2025/08/fest-1.jpg"
                   alt="Events"
                   fill
                   className="object-cover"
@@ -127,7 +127,7 @@ export default function AboutPage() {
             <article className="overflow-hidden rounded-[1.4rem] border border-primary-light/20 bg-bg-light">
               <div className="relative h-56">
                 <Image
-                  src="https://saudadevoces.com/wp-content/uploads/2024/10/Copia-de-20180203_145549.jpg"
+                  src="/wp-content/uploads/2024/10/Copia-de-20180203_145549.jpg"
                   alt="Sustainable Development"
                   fill
                   className="object-cover"
@@ -165,7 +165,7 @@ export default function AboutPage() {
           </article>
           <div className="relative overflow-hidden rounded-[1.7rem] border border-accent/25">
             <Image
-              src="https://saudadevoces.com/wp-content/uploads/2026/01/mateus-pontes-x2TDul-JMl8-unsplash-scaled.jpg"
+              src="/wp-content/uploads/2026/01/mateus-pontes-x2TDul-JMl8-unsplash-scaled.jpg"
               alt="Saudade Land vision in Brazil"
               width={1200}
               height={900}

@@ -16,7 +16,7 @@ export function MaykaSection({ locale }: MaykaSectionProps) {
           <div className="absolute -left-3 -top-3 h-32 w-32 rounded-full border border-accent/60 bg-accent-light/40 md:-left-4 md:-top-4 md:h-56 md:w-56" />
           <div className="relative mx-auto w-full max-w-[520px] overflow-hidden rounded-[2rem] border border-primary-light/20 shadow-[0_35px_80px_-42px_rgba(9,30,34,0.4)]">
             <Image
-              src="https://saudadevoces.com/wp-content/uploads/2024/10/784519E1-6171-45BA-AB39-9CE60DCC2A60_1_105_c.jpeg"
+              src="/wp-content/uploads/2024/10/784519E1-6171-45BA-AB39-9CE60DCC2A60_1_105_c.jpeg"
               alt={t("imageAlt")}
               width={920}
               height={1100}
