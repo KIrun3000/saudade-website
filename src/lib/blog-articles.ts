@@ -150,5 +150,7 @@ export function getBlogArticleBySlug(slug: string) {
 }
 
 export function getProxiedBlogImageSrc(src: string) {
+  // Images are now hosted locally in public/wp-content — return path directly
+  if (src.startsWith("/")) return src;
   return `/api/blog-image?src=${encodeURIComponent(src)}`;
 }

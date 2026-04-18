@@ -110,13 +110,6 @@ export function Header({ locale }: HeaderProps) {
         </Link>
 
         <nav aria-label="Primary" className="hidden items-center gap-5 xl:flex">
-          <Link
-            href={`/${locale}/about`}
-            className="luxury-label text-[10px] text-accent/88 transition-all duration-300 hover:text-accent-light"
-          >
-            {tNav("about")}
-          </Link>
-
           {/* Shop dropdown */}
           <div ref={shopRef} className="relative">
             <button
@@ -233,14 +226,6 @@ export function Header({ locale }: HeaderProps) {
             </div>
 
             <nav aria-label="Mobile primary" className="mt-6 grid gap-2">
-              <Link
-                href={`/${locale}/about`}
-                onClick={() => setIsMobileOpen(false)}
-                className="luxury-label inline-flex min-h-11 items-center rounded-lg px-3 text-sm text-accent/92 transition-colors duration-300 hover:bg-accent/10 hover:text-accent-light"
-              >
-                {tNav("about")}
-              </Link>
-
               {/* Mobile shop dropdown */}
               <div>
                 <button
