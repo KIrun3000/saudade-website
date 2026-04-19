@@ -82,6 +82,7 @@ export function Header({ locale }: HeaderProps) {
   }, [isMobileOpen]);
 
   return (
+    <>
     <header
       className={`fixed inset-x-0 top-0 z-50 border-b transition-all duration-300 ${
         isSolid || isMobileOpen
@@ -180,36 +181,44 @@ export function Header({ locale }: HeaderProps) {
         </div>
       </div>
 
-      {isMobileOpen ? (
-        <div className="fixed inset-0 z-[60] text-accent backdrop-blur-md md:hidden" style={{ backgroundColor: "rgba(9, 30, 34, 0.93)" }}>
-          <div className="mx-auto flex h-full w-full max-w-7xl flex-col px-5 py-5 md:px-8">
-            <div className="flex items-center justify-between">
-              <p className="luxury-label text-sm text-accent-muted">Menu</p>
-              <button
-                type="button"
-                onClick={() => setIsMobileOpen(false)}
-                className="inline-flex min-h-11 min-w-11 items-center justify-center rounded-full border border-accent/35 bg-primary-dark/40 text-accent"
-                aria-label={tHeader("closeMenu")}
-              >
-                <X className="h-5 w-5" />
-              </button>
-            </div>
-
-            <nav aria-label="Mobile primary" className="mt-6 grid gap-2">
-              {navigation.map((item) => (
-                <Link
-                  key={item.key}
-                  href={`/${locale}${item.href}`}
-                  onClick={() => setIsMobileOpen(false)}
-                  className="luxury-label inline-flex min-h-11 items-center rounded-lg px-3 text-sm text-accent/92 transition-colors duration-300 hover:bg-accent/10 hover:text-accent-light"
-                >
-                  {tNav(item.key)}
-                </Link>
-              ))}
-            </nav>
-          </div>
-        </div>
-      ) : null}
     </header>
+
+    {/* Mobile menu — rendered OUTSIDE <header> so it sits in the root stacking
+        context at z-[200], fully above the hero and all page content */}
+    {isMobileOpen ? (
+      <div
+        className="fixed inset-0 z-[200] text-accent md:hidden"
+        style={{ backgroundColor: "rgba(9, 30, 34, 0.93)", backdropFilter: "blur(8px)" }}
+      >
+        <div className="mx-auto flex h-full w-full max-w-7xl flex-col px-5 py-5 md:px-8">
+          <div className="flex items-center justify-between">
+            <p className="luxury-label text-sm text-accent-muted">Menu</p>
+            <button
+              type="button"
+              onClick={() => setIsMobileOpen(false)}
+              className="inline-flex min-h-11 min-w-11 items-center justify-center rounded-full border border-accent/35 text-accent"
+              style={{ backgroundColor: "rgba(9, 30, 34, 0.5)" }}
+              aria-label={tHeader("closeMenu")}
+            >
+              <X className="h-5 w-5" />
+            </button>
+          </div>
+
+          <nav aria-label="Mobile primary" className="mt-6 grid gap-2">
+            {navigation.map((item) => (
+              <Link
+                key={item.key}
+                href={`/${locale}${item.href}`}
+                onClick={() => setIsMobileOpen(false)}
+                className="luxury-label inline-flex min-h-11 items-center rounded-lg px-3 text-sm text-accent/92 transition-colors duration-300 hover:bg-accent/10 hover:text-accent-light"
+              >
+                {tNav(item.key)}
+              </Link>
+            ))}
+          </nav>
+        </div>
+      </div>
+    ) : null}
+    </>
   );
 }

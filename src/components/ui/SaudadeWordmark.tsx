@@ -71,17 +71,20 @@ export function SaudadeWordmark({ size = "hero", className = "" }: Props) {
   // Centre of SVG — SAUDADE is centred here
   const MX = 700;
 
-  // Nudge mandala slightly left of centre and slightly up to sit visually
-  // centred on the "D" glyph across all browsers / screen sizes.
-  const mandalaX = MX - 8;    // 700 → 692  (slight left nudge from SVG centre)
-  const mandalaY = size === "nav" ? 188 : 268;
+  // Desktop (Chrome): includes trailing letter-spacing in textAnchor="middle",
+  // shifting the D centre to ~677. Nudge: mandalaX = 671, mandalaY = 292.
+  // Mobile (Safari/WebKit): does NOT include trailing ls → D centre ≈ 700.
+  // We render two mandala groups, each shown only at the right breakpoint.
+  const mandalaXDesktop = MX - 29;  // 671 — tuned for Chrome desktop
+  const mandalaYDesktop = size === "nav" ? 193 : 292;
+  const mandalaXMobile  = MX - 8;   // 692 — tuned for mobile Safari
+  const mandalaYMobile  = size === "nav" ? 188 : 268;
 
   // Mandala radius scaled to context
   const mandalaRadius = size === "nav" ? 118 : 265;
 
-  // Baseline sits so cap-height centre aligns with mandala centre
-  // cap-height ≈ 0.70 × fontSize  →  baseline = mandalaY + 0.35 × fontSize
-  const textY = mandalaY + fontSize * 0.35;
+  // Baseline: use desktop Y for text positioning (same formula either way)
+  const textY = mandalaYDesktop + fontSize * 0.35;
 
   const vb = size === "nav" ? "0 0 1400 400" : "0 0 1400 600";
 
@@ -95,8 +98,14 @@ export function SaudadeWordmark({ size = "hero", className = "" }: Props) {
 
   return (
     <svg viewBox={vb} className={className} aria-label="SAUDADE" overflow="visible">
-      {/* Official Saudade logo mandala centred on letter D */}
-      <LogoMandala cx={mandalaX} cy={mandalaY} radius={mandalaRadius} id={size} />
+      {/* Desktop mandala — hidden on mobile (md:block / hidden on small screens) */}
+      <g className="hidden md:block">
+        <LogoMandala cx={mandalaXDesktop} cy={mandalaYDesktop} radius={mandalaRadius} id={`${size}-d`} />
+      </g>
+      {/* Mobile mandala — hidden on desktop */}
+      <g className="block md:hidden">
+        <LogoMandala cx={mandalaXMobile} cy={mandalaYMobile} radius={mandalaRadius} id={`${size}-m`} />
+      </g>
 
       {/* Full SAUDADE — paintOrder stroke ensures stroke widens outward only */}
       <text x={MX} y={textY} textAnchor="middle"
