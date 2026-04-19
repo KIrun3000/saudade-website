@@ -33,9 +33,10 @@ const accentFont = Courgette({
 
 const wordmarkFont = localFont({
   src: [
-    { path: "../../public/fonts/Cocomat-Pro-Extralight-trial.ttf", weight: "200", style: "normal" },
-    { path: "../../public/fonts/Cocomat-Pro-Light-trial.ttf",      weight: "300", style: "normal" },
-    { path: "../../public/fonts/Cocomat-Pro-Thin-trial.ttf",       weight: "100", style: "normal" },
+    { path: "../../public/fonts/CocoBiker/CocoBiker-Ultralight-trial.ttf", weight: "100", style: "normal" },
+    { path: "../../public/fonts/CocoBiker/CocoBiker-Light-trial.ttf",      weight: "300", style: "normal" },
+    { path: "../../public/fonts/CocoBiker/CocoBiker-Regular-trial.ttf",    weight: "400", style: "normal" },
+    { path: "../../public/fonts/CocoBiker/CocoBiker-Bold-trial.ttf",       weight: "700", style: "normal" },
   ],
   display: "swap",
   variable: "--font-wordmark",

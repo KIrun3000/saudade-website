@@ -89,8 +89,8 @@ export function SaudadeWordmark({ size = "hero", className = "" }: Props) {
   const vb = size === "nav" ? "0 0 1400 400" : "0 0 1400 600";
 
   const fontStyle: React.CSSProperties = {
-    fontFamily: "var(--font-wordmark), 'Cocomat Pro', sans-serif",
-    fontWeight: 200,
+    fontFamily: "var(--font-wordmark), 'Coco Biker', sans-serif",
+    fontWeight: 300,
   };
 
   // Stroke thickness: adds weight without changing the letterform shape
