@@ -188,7 +188,7 @@ export function Header({ locale }: HeaderProps) {
     {isMobileOpen ? (
       <div
         className="fixed inset-0 z-[200] text-accent md:hidden"
-        style={{ backgroundColor: "rgba(9, 30, 34, 0.93)", backdropFilter: "blur(8px)" }}
+        style={{ backgroundColor: "rgba(9, 30, 34, 0.82)", backdropFilter: "blur(12px)" }}
       >
         <div className="mx-auto flex h-full w-full max-w-7xl flex-col px-5 py-5 md:px-8">
           <div className="flex items-center justify-between">

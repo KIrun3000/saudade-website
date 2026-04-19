@@ -78,7 +78,7 @@ export function SaudadeWordmark({ size = "hero", className = "" }: Props) {
   const mandalaXDesktop = MX - 29;  // 671 — tuned for Chrome desktop
   const mandalaYDesktop = size === "nav" ? 193 : 292;
   const mandalaXMobile  = MX - 8;   // 692 — tuned for mobile Safari
-  const mandalaYMobile  = size === "nav" ? 188 : 268;
+  const mandalaYMobile  = size === "nav" ? 188 : 278;
 
   // Mandala radius scaled to context
   const mandalaRadius = size === "nav" ? 118 : 265;
