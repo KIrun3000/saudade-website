@@ -71,12 +71,10 @@ export function SaudadeWordmark({ size = "hero", className = "" }: Props) {
   // Centre of SVG — SAUDADE is centred here
   const MX = 700;
 
-  // Centre the mandala at the SVG midpoint (x=700), which corresponds to the
-  // visual centre of "SAUDADE". Different browsers handle trailing letter-spacing
-  // differently inside textAnchor="middle"; using MX directly keeps the mandala
-  // correctly aligned on both desktop and mobile (Safari/WebKit).
-  const mandalaX = MX;
-  const mandalaY = size === "nav" ? 193 : 292;
+  // Nudge mandala slightly left of centre and slightly up to sit visually
+  // centred on the "D" glyph across all browsers / screen sizes.
+  const mandalaX = MX - 16;   // 700 → 684  (a touch left of SVG centre)
+  const mandalaY = size === "nav" ? 190 : 278;
 
   // Mandala radius scaled to context
   const mandalaRadius = size === "nav" ? 118 : 265;

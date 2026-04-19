@@ -181,7 +181,7 @@ export function Header({ locale }: HeaderProps) {
       </div>
 
       {isMobileOpen ? (
-        <div className="fixed inset-0 z-[60] bg-primary-dark text-accent md:hidden">
+        <div className="fixed inset-0 z-[60] bg-primary-dark/92 text-accent backdrop-blur-lg md:hidden">
           <div className="mx-auto flex h-full w-full max-w-7xl flex-col px-5 py-5 md:px-8">
             <div className="flex items-center justify-between">
               <p className="luxury-label text-sm text-accent-muted">Menu</p>
