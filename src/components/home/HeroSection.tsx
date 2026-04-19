@@ -32,7 +32,7 @@ export function HeroSection({ locale }: HeroSectionProps) {
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
-            className="luxury-label w-full text-center text-[22px] tracking-[0.38em] text-accent/70 md:text-[26px]"
+            className="luxury-label w-full text-center text-[11px] tracking-[0.28em] text-accent/70 md:text-[26px] md:tracking-[0.38em]"
           >
             {t("tagline")}
           </motion.p>
@@ -51,7 +51,7 @@ export function HeroSection({ locale }: HeroSectionProps) {
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.18 }}
-            className="luxury-label w-full text-center text-[22px] tracking-[0.38em] text-accent/70 md:text-[26px]"
+            className="luxury-label w-full text-center text-[11px] tracking-[0.28em] text-accent/70 md:text-[26px] md:tracking-[0.38em]"
           >
             {t("subtitle")}
           </motion.p>
