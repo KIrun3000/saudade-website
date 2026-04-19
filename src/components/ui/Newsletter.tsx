@@ -63,7 +63,7 @@ export function Newsletter() {
       <button
         type="submit"
         disabled={isLoading}
-        className="inline-flex min-h-11 w-full items-center justify-center rounded-full border border-accent/65 bg-transparent px-6 py-2 font-display text-[11px] font-light uppercase tracking-[0.22em] text-accent transition-colors duration-300 hover:border-accent-light hover:text-accent-light disabled:opacity-60 sm:w-auto"
+        className="inline-flex min-h-12 w-full items-center justify-center rounded-full border border-accent/65 bg-transparent px-8 py-3 font-display text-[13px] font-light uppercase tracking-[0.22em] text-accent transition-colors duration-300 hover:border-accent-light hover:text-accent-light disabled:opacity-60 sm:w-auto"
       >
         {isLoading ? "…" : t("submit")}
       </button>
