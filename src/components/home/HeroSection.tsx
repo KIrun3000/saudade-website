@@ -32,7 +32,8 @@ export function HeroSection({ locale }: HeroSectionProps) {
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
-            className="luxury-label w-full text-center text-[13px] tracking-[0.22em] text-accent/70 md:text-[26px] md:tracking-[0.38em]"
+            className="luxury-label w-full text-center text-accent/70 md:text-[26px]"
+            style={{ fontSize: 'clamp(12px, 3.5vw, 26px)', letterSpacing: 'clamp(0.18em, 0.8vw, 0.38em)' }}
           >
             {t("tagline")}
           </motion.p>
@@ -42,7 +43,7 @@ export function HeroSection({ locale }: HeroSectionProps) {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.1 }}
-            className="my-2 w-full md:my-0"
+            className="w-full"
           >
             <SaudadeWordmark size="hero" className="w-full h-auto" />
           </motion.div>
@@ -51,7 +52,8 @@ export function HeroSection({ locale }: HeroSectionProps) {
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.18 }}
-            className="luxury-label w-full text-center text-[13px] tracking-[0.22em] text-accent/70 md:text-[26px] md:tracking-[0.38em]"
+            className="luxury-label w-full text-center text-accent/70 md:text-[26px]"
+            style={{ fontSize: 'clamp(12px, 3.5vw, 26px)', letterSpacing: 'clamp(0.18em, 0.8vw, 0.38em)' }}
           >
             {t("subtitle")}
           </motion.p>
