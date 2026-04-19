@@ -73,8 +73,8 @@ export function SaudadeWordmark({ size = "hero", className = "" }: Props) {
 
   // Nudge mandala slightly left of centre and slightly up to sit visually
   // centred on the "D" glyph across all browsers / screen sizes.
-  const mandalaX = MX - 16;   // 700 → 684  (a touch left of SVG centre)
-  const mandalaY = size === "nav" ? 190 : 278;
+  const mandalaX = MX - 8;    // 700 → 692  (slight left nudge from SVG centre)
+  const mandalaY = size === "nav" ? 188 : 268;
 
   // Mandala radius scaled to context
   const mandalaRadius = size === "nav" ? 118 : 265;
