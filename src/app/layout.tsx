@@ -44,8 +44,8 @@ const wordmarkFont = localFont({
 export const metadata: Metadata = {
   metadataBase: new URL("https://saudade-website.vercel.app"),
   icons: {
-    icon: "/mandala11-transparent.png",
-    apple: "/mandala11-transparent.png",
+    icon: "/favicon-mandala.png",
+    apple: "/favicon-mandala.png",
   },
   title: {
     default: "Saudade — High Frequency Living",
