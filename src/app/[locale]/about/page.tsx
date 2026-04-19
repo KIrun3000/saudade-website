@@ -5,8 +5,7 @@ export default function AboutPage() {
     <main>
       <section className="bg-primary-dark px-5 pb-16 pt-32 text-accent md:px-8 md:pb-20 md:pt-36">
         <div className="mx-auto max-w-6xl text-center">
-          <p className="luxury-label text-sm text-accent-muted md:text-[11px]">About</p>
-          <h1 className="mt-4 font-display text-[2.25rem] font-light uppercase tracking-[0.18em] md:mt-6 md:text-7xl md:tracking-[0.28em]">
+          <h1 className="font-display text-[2.25rem] font-light uppercase tracking-[0.18em] md:text-7xl md:tracking-[0.28em]">
             ABOUT SAUDADE
           </h1>
         </div>
