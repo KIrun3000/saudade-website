@@ -676,21 +676,34 @@ function buildMasterProduct(
   // an empty string here means "don't translate" (the EN/PL behaviour).
   const overlayLocale = localeOverlay?.locale ?? "";
 
-  /** Look up the locale-translated string for an EN material name. Tries (in
-   *  order): the source product's productType in the overlay (Shopify's own
-   *  translation, e.g. "Cartaz Emoldurado"), then the optionTranslations
-   *  fallback. Returns the canonical English when neither yields anything. */
+  /** Look up the locale-translated string for an EN material name.
+   *
+   *  We DELIBERATELY prefer the optionTranslations.ts fallback table over
+   *  Shopify's productType. Maya's Shopify uses a generic productType (e.g.
+   *  "Material Impresso" / "Print Material") for every print SKU, so reading
+   *  productType per-locale collapses all four canonical materials into a
+   *  single button. The fallback table has four distinct, correct names per
+   *  locale (Cartaz emoldurado / Tela emoldurada / Tela / Cartaz on PT, etc.)
+   *  which is what the picker actually needs.
+   *
+   *  We only fall back to Shopify's productType if the fallback table doesn't
+   *  cover the locale (i.e. PL / EN — both pass through unchanged), AND the
+   *  productType is actually material-specific (matches a known material
+   *  alias via normaliseMaterial). Otherwise we keep the canonical English
+   *  name. */
   const localizedMaterialName = (m: Material): string => {
+    const tableValue = translateOptionValue("Material", m, overlayLocale);
+    if (tableValue && tableValue !== m) return tableValue;
     if (!localeOverlay) return m;
-    // Find a source product carrying this material and look up the locale's
-    // productType, which IS the translated material label.
     for (const src of bucket.sources) {
       if (src.material !== m) continue;
       const localeInfo = resolveLocaleProduct(src.product, localeOverlay);
       const pt = localeInfo?.productType?.trim();
-      if (pt) return pt;
+      // Only trust productType when it normalises to a specific Material —
+      // i.e. it isn't a generic catch-all like "Material Impresso".
+      if (pt && normaliseMaterial(pt) === m) return pt;
     }
-    return translateOptionValue("Material", m, overlayLocale) || m;
+    return m;
   };
 
   /** Pull the locale-translated frame/size value for a given EN variant.
