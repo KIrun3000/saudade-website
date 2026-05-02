@@ -4,7 +4,7 @@ import { Suspense } from "react";
 import { setRequestLocale, getTranslations } from "next-intl/server";
 
 import { ShopGridClient } from "@/components/shop/ShopGridClient";
-import { buildEnglishPaintingMap, groupProductsByPainting } from "@/lib/groupProducts";
+import { buildLocaleOverlay, groupProductsByPainting } from "@/lib/groupProducts";
 import { getAllProducts, getCollectionByHandle, getCollections, type ShopifyCollection } from "@/lib/shopify";
 
 export const metadata: Metadata = {
@@ -38,25 +38,31 @@ export default async function ShopPage({ params }: ShopPageProps) {
   setRequestLocale(locale);
   const t = await getTranslations("shopPage");
 
-  // Need an English-canonical painting map so non-EN locales can group
-  // variants whose Shopify titles are inconsistently translated (e.g. some
-  // PT products say "A Cerimônia", others still "The Ceremony Premium Matte
-  // Paper"). For the EN locale itself the map is identical to local
-  // resolution and adds no work. We only fetch the EN catalog separately
-  // when the user-facing locale is not English.
-  const needsEnglishMap = locale !== "en";
+  // Strategy: ALWAYS use the EN catalog as the variant-structure source so
+  // every locale guarantees the same shape (4 materials × 4 frame colours ×
+  // every size, regardless of which SKUs Shopify Markets has published or
+  // translated). For non-EN locales, fetch the locale catalog as an OVERLAY
+  // — its handles supply the localised painting titles, its productTypes
+  // supply localised material names, and its variants (matched by ID) supply
+  // localised frame colour values. Polish stays on the EN catalog by
+  // design (Maya: "leave the polish in english").
+  const useLocaleOverlay = locale !== "en" && locale !== "pl";
 
-  // Fetch all products + collections + specific named collections in parallel.
-  const [allProducts, allCollections, artCollection, fashionCollection, englishProducts] =
+  const [englishProducts, allCollections, artCollection, fashionCollection, localeProducts] =
     await Promise.all([
-      getAllProducts(250, locale).catch(() => []),
+      // EN is the structure source for every locale.
+      getAllProducts(250, "en").catch(() => []),
+      // Collections still come in the user's locale so the sidebar labels read right.
       getCollections(20, locale).catch(() => []),
       fetchFirstFound(ART_HANDLES, locale),
       fetchFirstFound(FASHION_HANDLES, locale),
-      needsEnglishMap ? getAllProducts(250, "en").catch(() => []) : Promise.resolve([]),
+      // Locale catalog only needed for translation overlay (ES/PT).
+      useLocaleOverlay ? getAllProducts(250, locale).catch(() => []) : Promise.resolve([]),
     ]);
 
-  const englishMap = needsEnglishMap ? buildEnglishPaintingMap(englishProducts) : undefined;
+  const overlay = useLocaleOverlay
+    ? buildLocaleOverlay(localeProducts, locale)
+    : undefined;
 
   // Merge specifically fetched collections into the collections list (dedup by handle)
   const collectionMap = new Map<string, ShopifyCollection>();
@@ -64,19 +70,24 @@ export default async function ShopPage({ params }: ShopPageProps) {
   if (artCollection) collectionMap.set(artCollection.handle, artCollection);
   if (fashionCollection) collectionMap.set(fashionCollection.handle, fashionCollection);
   // Re-map each collection's product list through the same painting-grouping
-  // transform, so collection memberships use the new virtual handles too.
+  // transform. The collection products themselves are still in the requested
+  // locale, but we group them with the EN-driven structure logic + overlay
+  // so collection cards match the main grid.
   const collections = Array.from(collectionMap.values()).map((col) => ({
     ...col,
     products: {
       edges: groupProductsByPainting(
         col.products.edges.map((e) => e.node),
-        englishMap,
+        undefined,
+        overlay,
       ).map((node) => ({ node })),
     },
   }));
 
-  // Build a unified product list (dedup by handle) including collection products
-  const productMap = new Map(allProducts.map((p) => [p.handle, p]));
+  // Build a unified product list (dedup by handle) starting from the EN
+  // catalog and including any extra products from the named collections that
+  // weren't already in the catalog.
+  const productMap = new Map(englishProducts.map((p) => [p.handle, p]));
   for (const col of [artCollection, fashionCollection]) {
     if (!col) continue;
     for (const { node } of col.products.edges) {
@@ -85,10 +96,10 @@ export default async function ShopPage({ params }: ShopPageProps) {
   }
   const rawProducts = Array.from(productMap.values());
 
-  // Collapse painting products that share a master title (e.g. "Soul Gathering — Canvas",
-  // "Soul Gathering — Framed Poster") into one virtual product per painting with
+  // Collapse painting products into one virtual product per painting with
   // Material × Frame × Size variants. Non-art products pass through unchanged.
-  const products = groupProductsByPainting(rawProducts, englishMap);
+  // The overlay translates display strings while structure stays EN-driven.
+  const products = groupProductsByPainting(rawProducts, undefined, overlay);
 
   // URL ?category= values for the hero links
   const artParam = artCollection?.handle ?? "art";

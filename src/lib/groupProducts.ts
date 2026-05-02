@@ -28,6 +28,7 @@ import type {
 } from "./shopify";
 import productPaintingMap from "./productPaintingMap.json";
 import paintingPalette from "./paintingPalette.json";
+import { translateOptionValue } from "./optionTranslations";
 
 /**
  * Source-of-truth map: { shopifyHandle: { painting: "Canonical Name", ... } }
@@ -454,9 +455,11 @@ function resolvePainting(product: ShopifyProduct): { painting: string; material:
  *  the same source, so the redirect always lands on a real master. */
 export function getMasterHandle(
   product: ShopifyProduct,
-  englishCanonicalMap?: Map<string, string>,
+  englishCanonicalMap?: EnglishPaintingMap,
 ): string | null {
-  const englishPainting = englishCanonicalMap?.get(product.handle);
+  const englishPainting = englishCanonicalMap
+    ? lookupEnglishPainting(product, englishCanonicalMap)
+    : undefined;
   if (englishPainting) return slugify(englishPainting);
   const resolved = resolvePainting(product);
   return resolved ? slugify(resolved.painting) : null;
@@ -472,21 +475,129 @@ type Bucket = {
 
 /**
  * Build a map from Shopify product handle → canonical English painting name,
- * computed from a catalog fetched in the EN locale. This map is the
- * "translation truth": when the storefront is rendered in another locale, we
- * use this map to bucket variants whose translated titles wouldn't otherwise
- * match (e.g. "A Cerimônia" + "The Ceremony Premium Matte Paper" both belong
- * to the "The Ceremony" bucket because both handles map to it in English).
+ * computed from a catalog fetched in the EN locale.
+ *
+ * Kept (with an unchanged public signature) for backwards compatibility with
+ * any caller that hasn't migrated to the EN-as-source flow yet. New shop-page
+ * code should fetch the EN catalog directly and pass it as the `products`
+ * argument to `groupProductsByPainting`, with a `LocaleOverlay` for
+ * translation strings — that path doesn't use this map at all.
  */
+export type EnglishPaintingMap = {
+  byHandle: Map<string, string>;
+  byVariantId: Map<string, string>;
+};
+
 export function buildEnglishPaintingMap(
   englishProducts: ShopifyProduct[],
-): Map<string, string> {
-  const map = new Map<string, string>();
+): EnglishPaintingMap {
+  const byHandle = new Map<string, string>();
+  const byVariantId = new Map<string, string>();
   for (const p of englishProducts) {
     const r = resolvePainting(p);
-    if (r) map.set(p.handle, r.painting);
+    if (!r) continue;
+    byHandle.set(p.handle, r.painting);
+    for (const { node: v } of p.variants.edges) {
+      if (v.id) byVariantId.set(v.id, r.painting);
+    }
   }
-  return map;
+  return { byHandle, byVariantId };
+}
+
+/**
+ * Locale overlay — a thin index over a Shopify catalog fetched in a non-EN
+ * locale. We use the EN catalog for variant STRUCTURE (so every locale sees
+ * the same 4 materials × 4 frames × all sizes) but pull the displayed STRINGS
+ * from this overlay so titles, frame colour names, and material labels show
+ * up in the user's language exactly as Maya translated them in Shopify.
+ *
+ *   `byHandle`     handle → { title, description, descriptionHtml, productType }
+ *                  Used to translate the painting title and the Material
+ *                  display value (productType IS the localised material name).
+ *
+ *   `byVariantId`  variant ID → selectedOptions
+ *                  Variant IDs are immutable across Markets, so this is the
+ *                  reliable cross-locale linker. Used to translate Frame and
+ *                  Size values per-variant.
+ */
+type LocaleProductInfo = {
+  handle: string;
+  title: string;
+  description: string;
+  descriptionHtml: string;
+  productType: string;
+};
+
+export type LocaleOverlay = {
+  /** ISO locale code (e.g. "es", "pt"). Used as the key for the
+   *  optionTranslations.ts fallback table when Shopify doesn't have a
+   *  translation for a particular SKU. */
+  locale: string;
+  byHandle: Map<string, LocaleProductInfo>;
+  /** variant ID → { handle of the locale product that owns this variant,
+   *  selectedOptions in the locale }. Variant IDs are immutable across
+   *  Markets, so this is the cross-locale linker that works even when
+   *  Shopify's URL translation rewrites the handle. */
+  byVariantId: Map<string, { handle: string; selectedOptions: ShopifySelectedOption[] }>;
+};
+
+export function buildLocaleOverlay(
+  localeProducts: ShopifyProduct[],
+  locale: string,
+): LocaleOverlay {
+  const byHandle = new Map<string, LocaleProductInfo>();
+  const byVariantId = new Map<
+    string,
+    { handle: string; selectedOptions: ShopifySelectedOption[] }
+  >();
+  for (const p of localeProducts) {
+    byHandle.set(p.handle, {
+      handle: p.handle,
+      title: p.title,
+      description: p.description,
+      descriptionHtml: p.descriptionHtml,
+      productType: p.productType,
+    });
+    for (const { node: v } of p.variants.edges) {
+      if (v.id) byVariantId.set(v.id, { handle: p.handle, selectedOptions: v.selectedOptions });
+    }
+  }
+  return { locale, byHandle, byVariantId };
+}
+
+/** Resolve the locale product info for an EN source product, even when
+ *  Shopify Markets rewrites handles per locale. Tries handle first, then
+ *  walks the EN product's variant IDs to find any matching locale product. */
+function resolveLocaleProduct(
+  enProduct: ShopifyProduct,
+  overlay: LocaleOverlay,
+): LocaleProductInfo | undefined {
+  const byHandle = overlay.byHandle.get(enProduct.handle);
+  if (byHandle) return byHandle;
+  for (const { node: v } of enProduct.variants.edges) {
+    if (!v.id) continue;
+    const link = overlay.byVariantId.get(v.id);
+    if (!link) continue;
+    const info = overlay.byHandle.get(link.handle);
+    if (info) return info;
+  }
+  return undefined;
+}
+
+/** Look up a localised product's canonical English painting name in the dual
+ *  map: handle first (fast, exact), then variant-ID overlap as a fallback for
+ *  catalogs where Shopify rewrites the handle per locale. */
+function lookupEnglishPainting(
+  product: ShopifyProduct,
+  map: EnglishPaintingMap,
+): string | undefined {
+  const direct = map.byHandle.get(product.handle);
+  if (direct) return direct;
+  for (const { node: v } of product.variants.edges) {
+    const hit = v.id ? map.byVariantId.get(v.id) : undefined;
+    if (hit) return hit;
+  }
+  return undefined;
 }
 
 /**
@@ -501,7 +612,8 @@ export function buildEnglishPaintingMap(
  */
 export function groupProductsByPainting(
   products: ShopifyProduct[],
-  englishCanonicalMap?: Map<string, string>,
+  englishCanonicalMap?: EnglishPaintingMap,
+  localeOverlay?: LocaleOverlay,
 ): ShopifyProduct[] {
   const buckets = new Map<string, Bucket>();
   const passthrough: ShopifyProduct[] = [];
@@ -510,8 +622,12 @@ export function groupProductsByPainting(
     const resolved = resolvePainting(product);
     // Even if local resolution fails, an English-map hit can still bucket the
     // product (e.g. PT title is so mangled we can't parse, but the EN catalog
-    // told us this handle = "Soul Gathering").
-    const englishPainting = englishCanonicalMap?.get(product.handle);
+    // told us this handle = "Soul Gathering"). Try handle first, then fall
+    // back to variant-ID overlap for catalogs where Shopify Markets rewrites
+    // handles per locale.
+    const englishPainting = englishCanonicalMap
+      ? lookupEnglishPainting(product, englishCanonicalMap)
+      : undefined;
     if (!resolved && !englishPainting) {
       passthrough.push(product);
       continue;
@@ -540,15 +656,56 @@ export function groupProductsByPainting(
     bucket.sources.push({ product, material, localPainting });
   }
 
-  const masters = Array.from(buckets.values()).map(buildMasterProduct);
+  const masters = Array.from(buckets.values()).map((b) =>
+    buildMasterProduct(b, localeOverlay),
+  );
   return [...masters, ...passthrough];
 }
 
-function buildMasterProduct(bucket: Bucket): ShopifyProduct {
+function buildMasterProduct(
+  bucket: Bucket,
+  localeOverlay?: LocaleOverlay,
+): ShopifyProduct {
   // Pick the Framed Poster source as the description/SEO template.
   const template =
     bucket.sources.find((s) => s.material === "Framed Poster")?.product ??
     bucket.sources[0].product;
+
+  // Locale used as the lookup key for the optionTranslations.ts fallback
+  // table. translateOptionValue silently passes through unknown locales, so
+  // an empty string here means "don't translate" (the EN/PL behaviour).
+  const overlayLocale = localeOverlay?.locale ?? "";
+
+  /** Look up the locale-translated string for an EN material name. Tries (in
+   *  order): the source product's productType in the overlay (Shopify's own
+   *  translation, e.g. "Cartaz Emoldurado"), then the optionTranslations
+   *  fallback. Returns the canonical English when neither yields anything. */
+  const localizedMaterialName = (m: Material): string => {
+    if (!localeOverlay) return m;
+    // Find a source product carrying this material and look up the locale's
+    // productType, which IS the translated material label.
+    for (const src of bucket.sources) {
+      if (src.material !== m) continue;
+      const localeInfo = resolveLocaleProduct(src.product, localeOverlay);
+      const pt = localeInfo?.productType?.trim();
+      if (pt) return pt;
+    }
+    return translateOptionValue("Material", m, overlayLocale) || m;
+  };
+
+  /** Pull the locale-translated frame/size value for a given EN variant.
+   *  Variant IDs are immutable across Markets, so byVariantId is reliable. */
+  const localizedVariantOption = (
+    enVariant: ShopifyProductVariant,
+    axis: typeof OPTION_FRAME | typeof OPTION_SIZE | typeof OPTION_ORIENTATION,
+  ): string | undefined => {
+    if (!localeOverlay) return undefined;
+    const link = localeOverlay.byVariantId.get(enVariant.id);
+    if (!link) return undefined;
+    if (axis === OPTION_FRAME) return findFrameValue(link.selectedOptions);
+    if (axis === OPTION_SIZE) return findSizeValue(link.selectedOptions);
+    return findOrientationValue(link.selectedOptions);
+  };
 
   // Collect ONE hero image per source product (so the gallery is a tight set
   // of ~4 — Poster / Framed Poster / Canvas / Framed Canvas — instead of every
@@ -577,23 +734,62 @@ function buildMasterProduct(bucket: Bucket): ShopifyProduct {
   let maxPrice = Number.NEGATIVE_INFINITY;
   let currencyCode = "EUR";
 
+  // Match values that indicate the product ships UNASSEMBLED / DIY-kit form,
+  // in any supported locale. Used as a NEGATIVE filter: by default we keep
+  // every framed variant; we only drop ones explicitly flagged as kit. The
+  // old code did the opposite (kept only values literally equal to
+  // "ready-to-hang"), which silently nuked entire Framed Poster catalogs on
+  // ES/PT/PL where the value is "Listo para colgar" / "Pronto para pendurar"
+  // / "Gotowe do powieszenia".
+  const NOT_ASSEMBLED_RE =
+    /not\s*assembled|kit|para\s*montar|sin\s*montar|por\s*montar|a\s*montar|nieskręcony|nieskrecony|do\s*złożenia|do\s*zlozenia|do\s*samodzielnego/i;
+
   for (const { product, material } of bucket.sources) {
     for (const { node: v } of product.variants.edges) {
-      // Drop "Not assembled" Framed Poster variants.
-      if (material === "Framed Poster") {
+      // Drop unassembled variants for any framed material (Poster or Canvas).
+      // Localised: keep variants by default unless the Assembly value
+      // explicitly indicates kit / not-assembled.
+      if (material === "Framed Poster" || material === "Framed Canvas") {
         const assembly = findOption(v.selectedOptions, OPTION_ASSEMBLY);
-        if (assembly && assembly.toLowerCase() !== "ready-to-hang") continue;
+        if (assembly && NOT_ASSEMBLED_RE.test(assembly)) continue;
       }
 
-      const sourceFrame = findFrameValue(v.selectedOptions);
-      const sourceSize = findSizeValue(v.selectedOptions);
-      const sourceOrientation = findOrientationValue(v.selectedOptions);
+      // Read raw frame/size/orientation FIRST from the EN variant (the
+      // structure source-of-truth). When a localeOverlay is present, prefer
+      // the translated value for the same variant ID — that's Shopify's own
+      // translation. If Shopify hasn't translated this SKU yet, fall through
+      // to the optionTranslations.ts table so the UI never mixes English
+      // with localised labels.
+      const enFrame = findFrameValue(v.selectedOptions);
+      const enSize = findSizeValue(v.selectedOptions);
+      const enOrientation = findOrientationValue(v.selectedOptions);
+
+      const overlayFrame = localizedVariantOption(v, OPTION_FRAME);
+      const overlaySize = localizedVariantOption(v, OPTION_SIZE);
+      const overlayOrientation = localizedVariantOption(v, OPTION_ORIENTATION);
+
+      const fallbackFrame = enFrame
+        ? translateOptionValue("Frame", enFrame, overlayLocale)
+        : enFrame;
+      // Sizes are universal (cm/inches) — translateOptionValue passes through.
+      const fallbackSize = enSize;
+      const fallbackOrientation = enOrientation;
+
+      const sourceFrame = overlayFrame ?? fallbackFrame;
+      const sourceSize = overlaySize ?? fallbackSize;
+      const sourceOrientation = overlayOrientation ?? fallbackOrientation;
 
       const frame =
         material === "Poster" || material === "Canvas" ? "None" : normaliseFrame(sourceFrame);
       const size = normaliseSize(sourceSize, sourceOrientation);
 
-      const key = `${material}|${frame}|${size}`;
+      // Dedup key uses the EN material name + EN-derived frame/size so
+      // identical structural variants don't double up just because one was
+      // matched via locale overlay and another via fallback.
+      const enFrameNormalised =
+        material === "Poster" || material === "Canvas" ? "None" : normaliseFrame(enFrame);
+      const enSizeNormalised = normaliseSize(enSize, enOrientation);
+      const key = `${material}|${enFrameNormalised}|${enSizeNormalised}`;
       if (seenVariantKeys.has(key)) continue;
       seenVariantKeys.add(key);
 
@@ -604,14 +800,16 @@ function buildMasterProduct(bucket: Bucket): ShopifyProduct {
       }
       currencyCode = v.price.currencyCode || currencyCode;
 
+      const materialDisplay = localizedMaterialName(material);
+
       variants.push({
         id: v.id, // KEEP real Shopify variant id — checkout depends on it.
-        title: `${material} / ${frame} / ${size}`,
+        title: `${materialDisplay} / ${frame} / ${size}`,
         price: v.price,
         availableForSale: v.availableForSale,
         image: v.image ?? null,
         selectedOptions: [
-          { name: OUT_MATERIAL, value: material },
+          { name: OUT_MATERIAL, value: materialDisplay },
           { name: OUT_FRAME, value: frame },
           { name: OUT_SIZE, value: size },
         ],
@@ -621,16 +819,19 @@ function buildMasterProduct(bucket: Bucket): ShopifyProduct {
 
   // Sort variants for stable, sensible rendering: Framed Poster first (the
   // master view), then Framed Canvas, Canvas, Poster; within each, by Frame
-  // then Size.
+  // then Size. Build a label→canonical map so localised material strings
+  // (e.g. "Póster enmarcado") still sort by their canonical position.
   const materialOrder: Record<Material, number> = {
     "Framed Poster": 0,
     "Framed Canvas": 1,
     Canvas: 2,
     Poster: 3,
   };
+  const orderByLabel = new Map<string, number>();
+  for (const m of MATERIALS) orderByLabel.set(localizedMaterialName(m), materialOrder[m]);
   variants.sort((a, b) => {
-    const ma = materialOrder[a.selectedOptions[0].value as Material] ?? 99;
-    const mb = materialOrder[b.selectedOptions[0].value as Material] ?? 99;
+    const ma = orderByLabel.get(a.selectedOptions[0].value) ?? 99;
+    const mb = orderByLabel.get(b.selectedOptions[0].value) ?? 99;
     if (ma !== mb) return ma - mb;
     if (a.selectedOptions[1].value !== b.selectedOptions[1].value) {
       return a.selectedOptions[1].value.localeCompare(b.selectedOptions[1].value);
@@ -652,37 +853,68 @@ function buildMasterProduct(bucket: Bucket): ShopifyProduct {
   // Per-material descriptions: each Shopify source product carries its own
   // copy (Poster paper specs, Canvas specs, etc.) The detail page swaps to
   // the right one when the buyer changes Material.
+  //
+  // Keyed by the LOCALISED material display name (because that's what the
+  // detail page now sees as `selectedOptions["Material"]`). Description text
+  // itself prefers the locale overlay's translation when present, falling
+  // back to the EN source product's description.
   const materialDescriptions: Record<
     string,
     { description: string; descriptionHtml: string }
   > = {};
   for (const { product, material } of bucket.sources) {
-    if (!materialDescriptions[material]) {
-      materialDescriptions[material] = {
-        description: product.description,
-        descriptionHtml: product.descriptionHtml,
-      };
-    }
+    const key = localizedMaterialName(material);
+    if (materialDescriptions[key]) continue;
+    const localeData = localeOverlay
+      ? resolveLocaleProduct(product, localeOverlay)
+      : undefined;
+    materialDescriptions[key] = {
+      description: localeData?.description || product.description,
+      descriptionHtml: localeData?.descriptionHtml || product.descriptionHtml,
+    };
   }
 
-  // Display title: prefer the LOCALISED painting name when one of the bucket's
-  // sources gave us a translation that differs from the English canonical
-  // (bucket.painting). Falls back to the canonical name when no source
-  // produced a different translation — which is the right behaviour for the
-  // EN locale, the PL locale (which we serve in English), and untranslated
-  // products inside ES/PT.
-  const canonical = bucket.painting;
-  const translatedSource = bucket.sources.find(
-    (s) => s.localPainting && s.localPainting !== canonical,
-  );
-  const displayTitle = translatedSource?.localPainting ?? canonical;
+  // Display title: prefer Shopify's localised title for any of the bucket's
+  // source products (read via the locale overlay). Parses out the
+  // " — Material" suffix when present so the master shows just the painting
+  // name, not "Painting — Material". Falls back to the canonical English
+  // painting name when there's no overlay or no translation hit.
+  let displayTitle = bucket.painting;
+  if (localeOverlay) {
+    for (const src of [template, ...bucket.sources.map((s) => s.product)]) {
+      const localeData = resolveLocaleProduct(src, localeOverlay);
+      if (!localeData?.title) continue;
+      const parsed = parseTitle(localeData.title);
+      const candidate = parsed?.painting?.trim() || localeData.title.trim();
+      if (candidate && candidate !== bucket.painting) {
+        displayTitle = candidate;
+        break;
+      }
+    }
+  } else {
+    // No overlay: keep the original "any source has a localPainting that
+    // differs from the canonical" heuristic so EN-only and PL-as-EN flows
+    // are unchanged.
+    const translatedSource = bucket.sources.find(
+      (s) => s.localPainting && s.localPainting !== bucket.painting,
+    );
+    if (translatedSource) displayTitle = translatedSource.localPainting;
+  }
+
+  // Pick the locale-translated description for the master itself, preferring
+  // the template (Framed Poster) source's translation.
+  const templateLocale = localeOverlay
+    ? resolveLocaleProduct(template, localeOverlay)
+    : undefined;
+  const masterDescription = templateLocale?.description || template.description;
+  const masterDescriptionHtml = templateLocale?.descriptionHtml || template.descriptionHtml;
 
   return {
     id: `virtual:${bucket.handle}`,
     title: displayTitle,
     handle: bucket.handle,
-    description: template.description,
-    descriptionHtml: template.descriptionHtml,
+    description: masterDescription,
+    descriptionHtml: masterDescriptionHtml,
     images: { edges: images.map((node) => ({ node })) },
     priceRange: {
       minVariantPrice: { amount: minPrice.toFixed(2), currencyCode },

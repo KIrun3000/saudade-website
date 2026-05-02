@@ -4,7 +4,7 @@ import { setRequestLocale } from "next-intl/server";
 
 import { ProductDetailClient } from "@/components/shop/ProductDetailClient";
 import {
-  buildEnglishPaintingMap,
+  buildLocaleOverlay,
   getMasterHandle,
   groupProductsByPainting,
 } from "@/lib/groupProducts";
@@ -62,24 +62,21 @@ type Props = {
 };
 
 /**
- * Look the handle up in the painting-grouped catalog first (so painting slugs
- * like "soul-gathering" resolve to the synthetic master product). Fall back to
- * the raw Shopify handle for non-art products.
- *
- * For non-EN locales we also fetch the EN catalog and pass it to the grouping
- * step so variants whose translations differ across SKUs still bucket together
- * — see groupProductsByPainting / buildEnglishPaintingMap.
+ * Look the handle up in the painting-grouped catalog. EN catalog drives
+ * variant structure on every locale (so the detail page always sees all 4
+ * materials × all 4 frame colours × all sizes), with the locale catalog
+ * supplied as a translation overlay for ES/PT. Polish stays English.
  */
 async function resolveProduct(handle: string, locale?: string): Promise<ShopifyProduct | null> {
-  const needsEnglishMap = !!locale && locale !== "en";
-  const [allProducts, englishProducts] = await Promise.all([
-    getAllProducts(250, locale).catch(() => [] as ShopifyProduct[]),
-    needsEnglishMap
-      ? getAllProducts(250, "en").catch(() => [] as ShopifyProduct[])
+  const useLocaleOverlay = !!locale && locale !== "en" && locale !== "pl";
+  const [englishProducts, localeProducts] = await Promise.all([
+    getAllProducts(250, "en").catch(() => [] as ShopifyProduct[]),
+    useLocaleOverlay
+      ? getAllProducts(250, locale).catch(() => [] as ShopifyProduct[])
       : Promise.resolve([] as ShopifyProduct[]),
   ]);
-  const englishMap = needsEnglishMap ? buildEnglishPaintingMap(englishProducts) : undefined;
-  const grouped = groupProductsByPainting(allProducts, englishMap);
+  const overlay = useLocaleOverlay ? buildLocaleOverlay(localeProducts, locale!) : undefined;
+  const grouped = groupProductsByPainting(englishProducts, undefined, overlay);
   const master = grouped.find((p) => p.handle === handle);
   if (master) return master;
   return getProductByHandle(handle, locale);
@@ -110,19 +107,17 @@ export default async function ProductPage({ params }: Props) {
   const { locale, handle } = await params;
   setRequestLocale(locale);
 
-  // Pull the full catalog so we can both: (a) resolve the master product, and
-  // (b) build a "related" list from the same grouped view. For non-EN locales
-  // we also pull the EN catalog and pass it to grouping as the canonical
-  // bucket-key source (handles inconsistent Shopify translations).
-  const needsEnglishMap = locale !== "en";
-  const [allProducts, englishProducts] = await Promise.all([
-    getAllProducts(250, locale).catch(() => [] as ShopifyProduct[]),
-    needsEnglishMap
-      ? getAllProducts(250, "en").catch(() => [] as ShopifyProduct[])
+  // EN catalog drives structure on every locale; locale catalog is just an
+  // overlay for translations (titles, productType, frame colour values).
+  const useLocaleOverlay = locale !== "en" && locale !== "pl";
+  const [englishProducts, localeProducts] = await Promise.all([
+    getAllProducts(250, "en").catch(() => [] as ShopifyProduct[]),
+    useLocaleOverlay
+      ? getAllProducts(250, locale).catch(() => [] as ShopifyProduct[])
       : Promise.resolve([] as ShopifyProduct[]),
   ]);
-  const englishMap = needsEnglishMap ? buildEnglishPaintingMap(englishProducts) : undefined;
-  const grouped = groupProductsByPainting(allProducts, englishMap);
+  const overlay = useLocaleOverlay ? buildLocaleOverlay(localeProducts, locale) : undefined;
+  const grouped = groupProductsByPainting(englishProducts, undefined, overlay);
 
   // 1) Direct hit on a master/painting handle (or non-art passthrough).
   let product = grouped.find((p) => p.handle === handle) ?? null;
@@ -133,7 +128,7 @@ export default async function ProductPage({ params }: Props) {
   if (!product) {
     const legacy = await getProductByHandle(handle, locale);
     if (legacy) {
-      const master = getMasterHandle(legacy, englishMap);
+      const master = getMasterHandle(legacy);
       if (master && master !== legacy.handle) {
         redirect(`/${locale}/shop/${master}`);
       }
