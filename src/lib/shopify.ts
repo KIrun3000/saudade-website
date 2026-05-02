@@ -44,6 +44,14 @@ export interface ShopifyProduct {
   tags: string[];
   productType: string;
   availableForSale: boolean;
+  /** Only present on virtual master products synthesised by groupProducts. Each
+   *  entry is the description that came from the Shopify source product for
+   *  that material (Poster / Framed Poster / Canvas / Framed Canvas) so the
+   *  detail page can swap copy when the buyer changes Material. */
+  materialDescriptions?: Record<
+    string,
+    { description: string; descriptionHtml: string }
+  >;
 }
 
 export interface ShopifyCollection {
@@ -109,23 +117,45 @@ function isAuthError(error: unknown) {
   );
 }
 
+/** Map next-intl locale codes to Shopify Storefront language codes.
+ *  Polish is intentionally mapped to EN: the Shopify catalog has no Polish
+ *  translations, so requesting PL returns mixed/empty data. Falling back to
+ *  English keeps the /pl/shop product cards consistent (English titles only)
+ *  while next-intl still translates the surrounding UI chrome. */
+function toShopifyLanguage(locale: string): string {
+  const map: Record<string, string> = {
+    en: "EN",
+    es: "ES",
+    pt: "PT_BR",
+    pl: "EN",
+  };
+  return map[locale] ?? "EN";
+}
+
 async function shopifyFetch<T>({
   query,
   variables,
+  locale,
 }: {
   query: string;
   variables?: Record<string, unknown>;
+  locale?: string;
 }): Promise<T> {
   if (!domain || !storefrontToken) {
     throw new Error("Missing Shopify environment variables");
   }
 
+  const headers: Record<string, string> = {
+    "Content-Type": "application/json",
+    "X-Shopify-Storefront-Access-Token": SHOPIFY_STOREFRONT_TOKEN,
+  };
+  if (locale) {
+    headers["Accept-Language"] = toShopifyLanguage(locale);
+  }
+
   const response = await fetch(SHOPIFY_GRAPHQL_URL, {
     method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "X-Shopify-Storefront-Access-Token": SHOPIFY_STOREFRONT_TOKEN,
-    },
+    headers,
     body: JSON.stringify({ query, variables }),
     next: { revalidate: 120 },
   });
@@ -220,22 +250,39 @@ async function fetchPublicProducts(limit = 250) {
     throw new Error("Missing Shopify store domain");
   }
 
-  const response = await fetch(`https://${domain}/products.json?limit=${limit}`, {
-    next: { revalidate: 120 },
-  });
-
-  if (!response.ok) {
-    throw new Error(`Shopify public products error: ${response.status}`);
+  // Walk Shopify's public products.json with `?page=` pagination until we
+  // either hit `limit` or get an empty page back. The endpoint caps a single
+  // call at 250 — without paging we'd silently lose everything past it.
+  const out: ShopifyProduct[] = [];
+  const perPage = Math.min(limit, 250);
+  for (let page = 1; out.length < limit; page++) {
+    const response = await fetch(
+      `https://${domain}/products.json?limit=${perPage}&page=${page}`,
+      { next: { revalidate: 120 } },
+    );
+    if (!response.ok) {
+      if (page === 1) {
+        throw new Error(`Shopify public products error: ${response.status}`);
+      }
+      break;
+    }
+    const data = (await response.json()) as { products: ShopifyAjaxProduct[] };
+    if (!data.products?.length) break;
+    for (const raw of data.products) {
+      out.push(transformAjaxProduct(raw));
+      if (out.length >= limit) break;
+    }
+    if (data.products.length < perPage) break;
   }
-
-  const data = (await response.json()) as { products: ShopifyAjaxProduct[] };
-  return data.products.map(transformAjaxProduct);
+  return out;
 }
 
 const PRODUCTS_QUERY = `
-  query Products($first: Int!) {
-    products(first: $first) {
+  query Products($first: Int!, $after: String, $language: LanguageCode) @inContext(language: $language) {
+    products(first: $first, after: $after) {
+      pageInfo { hasNextPage endCursor }
       edges {
+        cursor
         node {
           id
           title
@@ -252,7 +299,7 @@ const PRODUCTS_QUERY = `
           images(first: 5) {
             edges { node { url altText width height } }
           }
-          variants(first: 10) {
+          variants(first: 100) {
             edges {
               node {
                 id
@@ -271,7 +318,7 @@ const PRODUCTS_QUERY = `
 `;
 
 const PRODUCT_BY_HANDLE_QUERY = `
-  query ProductByHandle($handle: String!) {
+  query ProductByHandle($handle: String!, $language: LanguageCode) @inContext(language: $language) {
     productByHandle(handle: $handle) {
       id
       title
@@ -288,7 +335,7 @@ const PRODUCT_BY_HANDLE_QUERY = `
       images(first: 10) {
         edges { node { url altText width height } }
       }
-      variants(first: 20) {
+      variants(first: 100) {
         edges {
           node {
             id
@@ -305,7 +352,7 @@ const PRODUCT_BY_HANDLE_QUERY = `
 `;
 
 const COLLECTIONS_QUERY = `
-  query Collections($first: Int!) {
+  query Collections($first: Int!, $language: LanguageCode) @inContext(language: $language) {
     collections(first: $first) {
       edges {
         node {
@@ -314,7 +361,7 @@ const COLLECTIONS_QUERY = `
           handle
           description
           image { url altText width height }
-          products(first: 20) {
+          products(first: 250) {
             edges {
               node {
                 id
@@ -332,7 +379,7 @@ const COLLECTIONS_QUERY = `
                 images(first: 5) {
                   edges { node { url altText width height } }
                 }
-                variants(first: 10) {
+                variants(first: 100) {
                   edges {
                     node {
                       id
@@ -354,14 +401,14 @@ const COLLECTIONS_QUERY = `
 `;
 
 const COLLECTION_BY_HANDLE_QUERY = `
-  query CollectionByHandle($handle: String!) {
+  query CollectionByHandle($handle: String!, $language: LanguageCode) @inContext(language: $language) {
     collectionByHandle(handle: $handle) {
       id
       title
       handle
       description
       image { url altText width height }
-      products(first: 50) {
+      products(first: 250) {
         edges {
           node {
             id
@@ -379,7 +426,7 @@ const COLLECTION_BY_HANDLE_QUERY = `
             images(first: 5) {
               edges { node { url altText width height } }
             }
-            variants(first: 10) {
+            variants(first: 100) {
               edges {
                 node {
                   id
@@ -436,13 +483,34 @@ function throwOnCheckoutErrors(errors: ShopifyCheckoutUserError[] | undefined) {
   }
 }
 
-export async function getAllProducts(first = 50) {
+type ProductsPage = {
+  products: {
+    pageInfo: { hasNextPage: boolean; endCursor: string | null };
+    edges: { cursor: string; node: ShopifyProduct }[];
+  };
+};
+
+export async function getAllProducts(first = 50, locale?: string) {
+  // Shopify Storefront caps a single products() page at 250. Loop with a
+  // cursor until we either hit `first` or run out of products. This is what
+  // unlocks the full catalog when there are more than 250 SKUs in Shopify.
+  const language = locale ? toShopifyLanguage(locale) : undefined;
   try {
-    const data = await shopifyFetch<{ products: { edges: { node: ShopifyProduct }[] } }>({
-      query: PRODUCTS_QUERY,
-      variables: { first },
-    });
-    return data.products.edges.map(({ node }) => node);
+    const out: ShopifyProduct[] = [];
+    let after: string | null = null;
+    const pageSize = Math.min(first, 250);
+    while (out.length < first) {
+      const data: ProductsPage = await shopifyFetch<ProductsPage>({
+        query: PRODUCTS_QUERY,
+        variables: { first: Math.min(pageSize, first - out.length), after, language },
+        locale,
+      });
+      for (const edge of data.products.edges) out.push(edge.node);
+      if (!data.products.pageInfo.hasNextPage) break;
+      after = data.products.pageInfo.endCursor;
+      if (!after) break;
+    }
+    return out;
   } catch (error) {
     if (!isAuthError(error)) {
       throw error;
@@ -452,11 +520,13 @@ export async function getAllProducts(first = 50) {
   }
 }
 
-export async function getProductByHandle(handle: string) {
+export async function getProductByHandle(handle: string, locale?: string) {
+  const language = locale ? toShopifyLanguage(locale) : undefined;
   try {
     const data = await shopifyFetch<{ productByHandle: ShopifyProduct | null }>({
       query: PRODUCT_BY_HANDLE_QUERY,
-      variables: { handle },
+      variables: { handle, language },
+      locale,
     });
     return data.productByHandle;
   } catch (error) {
@@ -468,11 +538,13 @@ export async function getProductByHandle(handle: string) {
   }
 }
 
-export async function getCollections(first = 10) {
+export async function getCollections(first = 10, locale?: string) {
+  const language = locale ? toShopifyLanguage(locale) : undefined;
   try {
     const data = await shopifyFetch<{ collections: { edges: { node: ShopifyCollection }[] } }>({
       query: COLLECTIONS_QUERY,
-      variables: { first },
+      variables: { first, language },
+      locale,
     });
     return data.collections.edges.map(({ node }) => node);
   } catch (error) {
@@ -503,11 +575,13 @@ export async function getCollections(first = 10) {
   }
 }
 
-export async function getCollectionByHandle(handle: string): Promise<ShopifyCollection | null> {
+export async function getCollectionByHandle(handle: string, locale?: string): Promise<ShopifyCollection | null> {
+  const language = locale ? toShopifyLanguage(locale) : undefined;
   try {
     const data = await shopifyFetch<{ collectionByHandle: ShopifyCollection | null }>({
       query: COLLECTION_BY_HANDLE_QUERY,
-      variables: { handle },
+      variables: { handle, language },
+      locale,
     });
     return data.collectionByHandle;
   } catch (error) {
