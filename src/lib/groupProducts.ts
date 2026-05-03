@@ -265,12 +265,18 @@ const MATERIAL_ALIASES_I18N: Record<string, Material> = {
   "papel mate premium": "Poster",
   "lienzo estirado": "Canvas",
   // Portuguese ("papel mate premium" already covered above for Spanish/PT
-  // — Portuguese also uses "papel fosco premium")
+  // — Portuguese also uses "papel fosco premium". "poster" without
+  // diacritic is already covered as the canonical English alias above.)
   "cartaz": "Poster",
   "pôster": "Poster",
   "cartaz emoldurado": "Framed Poster",
+  "pôster emoldurado": "Framed Poster",
+  "poster emoldurado": "Framed Poster",
+  "pôster com moldura": "Framed Poster",
+  "poster com moldura": "Framed Poster",
   "tela": "Canvas",
   "tela emoldurada": "Framed Canvas",
+  "tela com moldura": "Framed Canvas",
   "papel fosco premium": "Poster",
   "tela esticada": "Canvas",
   // Polish
@@ -830,6 +836,78 @@ function buildMasterProduct(
     }
   }
 
+  // ── Phantom-pad missing materials and frame colours ─────────────────────
+  // For every painting Maya wants the picker to surface ALL four canonical
+  // materials (Framed Poster / Framed Canvas / Canvas / Poster) and — for
+  // framed materials — ALL four frame colours (Black / White / Wood / Dark
+  // wood), regardless of whether Shopify currently has a SKU for each combo.
+  // Combos that don't have a real variant get a "phantom" entry marked
+  // availableForSale=false; ProductDetailClient styles them with the
+  // existing strike-through "Sold out" UI. Real SKUs always take precedence
+  // because we only synthesise combos that don't exist in `variants`.
+  const FRAME_COLOURS_EN = ["Black frame", "White frame", "Wood frame", "Dark wood frame"] as const;
+  const materialNeedsFrame: Record<Material, boolean> = {
+    "Framed Poster": true,
+    "Framed Canvas": true,
+    Canvas: false,
+    Poster: false,
+  };
+  const sizesByMaterial = new Map<Material, Set<string>>();
+  for (const v of variants) {
+    const matLabel = v.selectedOptions[0].value;
+    const m = MATERIALS.find((mm) => localizedMaterialName(mm) === matLabel);
+    if (!m) continue;
+    if (!sizesByMaterial.has(m)) sizesByMaterial.set(m, new Set<string>());
+    sizesByMaterial.get(m)!.add(v.selectedOptions[2].value);
+  }
+  // A representative size to show under a phantom material that has no real
+  // variants at all. Pick the most common size across the whole master.
+  const fallbackSize = (() => {
+    if (!variants.length) return "Default";
+    const counts = new Map<string, number>();
+    for (const v of variants) {
+      const s = v.selectedOptions[2].value;
+      counts.set(s, (counts.get(s) ?? 0) + 1);
+    }
+    let best: { s: string; n: number } | null = null;
+    for (const [s, n] of counts) if (!best || n > best.n) best = { s, n };
+    return best?.s ?? "Default";
+  })();
+  // Only synthesise phantoms for art products. We detect this by checking
+  // that the master came from a bucket whose sources all had a known
+  // canonical material — non-art products never enter buildMasterProduct
+  // (they're passthrough'd), so this is implicit.
+  for (const m of MATERIALS) {
+    const matLabel = localizedMaterialName(m);
+    const sizes = sizesByMaterial.get(m) ?? new Set<string>([fallbackSize]);
+    const frameValues = materialNeedsFrame[m]
+      ? FRAME_COLOURS_EN.map((c) =>
+          translateOptionValue("Frame", c, overlayLocale) || c,
+        )
+      : ["None"];
+    for (const frame of frameValues) {
+      const exists = variants.some(
+        (v) =>
+          v.selectedOptions[0].value === matLabel &&
+          v.selectedOptions[1].value === frame,
+      );
+      if (exists) continue;
+      const size = sizes.values().next().value ?? fallbackSize;
+      variants.push({
+        id: `phantom:${bucket.handle}:${m}:${frame}:${size}`,
+        title: `${matLabel} / ${frame} / ${size}`,
+        price: { amount: minPrice.toFixed(2), currencyCode },
+        availableForSale: false,
+        image: null,
+        selectedOptions: [
+          { name: OUT_MATERIAL, value: matLabel },
+          { name: OUT_FRAME, value: frame },
+          { name: OUT_SIZE, value: size },
+        ],
+      });
+    }
+  }
+
   // Sort variants for stable, sensible rendering: Framed Poster first (the
   // master view), then Framed Canvas, Canvas, Poster; within each, by Frame
   // then Size. Build a label→canonical map so localised material strings
@@ -898,7 +976,12 @@ function buildMasterProduct(
       const localeData = resolveLocaleProduct(src, localeOverlay);
       if (!localeData?.title) continue;
       const parsed = parseTitle(localeData.title);
-      const candidate = parsed?.painting?.trim() || localeData.title.trim();
+      // We REQUIRE parseTitle to succeed — never fall back to the raw locale
+      // title, since that would surface "Nawra — Pôster emoldurado" as the
+      // page H1 instead of just "Nawra". When parseTitle can't strip the
+      // material suffix, we keep walking sources or end up on bucket.painting
+      // (the English canonical name).
+      const candidate = parsed?.painting?.trim();
       if (candidate && candidate !== bucket.painting) {
         displayTitle = candidate;
         break;
