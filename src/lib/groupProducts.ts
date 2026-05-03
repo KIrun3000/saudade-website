@@ -28,7 +28,7 @@ import type {
 } from "./shopify";
 import productPaintingMap from "./productPaintingMap.json";
 import paintingPalette from "./paintingPalette.json";
-import { translateOptionValue } from "./optionTranslations";
+import { translateOptionValue, translatePaintingName } from "./optionTranslations";
 
 /**
  * Source-of-truth map: { shopifyHandle: { painting: "Canonical Name", ... } }
@@ -665,7 +665,55 @@ export function groupProductsByPainting(
   const masters = Array.from(buckets.values()).map((b) =>
     buildMasterProduct(b, localeOverlay),
   );
-  return [...masters, ...passthrough];
+
+  // Post-pass dedup: occasionally two Shopify products land in different
+  // buckets but really refer to the same painting (e.g. one handle parses
+  // cleanly to "Narwa" via the English alias, another has an unrecognisable
+  // suffix like "nawra-print" that titleCaseFromSlug turns into "Nawra
+  // Print"). Merge any masters whose normalised display title is identical,
+  // keeping the first master's URL handle and unioning their variants by
+  // ID.
+  const dedupedMasters = dedupMasters(masters);
+
+  return [...dedupedMasters, ...passthrough];
+}
+
+/** Normalise a display title for dedup comparison: lowercase, strip whitespace
+ *  and punctuation, and route through the canonicalize alias map (so "Nawra"
+ *  and "Narwa" hash the same). */
+function dedupKey(title: string): string {
+  return canonicalize(title.trim())
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "");
+}
+
+function dedupMasters(masters: ShopifyProduct[]): ShopifyProduct[] {
+  const byKey = new Map<string, ShopifyProduct>();
+  const order: string[] = [];
+  for (const m of masters) {
+    const key = dedupKey(m.title);
+    const existing = byKey.get(key);
+    if (!existing) {
+      byKey.set(key, m);
+      order.push(key);
+      continue;
+    }
+    // Merge `m` into `existing`. Variants are unioned by id; existing's
+    // master (handle / images / description / title) wins so URLs stay
+    // stable across deploys.
+    const seen = new Set(existing.variants.edges.map((e) => e.node.id));
+    const newVariants = m.variants.edges.filter((e) => !seen.has(e.node.id));
+    if (!newVariants.length) continue;
+    const existingImageUrls = new Set(existing.images.edges.map((e) => e.node.url));
+    const newImages = m.images.edges.filter((e) => !existingImageUrls.has(e.node.url));
+    byKey.set(key, {
+      ...existing,
+      variants: { edges: [...existing.variants.edges, ...newVariants] },
+      images: { edges: [...existing.images.edges, ...newImages] },
+      availableForSale: existing.availableForSale || m.availableForSale,
+    });
+  }
+  return order.map((k) => byKey.get(k)!);
 }
 
 function buildMasterProduct(
@@ -784,18 +832,19 @@ function buildMasterProduct(
       const enOrientation = findOrientationValue(v.selectedOptions);
 
       const overlayFrame = localizedVariantOption(v, OPTION_FRAME);
-      const overlaySize = localizedVariantOption(v, OPTION_SIZE);
       const overlayOrientation = localizedVariantOption(v, OPTION_ORIENTATION);
 
       const fallbackFrame = enFrame
         ? translateOptionValue("Frame", enFrame, overlayLocale)
         : enFrame;
-      // Sizes are universal (cm/inches) — translateOptionValue passes through.
-      const fallbackSize = enSize;
       const fallbackOrientation = enOrientation;
 
       const sourceFrame = overlayFrame ?? fallbackFrame;
-      const sourceSize = overlaySize ?? fallbackSize;
+      // Size: ALWAYS use the EN value, regardless of overlay. Spanish Shopify
+      // translates "8×10\"" → "8×10 pulg." and adds A-format duplicates that
+      // don't exist on the EN page; we want every locale showing the same
+      // clean cm/inch format ("20×25 cm / 8×10\"") that /en uses.
+      const sourceSize = enSize;
       const sourceOrientation = overlayOrientation ?? fallbackOrientation;
 
       const frame =
@@ -985,6 +1034,16 @@ function buildMasterProduct(
       if (candidate && candidate !== bucket.painting) {
         displayTitle = candidate;
         break;
+      }
+    }
+    // If no Shopify source provided a translated title (Maya hasn't
+    // translated this painting yet), fall back to the in-code translation
+    // table so the locale page never shows "The Guardian" / "Folk Master"
+    // / "Grace" sitting in the middle of Spanish copy.
+    if (displayTitle === bucket.painting) {
+      const tableValue = translatePaintingName(bucket.painting, overlayLocale);
+      if (tableValue && tableValue !== bucket.painting) {
+        displayTitle = tableValue;
       }
     }
   } else {

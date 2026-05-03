@@ -84,3 +84,45 @@ export function translateOptionName(
   const hit = AXIS_NAME_TRANSLATIONS[axisName.toLowerCase()];
   return hit?.[locale] ?? axisName;
 }
+
+/**
+ * Painting NAME translations. Keyed by the canonical English painting name
+ * (already canonicalised via TITLE_ALIASES so e.g. "Nawra" and "Narwa" both
+ * route to the same entry). Used as a fallback when Shopify doesn't have a
+ * locale-translated title for the product, so the shop never shows
+ * "The Guardian" mid-paragraph next to "Adair ha dibujado..." in Spanish.
+ *
+ * Adjustments to wording can be made directly here — every locale falls
+ * back to the English canonical name when no entry exists.
+ */
+const PAINTING_NAME_TRANSLATIONS: Record<string, Record<string, string>> = {
+  "narwa":                    { es: "Narwa",                     pt: "Narwa"                    },
+  "the ceremony":             { es: "La Ceremonia",              pt: "A Cerimônia"              },
+  "fraternal":                { es: "Fraternal",                  pt: "Fraternal"                 },
+  "soul gathering":           { es: "Alma Recolectora",          pt: "Reunião de Almas"         },
+  "naked desert":             { es: "Desierto Desnudo",          pt: "Deserto Nu"               },
+  "the guardian":             { es: "El Guardián",               pt: "O Guardião"               },
+  "grace":                    { es: "Gracia",                    pt: "Graça"                    },
+  "folk master":              { es: "Maestro Folclórico",        pt: "Mestre Folclórico"        },
+  "mystic garden":            { es: "Jardín Místico",            pt: "Jardim Místico"           },
+  "double portrait on rose":  { es: "Retrato Doble en Rosa",     pt: "Retrato Duplo em Rosa"    },
+  "double portrait on pink":  { es: "Retrato Doble en Rosa",     pt: "Retrato Duplo em Rosa"    },
+  "woman":                    { es: "Mujer",                     pt: "Mulher"                   },
+  "fraternal love":           { es: "Amor Fraternal",            pt: "Amor Fraternal"           },
+  "intertwined":              { es: "Entrelazados",              pt: "Entrelaçados"             },
+  "the eye":                  { es: "El Ojo",                    pt: "O Olho"                   },
+};
+
+/**
+ * Translate a canonical English painting name for display in `locale`.
+ * Returns `englishName` unchanged for English / Polish / unknown locales,
+ * or when no entry exists for this painting.
+ */
+export function translatePaintingName(
+  englishName: string,
+  locale: string,
+): string {
+  if (!SUPPORTED_VALUE_LOCALES.has(locale)) return englishName;
+  const hit = PAINTING_NAME_TRANSLATIONS[englishName.toLowerCase().trim()];
+  return hit?.[locale] ?? englishName;
+}
