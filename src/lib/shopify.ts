@@ -157,7 +157,7 @@ async function shopifyFetch<T>({
     method: "POST",
     headers,
     body: JSON.stringify({ query, variables }),
-    next: { revalidate: 120 },
+    next: { revalidate: 30 },
   });
 
   if (!response.ok) {

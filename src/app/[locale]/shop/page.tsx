@@ -86,12 +86,34 @@ export default async function ShopPage({ params }: ShopPageProps) {
 
   // Build a unified product list (dedup by handle) starting from the EN
   // catalog and including any extra products from the named collections that
-  // weren't already in the catalog.
+  // weren't already in the catalog. Then UNION in the locale catalog's
+  // variants for each handle — Shopify Markets sometimes carries a frame
+  // colour or size on the locale product that isn't on the EN one (Maya's
+  // catalog grew that way historically). Variant IDs are stable across
+  // markets, so de-duping by id gives us "best of both worlds": every
+  // material from either catalog, every frame/size variant from either.
   const productMap = new Map(englishProducts.map((p) => [p.handle, p]));
   for (const col of [artCollection, fashionCollection]) {
     if (!col) continue;
     for (const { node } of col.products.edges) {
       if (!productMap.has(node.handle)) productMap.set(node.handle, node);
+    }
+  }
+  for (const lp of localeProducts) {
+    const en = productMap.get(lp.handle);
+    if (!en) {
+      // Whole product is locale-only — keep it.
+      productMap.set(lp.handle, lp);
+      continue;
+    }
+    // Same handle exists in both catalogs: union the variants by ID.
+    const seen = new Set(en.variants.edges.map((e) => e.node.id));
+    const extras = lp.variants.edges.filter((e) => !seen.has(e.node.id));
+    if (extras.length) {
+      productMap.set(lp.handle, {
+        ...en,
+        variants: { edges: [...en.variants.edges, ...extras] },
+      });
     }
   }
   const rawProducts = Array.from(productMap.values());

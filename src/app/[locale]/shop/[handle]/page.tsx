@@ -76,7 +76,27 @@ async function resolveProduct(handle: string, locale?: string): Promise<ShopifyP
       : Promise.resolve([] as ShopifyProduct[]),
   ]);
   const overlay = useLocaleOverlay ? buildLocaleOverlay(localeProducts, locale!) : undefined;
-  const grouped = groupProductsByPainting(englishProducts, undefined, overlay);
+
+  // Same union-by-variant-id pass we do in the page route, so generateMetadata
+  // and the page see the same merged catalog.
+  const productMap = new Map(englishProducts.map((p) => [p.handle, p]));
+  for (const lp of localeProducts) {
+    const en = productMap.get(lp.handle);
+    if (!en) {
+      productMap.set(lp.handle, lp);
+      continue;
+    }
+    const seen = new Set(en.variants.edges.map((e) => e.node.id));
+    const extras = lp.variants.edges.filter((e) => !seen.has(e.node.id));
+    if (extras.length) {
+      productMap.set(lp.handle, {
+        ...en,
+        variants: { edges: [...en.variants.edges, ...extras] },
+      });
+    }
+  }
+  const merged = Array.from(productMap.values());
+  const grouped = groupProductsByPainting(merged, undefined, overlay);
   const master = grouped.find((p) => p.handle === handle);
   if (master) return master;
   return getProductByHandle(handle, locale);
@@ -109,6 +129,10 @@ export default async function ProductPage({ params }: Props) {
 
   // EN catalog drives structure on every locale; locale catalog is just an
   // overlay for translations (titles, productType, frame colour values).
+  // We also UNION the locale catalog's variants into the EN products so any
+  // frame/size SKU that exists in the locale catalog but not in EN (Gelato
+  // sometimes adds variants per-Market) still surfaces. Variant IDs are
+  // immutable across Markets, so de-duping by id is safe.
   const useLocaleOverlay = locale !== "en" && locale !== "pl";
   const [englishProducts, localeProducts] = await Promise.all([
     getAllProducts(250, "en").catch(() => [] as ShopifyProduct[]),
@@ -117,7 +141,25 @@ export default async function ProductPage({ params }: Props) {
       : Promise.resolve([] as ShopifyProduct[]),
   ]);
   const overlay = useLocaleOverlay ? buildLocaleOverlay(localeProducts, locale) : undefined;
-  const grouped = groupProductsByPainting(englishProducts, undefined, overlay);
+
+  const productMap = new Map(englishProducts.map((p) => [p.handle, p]));
+  for (const lp of localeProducts) {
+    const en = productMap.get(lp.handle);
+    if (!en) {
+      productMap.set(lp.handle, lp);
+      continue;
+    }
+    const seen = new Set(en.variants.edges.map((e) => e.node.id));
+    const extras = lp.variants.edges.filter((e) => !seen.has(e.node.id));
+    if (extras.length) {
+      productMap.set(lp.handle, {
+        ...en,
+        variants: { edges: [...en.variants.edges, ...extras] },
+      });
+    }
+  }
+  const merged = Array.from(productMap.values());
+  const grouped = groupProductsByPainting(merged, undefined, overlay);
 
   // 1) Direct hit on a master/painting handle (or non-art passthrough).
   let product = grouped.find((p) => p.handle === handle) ?? null;
