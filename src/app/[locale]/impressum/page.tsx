@@ -1,71 +1,62 @@
 import type { Metadata } from "next";
 
+import { LegalLayout, LegalSection } from "@/components/layout/LegalLayout";
+
 export const metadata: Metadata = {
-  title: "Impressum",
+  title: "Impressum — Saudade",
   description: "Legal notice and operator details for Saudade.",
 };
 
 export default function ImpressumPage() {
   return (
-    <main className="bg-bg-light py-24">
-      <section className="mx-auto max-w-4xl px-6 md:px-8">
-        <h1 className="luxury-label text-[14px] text-accent-muted">Impressum</h1>
+    <LegalLayout
+      eyebrow="Impressum"
+      title="Legal Notice"
+      meta="Informação nos termos do Art. 5 TMG"
+    >
+      <LegalSection heading="Operator · Betreiber">
+        <p>
+          Mayka — Saudade Creative Studio
+          <br />
+          Portugal
+        </p>
+      </LegalSection>
 
-        <div className="mt-8 space-y-8 text-text-on-light">
-          <section>
-            <h2 className="luxury-label text-[10px] text-accent-muted">
-              Angaben gemaess Art. 5 TMG / Informacao nos termos do Art. 5 TMG
-            </h2>
-          </section>
+      <LegalSection heading="Contact · Kontakt">
+        <p>
+          Email:{" "}
+          <a className="underline-offset-4 hover:underline" href="mailto:saudadestyle@gmail.com" style={{ opacity: 0.95 }}>saudadestyle@gmail.com</a>
+          <br />
+          Phone: (+351) 968 179 500
+          <br />
+          Instagram: @saudadevoces
+        </p>
+      </LegalSection>
 
-          <section>
-            <h3 className="luxury-label text-[10px] text-accent-muted">Betreiber / Operator</h3>
-            <p className="mt-3">Mayka [NACHNAME BITTE ERGAENZEN]</p>
-            <p>[STRASSE + HAUSNUMMER BITTE ERGAENZEN]</p>
-            <p>[PLZ + ORT BITTE ERGAENZEN]</p>
-            <p>Portugal</p>
-          </section>
+      <LegalSection heading="Responsible for content · Verantwortlich für den Inhalt">
+        <p>Mayka — Saudade Creative Studio, Portugal</p>
+      </LegalSection>
 
-          <section>
-            <h3 className="luxury-label text-[10px] text-accent-muted">Kontakt / Contact</h3>
-            <p className="mt-3">E-Mail: saudadestyle@gmail.com</p>
-            <p>Telefon: (+351) 968 179 500</p>
-            <p>Instagram: @saudadevoces</p>
-          </section>
-
-          <section>
-            <h3 className="luxury-label text-[10px] text-accent-muted">
-              Umsatzsteuer-ID / VAT ID
-            </h3>
-            <p className="mt-3">[UST-ID BITTE ERGAENZEN, FALLS VORHANDEN]</p>
-          </section>
-
-          <section>
-            <h3 className="luxury-label text-[10px] text-accent-muted">
-              Verantwortlich fuer den Inhalt / Responsible for content
-            </h3>
-            <p className="mt-3">Mayka [NACHNAME BITTE ERGAENZEN]</p>
-          </section>
-
-          <section>
-            <h3 className="luxury-label text-[10px] text-accent-muted">
-              Streitschlichtung / Dispute Resolution
-            </h3>
-            <p className="mt-3">
-              Die Europaeische Kommission stellt eine Plattform zur
-              Online-Streitbeilegung (OS) bereit:
-            </p>
-            <a
-              href="https://ec.europa.eu/consumers/odr/"
-              className="text-primary-light underline-offset-2 hover:underline"
-              target="_blank"
-              rel="noreferrer"
-            >
-              https://ec.europa.eu/consumers/odr/
-            </a>
-          </section>
-        </div>
-      </section>
-    </main>
+      <LegalSection heading="Dispute resolution · Streitschlichtung">
+        <p>
+          The European Commission provides a platform for online dispute resolution (ODR):
+        </p>
+        <p>
+          <a
+            className="underline-offset-4 hover:underline"
+            href="https://ec.europa.eu/consumers/odr/"
+            target="_blank"
+            rel="noreferrer"
+            style={{ opacity: 0.95 }}
+          >
+            ec.europa.eu/consumers/odr
+          </a>
+        </p>
+        <p style={{ opacity: 0.55, fontStyle: "italic" }}>
+          We are not obliged and generally not willing to participate in dispute resolution
+          proceedings before a consumer arbitration board.
+        </p>
+      </LegalSection>
+    </LegalLayout>
   );
 }

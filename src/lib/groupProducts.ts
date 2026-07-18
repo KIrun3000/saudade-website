@@ -44,9 +44,35 @@ const PAINTING_MAP = productPaintingMap as Record<string, PaintingMapEntry>;
  *  "palette:bw" / "palette:color" so the shop sidebar can filter by it. */
 const PALETTE_MAP = paintingPalette as Record<string, string>;
 export type PaintingPalette = "bw" | "color";
+
+/** Normalise a painting name for palette lookup: lowercase, strip punctuation
+ *  and collapse whitespace. This makes the classification robust against the
+ *  way canonical names are derived (titlecased from Shopify handles when the
+ *  image map is empty) — "Double Portrait On Rose", "double portrait on rose",
+ *  and "Double-Portrait-On-Rose" all resolve to the same key. */
+function normPaletteKey(s: string): string {
+  return s
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, " ")
+    .trim()
+    .replace(/\s+/g, " ");
+}
+
+// Pre-index the palette JSON by normalised key once, ignoring the _comment.
+const PALETTE_BY_NORM: Record<string, PaintingPalette> = (() => {
+  const out: Record<string, PaintingPalette> = {};
+  for (const [k, v] of Object.entries(PALETTE_MAP)) {
+    if (k.startsWith("_")) continue;
+    if (v === "bw" || v === "color") out[normPaletteKey(k)] = v;
+  }
+  return out;
+})();
+
 export function getPaintingPalette(painting: string): PaintingPalette | null {
-  const v = PALETTE_MAP[painting];
-  return v === "bw" || v === "color" ? v : null;
+  // Exact match first (fast path), then normalised match.
+  const exact = PALETTE_MAP[painting];
+  if (exact === "bw" || exact === "color") return exact;
+  return PALETTE_BY_NORM[normPaletteKey(painting)] ?? null;
 }
 export const PALETTE_TAG_PREFIX = "palette:";
 
@@ -711,6 +737,8 @@ function dedupMasters(masters: ShopifyProduct[]): ShopifyProduct[] {
       variants: { edges: [...existing.variants.edges, ...newVariants] },
       images: { edges: [...existing.images.edges, ...newImages] },
       availableForSale: existing.availableForSale || m.availableForSale,
+      // Existing master's per-material images win; fill any gaps from `m`.
+      materialImages: { ...m.materialImages, ...existing.materialImages },
     });
   }
   return order.map((k) => byKey.get(k)!);
@@ -792,6 +820,16 @@ function buildMasterProduct(
   ];
   for (const { product } of orderedSources) {
     pushImage(product.images.edges[0]?.node);
+  }
+
+  // Per-material hero image (canonical English material key). First source of
+  // each material wins. Used by the shop grid to default every card to the
+  // Framed Poster look and to switch all cards to a chosen material on demand.
+  const materialImages: Partial<Record<Material, ShopifyImage>> = {};
+  for (const { product, material } of bucket.sources) {
+    if (materialImages[material]) continue;
+    const img = product.images.edges[0]?.node;
+    if (img?.url) materialImages[material] = img;
   }
 
   // Collect & remap variants. Dedup by (Material, Frame, Size); first wins.
@@ -1080,5 +1118,6 @@ function buildMasterProduct(
     productType: template.productType || "Painting",
     availableForSale,
     materialDescriptions,
+    materialImages,
   };
 }

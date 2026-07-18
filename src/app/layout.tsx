@@ -33,46 +33,51 @@ const accentFont = Courgette({
 
 const wordmarkFont = localFont({
   src: [
-    { path: "../../public/fonts/CocoBiker/CocoBiker-Ultralight-trial.ttf", weight: "100", style: "normal" },
-    { path: "../../public/fonts/CocoBiker/CocoBiker-Light-trial.ttf",      weight: "300", style: "normal" },
-    { path: "../../public/fonts/CocoBiker/CocoBiker-Regular-trial.ttf",    weight: "400", style: "normal" },
-    { path: "../../public/fonts/CocoBiker/CocoBiker-Bold-trial.ttf",       weight: "700", style: "normal" },
+    { path: "../../public/fonts/Cocomat-Pro-Thin-trial.ttf",       weight: "100", style: "normal" },
+    { path: "../../public/fonts/Cocomat-Pro-Extralight-trial.ttf", weight: "200", style: "normal" },
+    { path: "../../public/fonts/Cocomat-Pro-Light-trial.ttf",      weight: "300", style: "normal" },
   ],
   display: "swap",
   variable: "--font-wordmark",
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://saudade-website.vercel.app"),
+  metadataBase: new URL("https://www.saudadevoces.com"),
   icons: {
     icon: "/favicon-mandala.png",
     apple: "/favicon-mandala.png",
   },
   title: {
-    default: "Saudade — High Frequency Living",
+    default: "Saudade — Original Art & Sustainable Fashion | High Frequency Living",
     template: "%s | Saudade",
   },
   description:
-    "International community of free-thinkers and nature lovers. Sustainable fashion, conscious events, and regenerative living. Made in Portugal.",
+    "Saudade: original paintings and limited art prints by Adair, and sustainable GOTS-certified fashion made in Portugal. Conscious clothing and art with a higher purpose.",
   keywords: [
     "saudade",
     "sustainable fashion",
-    "conscious living",
-    "community",
-    "Portugal",
+    "sustainable clothing",
+    "original art",
+    "art prints",
+    "paintings",
+    "conscious fashion",
+    "slow fashion",
+    "organic clothing",
     "ethical fashion",
+    "kimono",
     "high frequency",
-    "regenerative",
-    "organic fashion",
+    "regenerative living",
     "GOTS certified",
+    "made in Portugal",
   ],
   authors: [{ name: "Saudade", url: "https://saudadevoces.com" }],
   openGraph: {
     type: "website",
     locale: "en_US",
     siteName: "Saudade",
-    title: "Saudade — High Frequency Living",
-    description: "International community of free-thinkers and nature lovers.",
+    title: "Saudade — Original Art & Sustainable Fashion",
+    description:
+      "Original paintings and limited art prints, and sustainable fashion made in Portugal.",
     images: [
       {
         url: "/opengraph-image",
@@ -84,8 +89,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Saudade — High Frequency Living",
-    description: "International community of free-thinkers and nature lovers.",
+    title: "Saudade — Original Art & Sustainable Fashion",
+    description:
+      "Original paintings and limited art prints, and sustainable fashion made in Portugal.",
     images: ["/opengraph-image"],
   },
   robots: { index: true, follow: true },
@@ -100,9 +106,10 @@ export default function RootLayout({
     "@context": "https://schema.org",
     "@type": "Organization",
     name: "Saudade",
-    description: "Sustainable fashion brand and conscious living community",
-    url: "https://saudade-website.vercel.app",
-    logo: "/wp-content/uploads/2026/03/cropped-cropped-saudade_round_logo-removebg-preview.png",
+    description:
+      "Saudade — original art and sustainable fashion brand. Conscious clothing made in Portugal and limited art prints born from pure vision.",
+    url: "https://www.saudadevoces.com",
+    logo: "https://www.saudadevoces.com/favicon-mandala.png",
     contactPoint: {
       "@type": "ContactPoint",
       email: "saudadestyle@gmail.com",
@@ -116,6 +123,15 @@ export default function RootLayout({
     },
   };
 
+  const webSiteSchema = {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    name: "Saudade",
+    alternateName: "Saudade Voces",
+    url: "https://www.saudadevoces.com",
+    inLanguage: ["en", "pt", "es", "pl"],
+  };
+
   return (
     <html
       lang="en"
@@ -125,6 +141,10 @@ export default function RootLayout({
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(webSiteSchema) }}
         />
         {children}
       </body>

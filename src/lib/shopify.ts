@@ -52,6 +52,11 @@ export interface ShopifyProduct {
     string,
     { description: string; descriptionHtml: string }
   >;
+  /** Only present on virtual master products. One representative hero image per
+   *  canonical English material ("Framed Poster" | "Poster" | "Canvas" |
+   *  "Framed Canvas"). Lets the shop grid default to the framed-poster look and
+   *  switch every card to a chosen material on demand. */
+  materialImages?: Partial<Record<"Framed Poster" | "Poster" | "Canvas" | "Framed Canvas", ShopifyImage>>;
 }
 
 export interface ShopifyCollection {

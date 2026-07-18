@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg"
+  width="55mm" height="108mm" viewBox="0 0 55 108" version="1.1">
+
+  <!-- BACKGROUND -->
+  <rect width="55" height="108" fill="#fdfcfa"/>
+
+  <!-- OUTER BORDER -->
+  <rect x="0.4" y="0.4" width="54.2" height="107.2" fill="none" stroke="#c8b8ae" stroke-width="0.35"/>
+  <!-- INNER FRAME -->
+  <rect x="2" y="2" width="51" height="104" fill="none" stroke="#c8b8ae" stroke-width="0.18"/>
+
+  <!-- CORNER ORNAMENTS -->
+  <path d="M2.5,2.5 L6,2.5 M2.5,2.5 L2.5,6" stroke="#c8b8ae" stroke-width="0.35" fill="none"/>
+  <path d="M52.5,2.5 L49,2.5 M52.5,2.5 L52.5,6" stroke="#c8b8ae" stroke-width="0.35" fill="none"/>
+  <path d="M2.5,105.5 L6,105.5 M2.5,105.5 L2.5,102" stroke="#c8b8ae" stroke-width="0.35" fill="none"/>
+  <path d="M52.5,105.5 L49,105.5 M52.5,105.5 L52.5,102" stroke="#c8b8ae" stroke-width="0.35" fill="none"/>
+
+  <!-- DARK HEADER -->
+  <rect x="0" y="0" width="55" height="13" fill="#0d2b30"/>
+
+  <!-- STRING HOLE -->
+  <circle cx="27.5" cy="3.8" r="1.6" fill="#fdfcfa" stroke="#8aaba8" stroke-width="0.4"/>
+
+  <!-- CHAKANA: 22mm wide, scale=0.183, centered: x=(55-22)/2=16.5 -->
+  <g transform="translate(16.5, 14) scale(0.183)">
+    <path d="M38,0 L82,0 L82,18 L100,18 L100,38 L120,38 L120,82 L100,82 L100,100 L82,100 L82,120 L38,120 L38,100 L20,100 L20,82 L0,82 L0,38 L20,38 L20,18 L38,18 Z" fill="none" stroke="#0d2b30" stroke-width="5" stroke-linejoin="miter"/>
+    <path d="M40,8 L80,8 L80,20 L98,20 L98,40 L112,40 L112,80 L98,80 L98,100 L80,100 L80,112 L40,112 L40,100 L22,100 L22,80 L8,80 L8,40 L22,40 L22,20 L40,20 Z" fill="none" stroke="#0d2b30" stroke-width="4" stroke-linejoin="miter"/>
+    <path d="M42,16 L78,16 L78,28 L92,28 L92,42 L104,42 L104,78 L92,78 L92,92 L78,92 L78,104 L42,104 L42,92 L28,92 L28,78 L16,78 L16,42 L28,42 L28,28 L42,28 Z" fill="none" stroke="#0d2b30" stroke-width="4" stroke-linejoin="miter"/>
+    <path d="M44,24 L76,24 L76,36 L84,36 L84,44 L96,44 L96,76 L84,76 L84,84 L76,84 L76,96 L44,96 L44,84 L36,84 L36,76 L24,76 L24,44 L36,44 L36,36 L44,36 Z" fill="none" stroke="#0d2b30" stroke-width="4" stroke-linejoin="miter"/>
+    <path d="M46,32 L74,32 L74,46 L88,46 L88,74 L74,74 L74,88 L46,88 L46,74 L32,74 L32,46 L46,46 Z" fill="none" stroke="#0d2b30" stroke-width="4" stroke-linejoin="miter"/>
+    <rect x="44" y="44" width="32" height="32" fill="#0d2b30"/>
+    <circle cx="60" cy="60" r="9" fill="#fdfcfa"/>
+  </g>
+
+  <!-- THE CHAKANA LABEL -->
+  <text x="27.5" y="38.5" text-anchor="middle"
+    font-family="Cinzel,Georgia,serif" font-size="2.3" letter-spacing="1.5"
+    fill="#0d2b30">THE CHAKANA</text>
+
+  <!-- RULE -->
+  <line x1="8" y1="41" x2="47" y2="41" stroke="#c8b8ae" stroke-width="0.25"/>
+
+  <!-- CHAKANA DESCRIPTION -->
+  <text x="27.5" y="45.5" text-anchor="middle" font-family="Cormorant Garamond,Georgia,serif" font-size="2.85" fill="#2f3b40">The Chakana — the Andean Cross — maps</text>
+  <text x="27.5" y="49.3" text-anchor="middle" font-family="Cormorant Garamond,Georgia,serif" font-size="2.85" fill="#2f3b40">the cosmos: three worlds, four directions,</text>
+  <text x="27.5" y="53.1" text-anchor="middle" font-family="Cormorant Garamond,Georgia,serif" font-size="2.85" fill="#2f3b40">the cycles of the stars, the movement of time.</text>
+  <text x="27.5" y="56.9" text-anchor="middle" font-family="Cormorant Garamond,Georgia,serif" font-size="2.85" fill="#2f3b40">Rooted in Andean cosmovision, it is a bridge</text>
+  <text x="27.5" y="60.7" text-anchor="middle" font-family="Cormorant Garamond,Georgia,serif" font-size="2.85" fill="#2f3b40">between the upper, middle, and lower worlds.</text>
+  <text x="27.5" y="64.5" text-anchor="middle" font-family="Cormorant Garamond,Georgia,serif" font-size="2.85" font-style="italic" fill="#0d2b30">It is a key. It is the crossroads of everything.</text>
+
+  <!-- DIVIDER -->
+  <line x1="18" y1="67.5" x2="37" y2="67.5" stroke="#c8b8ae" stroke-width="0.25"/>
+
+  <!-- SAUDADE LABEL -->
+  <text x="27.5" y="72" text-anchor="middle"
+    font-family="Cinzel,Georgia,serif" font-size="2.3" letter-spacing="1.5"
+    fill="#9a8a82">SAUDADE</text>
+
+  <!-- SAUDADE MEANING -->
+  <text x="27.5" y="78" text-anchor="middle" font-family="Cormorant Garamond,Georgia,serif" font-size="3.5" font-style="italic" fill="#2f3b40">The bittersweet longing</text>
+  <text x="27.5" y="83" text-anchor="middle" font-family="Cormorant Garamond,Georgia,serif" font-size="3.5" font-style="italic" fill="#2f3b40">that connects us —</text>
+  <text x="27.5" y="88" text-anchor="middle" font-family="Cormorant Garamond,Georgia,serif" font-size="3.5" font-style="italic" fill="#2f3b40">and gives life its meaning.</text>
+
+  <!-- DARK FOOTER -->
+  <rect x="0" y="94" width="55" height="14" fill="#0d2b30"/>
+  <text x="27.5" y="102.5" text-anchor="middle"
+    font-family="Cinzel,Georgia,serif" font-size="2.5" letter-spacing="0.6"
+    fill="#8aaba8">SAUDADEVOCES.COM</text>
+
+</svg>

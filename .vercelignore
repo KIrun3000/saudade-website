@@ -1,0 +1,24 @@
+# Keep deploys fast: exclude heavy source/master files that the live site
+# never serves. These stay on your computer — this only stops them from being
+# uploaded to Vercel on each deploy.
+
+# Print-resolution masters (60MB+ each) — not referenced by the site
+public/fist collection prints web/
+
+# Source art scans (multi-MB PNGs) — not referenced by the site
+public/adair art/
+
+# Non-web assets that don't belong in a deploy
+public/**/*.key
+public/**/*.pdf
+public/Saudade Land Presentation.key
+
+# Root-level working/source files not needed at runtime
+*.key
+certificate-*-COMPLETE.svg
+slide-*.jpg
+docs/
+references/
+skills/
+portugues/
+dev-server.log

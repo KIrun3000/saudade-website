@@ -30,7 +30,7 @@ type CartContextValue = {
 const CartContext = createContext<CartContextValue | null>(null);
 const STORAGE_KEY = "saudade_cart_v1";
 
-export function CartProvider({ children }: { children: React.ReactNode }) {
+export function CartProvider({ children, locale }: { children: React.ReactNode; locale?: string }) {
   const [items, setItems] = useState<CartItem[]>([]);
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [isCheckingOut, setIsCheckingOut] = useState(false);
@@ -95,6 +95,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           items: items.map(({ variantId, quantity }) => ({ variantId, quantity })),
+          locale,
         }),
       });
 
@@ -104,12 +105,20 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
         throw new Error(data.error || "Checkout failed");
       }
 
-      window.location.href = data.webUrl;
+      // Append locale to Shopify checkout URL so Translate & Adapt serves
+      // the correct language on the hosted checkout page.
+      let checkoutUrl = data.webUrl;
+      if (locale && locale !== "en") {
+        const separator = checkoutUrl.includes("?") ? "&" : "?";
+        checkoutUrl = `${checkoutUrl}${separator}locale=${locale}`;
+      }
+
+      window.location.href = checkoutUrl;
     } catch (error) {
       console.error("Checkout error:", error);
       setIsCheckingOut(false);
     }
-  }, [isCheckingOut, items]);
+  }, [isCheckingOut, items, locale]);
 
   const cartCount = useMemo(
     () => items.reduce((acc, item) => acc + item.quantity, 0),

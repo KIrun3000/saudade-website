@@ -8,7 +8,14 @@ type NewsletterValues = {
   email: string;
 };
 
-export function Newsletter() {
+type NewsletterProps = {
+  /** "light" = on cream/white bg (default), "dark" = on dark teal bg */
+  variant?: "light" | "dark";
+  /** Override the submit button label (defaults to the shared newsletter copy) */
+  submitLabel?: string;
+};
+
+export function Newsletter({ variant = "light", submitLabel }: NewsletterProps) {
   const t = useTranslations("newsletter");
   const [isDone, setIsDone] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -39,6 +46,18 @@ export function Newsletter() {
     }
   };
 
+  const inputClass =
+    variant === "dark"
+      ? "min-h-11 w-full rounded-full border border-accent/30 bg-transparent px-5 text-sm text-accent outline-none transition-colors duration-300 placeholder:text-accent/40 focus:border-accent"
+      : "min-h-11 w-full rounded-full border border-primary/30 bg-transparent px-5 text-sm text-text-on-light outline-none transition-colors duration-300 placeholder:text-text-on-light/40 focus:border-primary";
+
+  const buttonClass =
+    variant === "dark"
+      ? "inline-flex min-h-14 w-full items-center justify-center rounded-full border border-accent/40 bg-transparent px-10 py-4 font-display text-[15px] font-light uppercase tracking-[0.22em] text-accent transition-colors duration-300 hover:border-accent-light hover:text-accent-light disabled:opacity-60 sm:w-auto"
+      : "inline-flex min-h-14 w-full items-center justify-center rounded-full border border-primary/40 bg-transparent px-10 py-4 font-display text-[15px] font-light uppercase tracking-[0.22em] text-text-on-light transition-colors duration-300 hover:border-primary hover:text-primary-dark disabled:opacity-60 sm:w-auto";
+
+  const successClass = variant === "dark" ? "text-sm text-accent/60" : "text-sm text-sage-light";
+
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="w-full max-w-xl space-y-3">
       <label htmlFor="newsletter-email" className="sr-only">
@@ -48,7 +67,7 @@ export function Newsletter() {
         id="newsletter-email"
         type="email"
         placeholder={t("placeholder")}
-        className="min-h-11 w-full rounded-full border border-accent/50 bg-primary-dark/60 px-5 text-sm text-accent outline-none transition-colors duration-300 placeholder:text-accent-muted focus:border-accent-light"
+        className={inputClass}
         {...register("email", {
           required: t("required"),
           pattern: {
@@ -63,12 +82,12 @@ export function Newsletter() {
       <button
         type="submit"
         disabled={isLoading}
-        className="inline-flex min-h-14 w-full items-center justify-center rounded-full border border-accent/65 bg-transparent px-10 py-4 font-display text-[15px] font-light uppercase tracking-[0.22em] text-accent transition-colors duration-300 hover:border-accent-light hover:text-accent-light disabled:opacity-60 sm:w-auto"
+        className={buttonClass}
       >
-        {isLoading ? "…" : t("submit")}
+        {isLoading ? "…" : submitLabel ?? t("submit")}
       </button>
       {isDone ? (
-        <p className="text-sm text-sage-light">{t("success")}</p>
+        <p className={successClass}>{t("success")}</p>
       ) : null}
       {error ? (
         <p className="text-sm text-[#8d2f2f]">{error}</p>

@@ -6,7 +6,7 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 import {
   BLOG_ARTICLES,
   BLOG_SLUGS,
-  getBlogArticleBySlug,
+  getLocalizedBlogArticle,
   getProxiedBlogImageSrc,
 } from "@/lib/blog-articles";
 
@@ -19,8 +19,8 @@ export function generateStaticParams() {
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const { slug } = await params;
-  const article = getBlogArticleBySlug(slug);
+  const { locale, slug } = await params;
+  const article = getLocalizedBlogArticle(slug, locale);
 
   if (!article) {
     return {};
@@ -49,7 +49,8 @@ export default async function BlogArticlePage({ params }: Props) {
 
   const t = await getTranslations("blogArticle");
   const tNav = await getTranslations("nav");
-  const article = getBlogArticleBySlug(slug);
+  const tBlog = await getTranslations("blogPage");
+  const article = getLocalizedBlogArticle(slug, locale);
 
   if (!article) {
     notFound();
@@ -61,10 +62,23 @@ export default async function BlogArticlePage({ params }: Props) {
     day: "numeric",
   }).format(new Date(article.publishedAt));
 
-  const relatedPosts = BLOG_ARTICLES.filter((entry) => entry.slug !== article.slug);
+  // Reuse the already-translated titles/excerpts from the blog listing page
+  const localizedPostCopy: Record<string, { title: string; excerpt: string }> = {
+    "saudade-meaning":   { title: tBlog("post1Title"), excerpt: tBlog("post1Excerpt") },
+    "textile-frequency": { title: tBlog("post2Title"), excerpt: tBlog("post2Excerpt") },
+    "who-made-my-clothes": { title: tBlog("post3Title"), excerpt: tBlog("post3Excerpt") },
+  };
+
+  const relatedPosts = BLOG_ARTICLES
+    .filter((entry) => entry.slug !== article.slug)
+    .map((entry) => ({
+      ...entry,
+      title: localizedPostCopy[entry.slug]?.title ?? entry.title,
+      description: localizedPostCopy[entry.slug]?.excerpt ?? entry.description,
+    }));
   const heroOverlayClass =
     article.slug === "textile-frequency"
-      ? "absolute inset-0 bg-gradient-to-b from-primary-dark/5 via-primary/35 to-primary-dark/55"
+      ? "absolute inset-0 bg-gradient-to-b from-primary-dark/60 via-primary/55 to-primary-dark/80"
       : "absolute inset-0 bg-gradient-to-b from-primary-dark/20 via-primary/70 to-primary-dark/90";
 
   return (
@@ -150,6 +164,39 @@ export default async function BlogArticlePage({ params }: Props) {
             </div>
           ))}
 
+          {article.postImageSections?.map((section, sectionIndex) => (
+            <div key={`${article.slug}-post-${sectionIndex}`} className="mb-10">
+              {section.heading ? (
+                <h2 className="mb-5 font-heading text-4xl font-light text-primary-dark md:text-5xl">
+                  {section.heading}
+                </h2>
+              ) : null}
+
+              {section.paragraphs?.map((paragraph, paragraphIndex) => (
+                <p
+                  key={`${article.slug}-post-${sectionIndex}-p-${paragraphIndex}`}
+                  className="mb-5 font-heading text-[1.2rem] font-light leading-relaxed text-text-on-light/90"
+                >
+                  {paragraph}
+                </p>
+              ))}
+
+              {section.quote ? (
+                <blockquote className="my-8 border-l-2 border-primary-light pl-5 font-heading text-xl font-light italic leading-relaxed text-primary-dark md:text-2xl">
+                  {section.quote}
+                </blockquote>
+              ) : null}
+
+              {section.bullets?.length ? (
+                <ul className="space-y-3 pl-4 text-base leading-relaxed text-text-on-light/88">
+                  {section.bullets.map((bullet) => (
+                    <li key={bullet}>- {bullet}</li>
+                  ))}
+                </ul>
+              ) : null}
+            </div>
+          ))}
+
           <div className="mt-14 border-t border-primary-light/25 pt-8">
             <Link
               href={`/${locale}/blog`}
@@ -199,7 +246,7 @@ export default async function BlogArticlePage({ params }: Props) {
 
           <div className="mt-10 border-t border-primary-light/20 pt-8">
             <Link
-              href={`/${locale}/shop`}
+              href={`/${locale}/shop/art`}
               className="inline-flex min-h-11 items-center font-display text-[11px] font-light uppercase tracking-[0.22em] text-primary transition-colors duration-300 hover:text-primary-dark"
             >
               {t("exploreShop")}

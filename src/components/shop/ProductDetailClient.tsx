@@ -30,6 +30,94 @@ function variantOption(variant: ShopifyProductVariant, name: string): string | u
   return variant.selectedOptions.find((o) => o.name === name)?.value;
 }
 
+const RARE_BY_NATURE = `<p><em>Rare by nature. Each print is produced in limited quantities.</em></p>`;
+
+/** Split HTML at the end of the paragraph that contains `phrase`. */
+function splitAtPhraseEnd(html: string, phrase: string): { before: string; after: string } {
+  const idx = html.toLowerCase().indexOf(phrase.toLowerCase());
+  if (idx === -1) return { before: html, after: "" };
+  const close = html.indexOf("</p>", idx);
+  const cut = close !== -1 ? close + 4 : idx + phrase.length;
+  return { before: html.slice(0, cut), after: html.slice(cut) };
+}
+
+/** Split HTML at the opening tag of the element that contains `phrase`. */
+function splitAtPhraseStart(html: string, phrase: string): { before: string; from: string } {
+  const idx = html.toLowerCase().indexOf(phrase.toLowerCase());
+  if (idx === -1) return { before: html, from: "" };
+  const tagStart = html.lastIndexOf("<", idx);
+  const cut = tagStart !== -1 ? tagStart : idx;
+  return { before: html.slice(0, cut), from: html.slice(cut) };
+}
+
+const descBtnStyle: React.CSSProperties = {
+  fontFamily: "var(--font-display)",
+  fontSize: "9px",
+  letterSpacing: "0.25em",
+  paddingBottom: "2px",
+  marginTop: "1.25rem",
+  display: "inline-block",
+  background: "none",
+  border: "none",
+  borderBottom: "1px solid rgba(30,60,65,0.5)",
+  color: "#2f3b40",
+  cursor: "pointer",
+  textTransform: "uppercase",
+  opacity: 0.8,
+  transition: "opacity 0.2s",
+};
+
+function ProductDescription({ html, plain }: { html: string | null; plain: string | null }) {
+  const [storyOpen, setStoryOpen] = useState(false);
+  const [matOpen, setMatOpen] = useState(false);
+
+  if (!html) return plain ? <p className="mt-6 text-sm text-text-on-light/85">{plain}</p> : null;
+
+  // 1. Split story teaser / story rest at "rare depth" paragraph end.
+  const { before: teaser, after: afterTeaser } = splitAtPhraseEnd(html, "rare depth");
+
+  // 2. Peel off the always-visible "Rare by nature" footer from the tail.
+  const rareIdx = afterTeaser.lastIndexOf(RARE_BY_NATURE);
+  const withoutRare = rareIdx !== -1 ? afterTeaser.slice(0, rareIdx) : afterTeaser;
+
+  // 3. Split what remains into story-rest / material-info at "our sturdy".
+  const { before: storyRest, from: materialInfo } = splitAtPhraseStart(withoutRare, "our sturdy");
+
+  const prose = "prose prose-sm max-w-none text-text-on-light/85";
+
+  return (
+    <div className="mt-6">
+      {/* Always-visible story teaser */}
+      <div className={prose} dangerouslySetInnerHTML={{ __html: teaser }} />
+
+      {/* Story rest — toggled by button 1 */}
+      {storyRest && storyOpen && (
+        <div className={prose} dangerouslySetInnerHTML={{ __html: storyRest }} />
+      )}
+      {storyRest && (
+        <button style={descBtnStyle} onClick={() => setStoryOpen((o) => !o)}>
+          {storyOpen ? "Close ↑" : "Discover the full story ↓"}
+        </button>
+      )}
+
+      {/* Material info — toggled by button 2 */}
+      {materialInfo && (
+        <div style={{ marginTop: "1.5rem" }}>
+          <button style={descBtnStyle} onClick={() => setMatOpen((o) => !o)}>
+            {matOpen ? "Close ↑" : "Material information ↓"}
+          </button>
+          {matOpen && (
+            <div className={prose} style={{ marginTop: "1rem" }} dangerouslySetInnerHTML={{ __html: materialInfo }} />
+          )}
+        </div>
+      )}
+
+      {/* Always-visible footer */}
+      <div className={prose} style={{ marginTop: "1.25rem" }} dangerouslySetInnerHTML={{ __html: RARE_BY_NATURE }} />
+    </div>
+  );
+}
+
 export function ProductDetailClient({
   locale,
   product,
@@ -183,7 +271,7 @@ export function ProductDetailClient({
       <section className="bg-primary-dark px-6 pb-16 pt-36 md:px-8">
         <div className="mx-auto flex max-w-7xl items-center justify-between gap-4">
           <Link
-            href={`/${locale}/shop`}
+            href={`/${locale}/shop/art`}
             className="font-display text-[11px] uppercase tracking-[0.22em] text-accent-muted hover:text-accent-light"
           >
             {t("backToShop")}
@@ -258,11 +346,6 @@ export function ProductDetailClient({
           <div className="rounded-[1.8rem] border border-primary-light/20 bg-bg-light p-7">
             <p className="luxury-label text-[10px] text-accent-muted">{product.productType || t("product")}</p>
             <h1 className="mt-4 font-heading text-5xl font-light text-text-on-light">{product.title}</h1>
-            {selectedVariant ? (
-              <p className="mt-4 text-2xl text-primary">
-                {formatPrice(selectedVariant.price.amount, selectedVariant.price.currencyCode)}
-              </p>
-            ) : null}
 
             {(() => {
               // Swap to the description that belongs to the currently selected
@@ -274,28 +357,26 @@ export function ProductDetailClient({
                 product.materialDescriptions && material
                   ? product.materialDescriptions[material]
                   : undefined;
-              const html = perMaterial?.descriptionHtml ?? product.descriptionHtml;
+              const rawHtml = perMaterial?.descriptionHtml ?? product.descriptionHtml;
               const plain = perMaterial?.description ?? product.description;
-              return html ? (
-                <div
-                  key={material ?? "default"}
-                  className="prose prose-sm mt-6 max-w-none text-text-on-light/85"
-                  dangerouslySetInnerHTML={{ __html: html }}
-                />
-              ) : plain ? (
-                <p className="mt-6 text-sm text-text-on-light/85">{plain}</p>
-              ) : null;
+              // Strip Gelato's "No minimum orders, printed and shipped on demand"
+              // line and replace with our scarcity message at the end.
+              const GELATO_LINE_RE = /(<[^>]+>)?[^<]*no minimum orders[^<]*printed and shipped on demand[^<]*(<\/[^>]+>)?/gi;
+              const cleanedHtml = rawHtml
+                ? rawHtml.replace(GELATO_LINE_RE, "").trimEnd() +
+                  `<p><em>Rare by nature. Each print is produced in limited quantities.</em></p>`
+                : rawHtml;
+              return <ProductDescription key={material ?? "default"} html={cleanedHtml ?? null} plain={plain ?? null} />;
             })()}
 
             {axisGroups.length ? (
               <div className="mt-8 space-y-5">
                 {axisGroups.map((group, idx) => {
-                  // Inline preview right after Material so the buyer can see
-                  // the live mockup without scrolling back to the main gallery
-                  // — for every material (Framed Poster, Framed Canvas, Canvas,
-                  // Poster), not just framed ones.
-                  const showPreviewAfter =
-                    group.name === "Material" && idx < axisGroups.length - 1;
+                  // Show the preview only once — after the last axis that is
+                  // either Material or Frame (whichever comes latest before Size).
+                  // This means one preview updates for both material and frame changes.
+                  // Show the preview after Material only (between Material and Frame).
+                  const showPreviewAfter = group.name === "Material" && idx < axisGroups.length - 1;
                   return (
                     <div key={group.name}>
                       <p className="font-display text-[11px] uppercase tracking-[0.2em] text-accent-muted">
@@ -348,6 +429,9 @@ export function ProductDetailClient({
 
             {selectedVariant ? (
               <div className="mt-8">
+                <p className="mb-4 text-2xl font-light text-primary">
+                  {formatPrice(selectedVariant.price.amount, selectedVariant.price.currencyCode)}
+                </p>
                 <AddToCartButton
                   variantId={selectedVariant.id}
                   variantTitle={selectedVariant.title}
@@ -367,35 +451,46 @@ export function ProductDetailClient({
         <section className="bg-bg-light py-16">
           <div className="mx-auto max-w-7xl px-6 md:px-8">
             <h2 className="font-heading text-4xl font-light text-text-on-light">{t("relatedTitle")}</h2>
-            <div className="mt-8 grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4">
+            <div className="mt-8 grid grid-cols-2 gap-x-6 gap-y-10 md:grid-cols-3 lg:grid-cols-4">
               {related.map((item) => {
                 const image = item.images.edges[0]?.node;
+                // Find a framed canvas variant priced between 100–200; fall back to max.
+                const fcVariants = item.variants.edges
+                  .map((e) => e.node)
+                  .filter((v) => !v.id.startsWith("phantom:") && v.availableForSale &&
+                    v.selectedOptions.some((o) => o.name.toLowerCase() === "material" && o.value === "Framed Canvas")
+                  );
+                const inRange = fcVariants.filter((v) => {
+                  const p = parseFloat(v.price.amount);
+                  return p >= 100 && p < 200;
+                });
+                const displayVariant = inRange.length > 0
+                  ? inRange.reduce((a, b) => parseFloat(a.price.amount) < parseFloat(b.price.amount) ? a : b)
+                  : fcVariants.length > 0
+                    ? fcVariants.reduce((a, b) => parseFloat(a.price.amount) > parseFloat(b.price.amount) ? a : b)
+                    : null;
+                const displayPrice = displayVariant?.price ?? item.priceRange.maxVariantPrice;
                 return (
-                  <article
-                    key={item.id}
-                    className="overflow-hidden rounded-[1.3rem] border border-primary-light/20 bg-bg-alt"
-                  >
+                  <article key={item.id} className="group">
                     <Link href={`/${locale}/shop/${item.handle}`}>
-                      <div className="relative aspect-[4/5]">
+                      <div className="relative aspect-[4/5] overflow-hidden">
                         {image ? (
                           <Image
                             src={image.url}
                             alt={image.altText || item.title}
                             fill
-                            className="object-cover"
+                            className="object-contain transition-transform duration-500 group-hover:scale-[1.03]"
+                            style={{ filter: "drop-shadow(0 12px 28px rgba(0,0,0,0.15))" }}
                             sizes="(max-width: 768px) 50vw, 25vw"
                           />
                         ) : null}
                       </div>
-                      <div className="p-4">
-                        <h3 className="line-clamp-2 font-heading text-2xl font-light text-text-on-light">
+                      <div className="mt-4 text-center">
+                        <h3 className="line-clamp-2 font-heading text-xl font-light text-text-on-light">
                           {item.title}
                         </h3>
-                        <p className="mt-2 text-sm text-primary">
-                          {formatPrice(
-                            item.priceRange.minVariantPrice.amount,
-                            item.priceRange.minVariantPrice.currencyCode,
-                          )}
+                        <p className="mt-1 font-display text-sm tracking-wide text-primary/60">
+                          {formatPrice(displayPrice.amount, displayPrice.currencyCode)}
                         </p>
                       </div>
                     </Link>

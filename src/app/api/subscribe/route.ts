@@ -1,23 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 
-const SHOPIFY_DOMAIN = process.env.NEXT_PUBLIC_SHOPIFY_STORE_DOMAIN!;
-const SHOPIFY_TOKEN = process.env.SHOPIFY_ADMIN_ACCESS_TOKEN!;
-const API_VERSION = "2024-10";
-
-async function shopifyRequest(path: string, method: string, body?: object) {
-  const res = await fetch(
-    `https://${SHOPIFY_DOMAIN}/admin/api/${API_VERSION}${path}`,
-    {
-      method,
-      headers: {
-        "X-Shopify-Access-Token": SHOPIFY_TOKEN,
-        "Content-Type": "application/json",
-      },
-      body: body ? JSON.stringify(body) : undefined,
-    }
-  );
-  return res;
-}
+const KLAVIYO_API_KEY = process.env.KLAVIYO_PRIVATE_API_KEY!;
+const KLAVIYO_LIST_ID = process.env.KLAVIYO_LIST_ID!;
 
 export async function POST(req: NextRequest) {
   try {
@@ -27,45 +11,61 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Email required" }, { status: 400 });
     }
 
-    // Try to create subscriber
-    const createRes = await shopifyRequest("/customers.json", "POST", {
-      customer: {
-        email,
-        email_marketing_consent: {
-          opt_in_level: "single_opt_in",
-          state: "subscribed",
-        },
-        tags: "newsletter",
-        verified_email: true,
+    // Step 1: Create or update the profile
+    const profileRes = await fetch("https://a.klaviyo.com/api/profiles/", {
+      method: "POST",
+      headers: {
+        "Authorization": `Klaviyo-API-Key ${KLAVIYO_API_KEY}`,
+        "Content-Type": "application/json",
+        "revision": "2025-01-15",
       },
+      body: JSON.stringify({
+        data: {
+          type: "profile",
+          attributes: { email },
+        },
+      }),
     });
 
-    if (createRes.status === 422) {
-      // Customer already exists — update marketing consent
-      const searchRes = await shopifyRequest(
-        `/customers/search.json?query=email:${encodeURIComponent(email)}`,
-        "GET"
-      );
-      const searchData = await searchRes.json();
-      const existing = searchData.customers?.[0];
+    let profileId: string;
 
-      if (existing) {
-        await shopifyRequest(`/customers/${existing.id}.json`, "PUT", {
-          customer: {
-            id: existing.id,
-            email_marketing_consent: {
-              opt_in_level: "single_opt_in",
-              state: "subscribed",
-            },
-            tags: existing.tags ? `${existing.tags},newsletter` : "newsletter",
-          },
-        });
-      }
+    if (profileRes.status === 201) {
+      const profileData = await profileRes.json();
+      profileId = profileData.data.id;
+    } else if (profileRes.status === 409) {
+      // Profile already exists — extract id from conflict response
+      const profileData = await profileRes.json();
+      profileId = profileData.errors?.[0]?.meta?.duplicate_profile_id;
+    } else {
+      const text = await profileRes.text();
+      console.error("[subscribe] profile error:", profileRes.status, text);
+      return NextResponse.json({ error: "Failed to create profile" }, { status: 500 });
+    }
+
+    // Step 2: Add profile to list
+    const listRes = await fetch(`https://a.klaviyo.com/api/lists/${KLAVIYO_LIST_ID}/relationships/profiles/`, {
+      method: "POST",
+      headers: {
+        "Authorization": `Klaviyo-API-Key ${KLAVIYO_API_KEY}`,
+        "Content-Type": "application/json",
+        "revision": "2025-01-15",
+      },
+      body: JSON.stringify({
+        data: [{ type: "profile", id: profileId }],
+      }),
+    });
+
+    console.log("[subscribe] list add status:", listRes.status);
+
+    if (listRes.status !== 204 && listRes.status !== 200) {
+      const text = await listRes.text();
+      console.error("[subscribe] list error:", text);
+      return NextResponse.json({ error: "Failed to add to list" }, { status: 500 });
     }
 
     return NextResponse.json({ success: true });
   } catch (err) {
-    console.error("Subscribe API error:", err);
-    return NextResponse.json({ error: "Server error" }, { status: 500 });
+    console.error("[subscribe] exception:", err);
+    return NextResponse.json({ error: String(err) }, { status: 500 });
   }
 }

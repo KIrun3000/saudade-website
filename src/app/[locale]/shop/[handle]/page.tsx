@@ -202,31 +202,60 @@ export default async function ProductPage({ params }: Props) {
     )
     .slice(0, 4);
 
+  const fixHtml = (html: string) =>
+    deduplicateDescriptionHtml(html).replaceAll("Saudade Unipessoal LDA", "Souldade Unipessoal LDA");
+
   const dedupedProduct = {
     ...product,
-    descriptionHtml: deduplicateDescriptionHtml(product.descriptionHtml),
-    // Apply the same dedup pass to every per-material description so the
-    // Adair / EU-Rep / Care preface doesn't double up after we swap copy.
+    descriptionHtml: fixHtml(product.descriptionHtml),
     materialDescriptions: product.materialDescriptions
       ? Object.fromEntries(
           Object.entries(product.materialDescriptions).map(([material, body]) => [
             material,
             {
-              description: body.description,
-              descriptionHtml: deduplicateDescriptionHtml(body.descriptionHtml),
+              description: body.description.replaceAll("Saudade Unipessoal LDA", "Souldade Unipessoal LDA"),
+              descriptionHtml: fixHtml(body.descriptionHtml),
             },
           ]),
         )
       : undefined,
   };
 
+  // Product rich-result schema: lets Google show price + availability in search.
+  const min = product.priceRange.minVariantPrice;
+  const max = product.priceRange.maxVariantPrice;
+  const productSchema = {
+    "@context": "https://schema.org",
+    "@type": "Product",
+    name: product.title,
+    description: product.description,
+    image: product.images.edges.slice(0, 3).map((e) => e.node.url),
+    url: `https://www.saudadevoces.com/${locale}/shop/${product.handle}`,
+    brand: { "@type": "Brand", name: "Saudade" },
+    offers: {
+      "@type": "AggregateOffer",
+      priceCurrency: min.currencyCode,
+      lowPrice: min.amount,
+      highPrice: max.amount,
+      availability: product.availableForSale
+        ? "https://schema.org/InStock"
+        : "https://schema.org/OutOfStock",
+    },
+  };
+
   return (
-    <ProductDetailClient
-      locale={locale}
-      product={dedupedProduct}
-      related={related}
-      prevProduct={prevProduct}
-      nextProduct={nextProduct}
-    />
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(productSchema) }}
+      />
+      <ProductDetailClient
+        locale={locale}
+        product={dedupedProduct}
+        related={related}
+        prevProduct={prevProduct}
+        nextProduct={nextProduct}
+      />
+    </>
   );
 }

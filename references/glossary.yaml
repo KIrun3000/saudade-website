@@ -1,0 +1,35 @@
+# Saudade brand glossary — used by the polish-localizer skill (and any other
+# translation tooling) to keep brand terms consistent across locales.
+#
+# Schema:
+#   do_not_translate: array of strings to copy verbatim into every locale
+#   prefer:           map of english_term -> canonical Polish term
+#   notes:            free-form translator guidance
+
+do_not_translate:
+  - Saudade
+  - Saudade Land
+  - Saudade Voces
+  - Mayka
+  - Adair
+  - Chakana
+  - Vocês
+  - GOTS
+  - Global Recycled Standard
+
+prefer:
+  community: społeczność
+  fashion: moda
+  movement: ruch
+  founder: założycielka
+  high frequency: wysoka częstotliwość
+  free thinkers: wolnomyśliciele
+  nature: natura
+  workshop: warsztat
+  sustainable: zrównoważony
+
+notes:
+  - "Voice: warm, slightly poetic for marketing copy; plain instructional for UI."
+  - "Use the informal singular ('Ty') for community/marketing copy. Avoid 'Państwo' formality."
+  - "UPPERCASE marketing labels (e.g. EXPLORE, VIEW ALL) should also be uppercased in Polish."
+  - "'Saudade' is a Portuguese feeling — keep the word, but you may add a Polish gloss in body copy."

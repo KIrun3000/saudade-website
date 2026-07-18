@@ -122,7 +122,7 @@ export function CartDrawer({ locale }: CartDrawerProps) {
                 {isCheckingOut ? t("redirecting") : t("checkout")}
               </button>
               <Link
-                href={`/${locale}/shop`}
+                href={`/${locale}/shop/art`}
                 className="inline-flex min-h-11 w-full items-center justify-center rounded-full border border-accent/35 px-6 py-3 font-display text-[11px] font-light uppercase tracking-[0.22em] text-accent transition-colors duration-300 hover:border-accent-light hover:text-accent-light"
                 onClick={toggleCart}
               >

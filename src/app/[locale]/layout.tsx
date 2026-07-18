@@ -4,8 +4,10 @@ import { notFound } from "next/navigation";
 
 import { Footer } from "@/components/layout/Footer";
 import { Header } from "@/components/layout/Header";
+import { SetHtmlLang } from "@/components/layout/SetHtmlLang";
 import { CartDrawer } from "@/components/shop/CartDrawer";
 import { CartProvider } from "@/components/shop/CartProvider";
+import { MushroomPeek } from "@/components/ui/MushroomPeek";
 import { locales } from "@/i18n/config";
 
 type Props = {
@@ -29,11 +31,13 @@ export default async function LocaleLayout({ children, params }: Props) {
 
   return (
     <NextIntlClientProvider locale={locale} messages={messages}>
-      <CartProvider>
+      <SetHtmlLang locale={locale} />
+      <CartProvider locale={locale}>
         <Header locale={locale} />
         <div className="flex-1">{children}</div>
         <Footer locale={locale} />
         <CartDrawer locale={locale} />
+        <MushroomPeek />
       </CartProvider>
     </NextIntlClientProvider>
   );

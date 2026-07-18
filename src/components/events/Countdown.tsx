@@ -24,9 +24,13 @@ function getTimeLeft(target: Date) {
 
 export function Countdown({ target }: CountdownProps) {
   const t = useTranslations("countdown");
-  const [timeLeft, setTimeLeft] = useState(() => getTimeLeft(target));
+  // Start from zeros so the server-rendered HTML and the client's first render
+  // match exactly (avoids a hydration mismatch). The real value is filled in
+  // immediately after mount, then ticks every second.
+  const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
 
   useEffect(() => {
+    setTimeLeft(getTimeLeft(target)); // sync to real time once on the client
     const timer = window.setInterval(() => {
       setTimeLeft(getTimeLeft(target));
     }, 1000);
