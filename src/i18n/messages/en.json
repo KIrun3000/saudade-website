@@ -553,12 +553,6 @@
     "readLess": "Read less"
   },
   "mushroom": {
-    "moon": [
-      "The moon is {phase} tonight — {lit}% lit.",
-      "{phase}, {lit}% glow. Whatever you start now grows with it.",
-      "It's a {phase} kind of day. Feel it before you fix it.",
-      "{phase} above you. The sky's keeping notes."
-    ],
     "plantGood": [
       "Good day to plant. The soil is listening.",
       "Waxing moon, kind sign — your seeds will thank you.",
@@ -590,16 +584,6 @@
       "You found me. The gentle ones always do.",
       "I grew here from a single spore and a lot of hope."
     ],
-    "phaseNames": {
-      "new": "New Moon",
-      "waxingCrescent": "Waxing Crescent",
-      "firstQuarter": "First Quarter",
-      "waxingGibbous": "Waxing Gibbous",
-      "full": "Full Moon",
-      "waningGibbous": "Waning Gibbous",
-      "lastQuarter": "Last Quarter",
-      "waningCrescent": "Waning Crescent"
-    },
     "pages": {
       "home": [
         "Saudade — you can't translate it, but you can feel it. You're feeling it now.",
@@ -651,6 +635,22 @@
         "A message sent with good intention always lands softly.",
         "Real people on the other side. That's rare these days."
       ]
-    }
+    },
+    "moonFull": [
+      "Full moon tonight. Big feelings are allowed.",
+      "The moon is full — a good night to let things glow."
+    ],
+    "moonNew": [
+      "New moon tonight. Perfect darkness for planting a quiet intention.",
+      "The moon starts over tonight. So can you."
+    ],
+    "moonWaxing": [
+      "Good days for beginnings — the sky agrees.",
+      "A fine stretch for growing things. Including you."
+    ],
+    "moonWaning": [
+      "These are days for softening — release what feels heavy.",
+      "A good stretch for finishing things and letting go."
+    ]
   }
 }

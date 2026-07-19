@@ -566,12 +566,6 @@
     "readLess": "Ler menos"
   },
   "mushroom": {
-    "moon": [
-      "Hoje a lua está {phase} — {lit}% iluminada.",
-      "{phase}, {lit}% de brilho. O que você começar agora cresce com ela.",
-      "É um dia de {phase}. Sinta antes de resolver.",
-      "{phase} sobre você. O céu está anotando."
-    ],
     "plantGood": [
       "Bom dia para plantar. A terra está ouvindo.",
       "Lua crescente, signo gentil — suas sementes agradecem.",
@@ -603,16 +597,6 @@
       "Você me encontrou. As almas gentis sempre encontram.",
       "Nasci aqui de um único esporo e muita esperança."
     ],
-    "phaseNames": {
-      "new": "Lua Nova",
-      "waxingCrescent": "Crescente",
-      "firstQuarter": "Quarto Crescente",
-      "waxingGibbous": "Gibosa Crescente",
-      "full": "Lua Cheia",
-      "waningGibbous": "Gibosa Minguante",
-      "lastQuarter": "Quarto Minguante",
-      "waningCrescent": "Minguante"
-    },
     "pages": {
       "home": [
         "Saudade — não se traduz, sente-se. E tu estás a senti-la agora.",
@@ -664,6 +648,22 @@
         "Uma mensagem enviada com boa intenção aterra sempre suave.",
         "Pessoas reais do outro lado. Hoje em dia isso é raro."
       ]
-    }
+    },
+    "moonFull": [
+      "Lua cheia esta noite. Sentimentos grandes são permitidos.",
+      "A lua está cheia — boa noite para deixar as coisas brilhar."
+    ],
+    "moonNew": [
+      "Lua nova esta noite. Escuridão perfeita para plantar uma intenção silenciosa.",
+      "A lua recomeça esta noite. Tu também podes."
+    ],
+    "moonWaxing": [
+      "Bons dias para começos — o céu concorda.",
+      "Uma boa fase para fazer crescer coisas. Incluindo-te a ti."
+    ],
+    "moonWaning": [
+      "Dias de suavizar — solta o que pesa.",
+      "Uma boa fase para terminar coisas e deixar ir."
+    ]
   }
 }

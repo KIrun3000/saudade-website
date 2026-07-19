@@ -566,12 +566,6 @@
     "readLess": "Czytaj mniej"
   },
   "mushroom": {
-    "moon": [
-      "Dziś księżyc jest {phase} — oświetlony w {lit}%.",
-      "{phase}, {lit}% blasku. To, co teraz zaczniesz, rośnie razem z nim.",
-      "To dzień {phase}. Poczuj, zanim zaczniesz naprawiać.",
-      "{phase} nad tobą. Niebo robi notatki."
-    ],
     "plantGood": [
       "Dobry dzień na sadzenie. Ziemia słucha.",
       "Przybywający księżyc, łagodny znak — nasiona ci podziękują.",
@@ -603,16 +597,6 @@
       "Znalazłeś mnie. Łagodne dusze zawsze znajdują.",
       "Wyrosłem tu z jednego zarodnika i mnóstwa nadziei."
     ],
-    "phaseNames": {
-      "new": "Nów",
-      "waxingCrescent": "Przybywający Sierp",
-      "firstQuarter": "Pierwsza Kwadra",
-      "waxingGibbous": "Przybywający Garb",
-      "full": "Pełnia",
-      "waningGibbous": "Ubywający Garb",
-      "lastQuarter": "Ostatnia Kwadra",
-      "waningCrescent": "Ubywający Sierp"
-    },
     "pages": {
       "home": [
         "Saudade — you can't translate it, but you can feel it. You're feeling it now.",
@@ -664,6 +648,22 @@
         "A message sent with good intention always lands softly.",
         "Real people on the other side. That's rare these days."
       ]
-    }
+    },
+    "moonFull": [
+      "Full moon tonight. Big feelings are allowed.",
+      "The moon is full — a good night to let things glow."
+    ],
+    "moonNew": [
+      "New moon tonight. Perfect darkness for planting a quiet intention.",
+      "The moon starts over tonight. So can you."
+    ],
+    "moonWaxing": [
+      "Good days for beginnings — the sky agrees.",
+      "A fine stretch for growing things. Including you."
+    ],
+    "moonWaning": [
+      "These are days for softening — release what feels heavy.",
+      "A good stretch for finishing things and letting go."
+    ]
   }
 }

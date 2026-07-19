@@ -67,12 +67,15 @@ export function useMushroomVoice() {
     const pageLines = asArr(asObj(tRaw("pages"))[pageKey]);
     const warm = asArr(tRaw("warm"));
 
+    // Moon-dependent advice. He only names the moon on its two big nights
+    // (full and new); the rest of the cycle he just hints at the energy.
     const moon = getMoon();
-    const phaseNames = asObj(tRaw("phaseNames")) as Record<string, string>;
-    const phaseLabel = phaseNames[moon.phase] ?? moon.phase;
-    const moonLines = asArr(tRaw("moon")).map((s) =>
-      s.replace(/\{phase\}/g, phaseLabel).replace(/\{lit\}/g, String(moon.illumination)),
-    );
+    const moonKey =
+      moon.phase === "full" ? "moonFull"
+      : moon.phase === "new" ? "moonNew"
+      : moon.waxing ? "moonWaxing"
+      : "moonWaning";
+    const moonLines = asArr(tRaw(moonKey));
     const plantLines = asArr(tRaw(moon.goodToPlant ? "plantGood" : "plantBad"));
     const cheeky = asArr(tRaw("cheeky"));
 
