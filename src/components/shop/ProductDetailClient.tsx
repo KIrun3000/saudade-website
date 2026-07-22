@@ -145,10 +145,14 @@ export function ProductDetailClient({
     return ordered;
   }, [variants]);
 
-  // Initial selection: first variant's options (variants are pre-sorted).
+  // Initial selection: first *available* variant's options (variants are
+  // pre-sorted Canvas-first, so this lands on Canvas when it's in stock and
+  // falls through to the next sellable material otherwise — never opening the
+  // page on a sold-out phantom).
   const [selectedOptions, setSelectedOptions] = useState<Record<string, string>>(() => {
     const initial: Record<string, string> = {};
-    variants[0]?.selectedOptions.forEach((option) => {
+    const defaultVariant = variants.find((v) => v.availableForSale) ?? variants[0];
+    defaultVariant?.selectedOptions.forEach((option) => {
       initial[option.name] = option.value;
     });
     return initial;

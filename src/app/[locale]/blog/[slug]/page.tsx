@@ -9,6 +9,17 @@ import {
   getLocalizedBlogArticle,
   getProxiedBlogImageSrc,
 } from "@/lib/blog-articles";
+import { locales, defaultLocale } from "@/i18n/config";
+
+const SITE_URL = "https://www.saudadevoces.com";
+
+// og:locale codes per site locale (Brazilian Portuguese for the brand's roots).
+const OG_LOCALES: Record<string, string> = {
+  en: "en_US",
+  pt: "pt_BR",
+  es: "es_ES",
+  pl: "pl_PL",
+};
 
 type Props = {
   params: Promise<{ locale: string; slug: string }>;
@@ -26,12 +37,33 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     return {};
   }
 
+  const path = `/blog/${slug}`;
+  // hreflang map so search engines serve the right language and avoid duplicate-content penalties.
+  const languages: Record<string, string> = Object.fromEntries(
+    locales.map((l) => [l, `/${l}${path}`]),
+  );
+  languages["x-default"] = `/${defaultLocale}${path}`;
+
   return {
     title: article.title,
     description: article.description,
+    keywords: article.keywords,
+    authors: [{ name: article.author }],
+    alternates: {
+      canonical: `/${locale}${path}`,
+      languages,
+    },
     openGraph: {
+      type: "article",
+      url: `/${locale}${path}`,
+      siteName: "Saudade",
+      locale: OG_LOCALES[locale] ?? "en_US",
       title: article.title,
       description: article.description,
+      publishedTime: article.publishedAt,
+      authors: [article.author],
+      section: article.category,
+      tags: article.keywords,
       images: [{ url: article.heroImage, alt: article.title }],
     },
     twitter: {
@@ -67,6 +99,7 @@ export default async function BlogArticlePage({ params }: Props) {
     "saudade-meaning":   { title: tBlog("post1Title"), excerpt: tBlog("post1Excerpt") },
     "textile-frequency": { title: tBlog("post2Title"), excerpt: tBlog("post2Excerpt") },
     "who-made-my-clothes": { title: tBlog("post3Title"), excerpt: tBlog("post3Excerpt") },
+    "permaculture": { title: tBlog("post4Title"), excerpt: tBlog("post4Excerpt") },
   };
 
   const relatedPosts = BLOG_ARTICLES
@@ -81,8 +114,46 @@ export default async function BlogArticlePage({ params }: Props) {
       ? "absolute inset-0 bg-gradient-to-b from-primary-dark/60 via-primary/55 to-primary-dark/80"
       : "absolute inset-0 bg-gradient-to-b from-primary-dark/20 via-primary/70 to-primary-dark/90";
 
+  const canonicalUrl = `${SITE_URL}/${locale}/blog/${slug}`;
+  const articleSchema = {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    headline: article.title,
+    description: article.description,
+    image: [`${SITE_URL}${article.heroImage}`],
+    datePublished: article.publishedAt,
+    dateModified: article.publishedAt,
+    inLanguage: locale,
+    articleSection: article.category,
+    keywords: article.keywords?.join(", "),
+    author: { "@type": "Person", name: article.author },
+    publisher: {
+      "@type": "Organization",
+      name: "Saudade",
+      logo: { "@type": "ImageObject", url: `${SITE_URL}/favicon-mandala.png` },
+    },
+    mainEntityOfPage: { "@type": "WebPage", "@id": canonicalUrl },
+  };
+  const breadcrumbSchema = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "Home", item: `${SITE_URL}/${locale}` },
+      { "@type": "ListItem", position: 2, name: "Journal", item: `${SITE_URL}/${locale}/blog` },
+      { "@type": "ListItem", position: 3, name: article.title, item: canonicalUrl },
+    ],
+  };
+
   return (
     <main>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(articleSchema) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
+      />
       <section className="relative flex min-h-[72vh] items-end overflow-hidden">
         <img
           src={getProxiedBlogImageSrc(article.heroImage)}
@@ -145,6 +216,37 @@ export default async function BlogArticlePage({ params }: Props) {
                   ))}
                 </ul>
               ) : null}
+
+              {section.links?.length ? (
+                <ul className="space-y-3 pl-4 text-base leading-relaxed text-text-on-light/88">
+                  {section.links.map((link) => (
+                    <li key={link.url}>
+                      -{" "}
+                      <a
+                        href={link.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-primary underline decoration-primary/30 underline-offset-4 transition-colors duration-300 hover:text-primary-dark hover:decoration-primary"
+                      >
+                        {link.label}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              ) : null}
+
+              {section.image ? (
+                <div className="relative my-12 h-[380px] overflow-hidden rounded-[1.5rem] border border-primary-light/20 md:h-[460px]">
+                  <img
+                    src={getProxiedBlogImageSrc(section.image)}
+                    alt={`${article.title} editorial image`}
+                    loading="lazy"
+                    decoding="async"
+                    referrerPolicy="no-referrer"
+                    className="absolute inset-0 h-full w-full object-cover"
+                  />
+                </div>
+              ) : null}
             </div>
           ))}
 
@@ -193,6 +295,37 @@ export default async function BlogArticlePage({ params }: Props) {
                     <li key={bullet}>- {bullet}</li>
                   ))}
                 </ul>
+              ) : null}
+
+              {section.links?.length ? (
+                <ul className="space-y-3 pl-4 text-base leading-relaxed text-text-on-light/88">
+                  {section.links.map((link) => (
+                    <li key={link.url}>
+                      -{" "}
+                      <a
+                        href={link.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-primary underline decoration-primary/30 underline-offset-4 transition-colors duration-300 hover:text-primary-dark hover:decoration-primary"
+                      >
+                        {link.label}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              ) : null}
+
+              {section.image ? (
+                <div className="relative my-12 h-[380px] overflow-hidden rounded-[1.5rem] border border-primary-light/20 md:h-[460px]">
+                  <img
+                    src={getProxiedBlogImageSrc(section.image)}
+                    alt={`${article.title} editorial image`}
+                    loading="lazy"
+                    decoding="async"
+                    referrerPolicy="no-referrer"
+                    className="absolute inset-0 h-full w-full object-cover"
+                  />
+                </div>
               ) : null}
             </div>
           ))}

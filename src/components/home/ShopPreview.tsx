@@ -21,23 +21,24 @@ export async function ShopPreview({ locale }: ShopPreviewProps) {
     // Group into one virtual master product per painting (Material × Frame × Size).
     const grouped = groupProductsByPainting(allProducts);
 
-    // Pick the preview image: prefer the Framed Poster / Black frame variant image,
-    // fall back to the first product image.
+    // Pick the preview image: prefer the gallery-wrapped Canvas look (matches
+    // the shop's canvas-first default — reads as an original painting, not a
+    // print), then a Canvas variant image, then the first product image.
     products = grouped.slice(0, 4).map((p) => {
-      const framedBlackVariant = p.variants.edges
+      const canvasVariant = p.variants.edges
         .map((e) => e.node)
         .find(
           (v) =>
             v.availableForSale &&
             v.selectedOptions.some(
-              (o) => o.name === "Material" && /framed poster/i.test(o.value),
-            ) &&
-            v.selectedOptions.some(
-              (o) => o.name === "Frame" && /black/i.test(o.value),
+              (o) => o.name === "Material" && o.value === "Canvas",
             ),
         );
       const previewImage =
-        framedBlackVariant?.image ?? p.images.edges[0]?.node ?? null;
+        p.materialImages?.["Canvas"] ??
+        canvasVariant?.image ??
+        p.images.edges[0]?.node ??
+        null;
       // Inject the chosen image as the first image so the card renders it.
       return {
         ...p,

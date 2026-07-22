@@ -1,8 +1,19 @@
+export type BlogLink = {
+  label: string;
+  url: string;
+};
+
 export type BlogSection = {
   heading?: string;
   paragraphs?: string[];
   bullets?: string[];
   quote?: string;
+  /** Optional image rendered directly after this section's content, to intersperse
+   *  imagery through the article instead of stacking it in one block. */
+  image?: string;
+  /** Clickable external references, rendered as a list of links (e.g. a
+   *  "Sources and Inspiration" section). Language-independent. */
+  links?: BlogLink[];
 };
 
 export type BlogArticleTranslation = {
@@ -14,8 +25,8 @@ export type BlogArticleTranslation = {
 };
 
 export type BlogArticle = {
-  slug: "saudade-meaning" | "textile-frequency" | "who-made-my-clothes";
-  category: "PHILOSOPHY" | "CONSCIOUS FASHION";
+  slug: "saudade-meaning" | "textile-frequency" | "who-made-my-clothes" | "permaculture";
+  category: "PHILOSOPHY" | "CONSCIOUS FASHION" | "REGENERATION";
   publishedAt: string;
   author: "Mayka";
   title: string;
@@ -23,6 +34,8 @@ export type BlogArticle = {
   description: string;
   cardImage: string;
   heroImage: string;
+  /** SEO keywords / OG tags for this article. */
+  keywords?: string[];
   quote?: string;
   extraImages?: string[];
   sections: BlogSection[];
@@ -33,6 +46,32 @@ export type BlogArticle = {
     pl?: BlogArticleTranslation;
   };
 };
+
+// Shared, language-independent source lists so a "Sources and Inspiration"
+// section can reuse the same verified links across every translation.
+const SOURCES_PERMACULTURE: BlogLink[] = [
+  { label: "Saudade — About: the vision of Saudade Land", url: "https://www.saudadevoces.com/about" },
+  { label: "What Is Permaculture, Anyway? — Omega Institute", url: "https://www.eomega.org/article/what-is-permaculture-anyway" },
+  { label: "Permaculture: Principles and Applications — Vert Zero", url: "https://vertzero.eco/en/insights/permaculture-principles-and-applications" },
+  { label: "Permaculture — Wikipedia", url: "https://en.wikipedia.org/wiki/Permaculture" },
+  { label: "What Is Permaculture? Benefits & Applications — Indonesia Asri", url: "https://indonesiaasri.com/en/education/what-is-permaculture/" },
+  { label: "27 Benefits of Permaculture and the Challenges — Futurside", url: "https://futurside.com/permaculture-benefits-and-challenges-you-need-to-know/" },
+];
+
+const SOURCES_TEXTILE_FREQUENCY: BlogLink[] = [
+  { label: "The Frequency of Fabric — Dr. Heidi Yellen's study (Sound Healing Research Foundation)", url: "https://soundhealingresearchfoundation.org/wp-content/uploads/2024/08/Frequency-of-Fabric.pdf" },
+  { label: "Washing synthetic clothes & microplastic pollution — Nature, Scientific Reports", url: "https://www.nature.com/articles/s41598-019-43023-x" },
+  { label: "Global Organic Textile Standard (GOTS)", url: "https://global-standard.org/" },
+  { label: "Linen — Wikipedia", url: "https://en.wikipedia.org/wiki/Linen" },
+  { label: "A New Textiles Economy — Ellen MacArthur Foundation", url: "https://www.ellenmacarthurfoundation.org/a-new-textiles-economy" },
+];
+
+const SOURCES_WHO_MADE: BlogLink[] = [
+  { label: "Fashion Revolution — Who Made My Clothes?", url: "https://www.fashionrevolution.org/" },
+  { label: "Rana Plaza collapse — Wikipedia", url: "https://en.wikipedia.org/wiki/Rana_Plaza_collapse" },
+  { label: "Clean Clothes Campaign", url: "https://cleanclothes.org/" },
+  { label: "A New Textiles Economy — Ellen MacArthur Foundation", url: "https://www.ellenmacarthurfoundation.org/a-new-textiles-economy" },
+];
 
 export const BLOG_ARTICLES: BlogArticle[] = [
   {
@@ -47,6 +86,18 @@ export const BLOG_ARTICLES: BlogArticle[] = [
       "/wp-content/uploads/2023/09/F56E23B8-D3FF-4BA1-BE97-73AC2B21B4CE_1_105_c-e1729254532272.jpeg",
     heroImage:
       "/wp-content/uploads/2023/09/pexels-tellez-erik-12747153.jpg",
+    keywords: [
+      "saudade",
+      "saudade meaning",
+      "what does saudade mean",
+      "Portuguese word saudade",
+      "longing",
+      "nostalgia",
+      "Brazilian Portuguese",
+      "untranslatable words",
+      "emotional connection",
+      "Saudade brand",
+    ],
     quote: '"When I think of saudade I think of the ocean"',
     extraImages: ["/costaricaocean.jpeg"],
     sections: [
@@ -154,6 +205,20 @@ export const BLOG_ARTICLES: BlogArticle[] = [
       "/wp-content/uploads/2023/09/volha-flaxeco-L8QuQqL1ZJ8-unsplash-1.jpeg",
     heroImage:
       "/wp-content/uploads/2023/09/volha-flaxeco-L8QuQqL1ZJ8-unsplash-1.jpeg",
+    keywords: [
+      "fabric frequency",
+      "frequency of fabrics",
+      "linen frequency",
+      "natural fibers",
+      "linen",
+      "hemp",
+      "organic cotton",
+      "wool",
+      "synthetic fabrics microplastics",
+      "conscious fashion",
+      "high vibration clothing",
+      "sustainable textiles",
+    ],
     extraImages: [
       "/wp-content/uploads/2024/10/pexels-photo-4405941-4405941-2.jpg",
     ],
@@ -196,6 +261,15 @@ export const BLOG_ARTICLES: BlogArticle[] = [
           "Breathes better than any synthetic",
           "Naturally resistant to mold, mildew, and UV light",
         ],
+      },
+    ],
+    postImageSections: [
+      {
+        heading: "Sources and Inspiration",
+        paragraphs: [
+          "To go deeper into the story behind these fibers, these resources offered knowledge and clarity:",
+        ],
+        links: SOURCES_TEXTILE_FREQUENCY,
       },
     ],
     translations: {
@@ -244,6 +318,15 @@ export const BLOG_ARTICLES: BlogArticle[] = [
             ],
           },
         ],
+        postImageSections: [
+          {
+            heading: "Fontes e Inspiração",
+            paragraphs: [
+              "Para aprofundar a história por trás destas fibras, estes recursos ofereceram conhecimento e clareza:",
+            ],
+            links: SOURCES_TEXTILE_FREQUENCY,
+          },
+        ],
       },
       es: {
         title: "La Frecuencia de los Tejidos",
@@ -288,6 +371,15 @@ export const BLOG_ARTICLES: BlogArticle[] = [
               "Respira mejor que cualquier sintético",
               "Naturalmente resistente al moho, el mildiu y la luz UV",
             ],
+          },
+        ],
+        postImageSections: [
+          {
+            heading: "Fuentes e Inspiración",
+            paragraphs: [
+              "Para profundizar en la historia detrás de estas fibras, estos recursos ofrecieron conocimiento y claridad:",
+            ],
+            links: SOURCES_TEXTILE_FREQUENCY,
           },
         ],
       },
@@ -336,6 +428,15 @@ export const BLOG_ARTICLES: BlogArticle[] = [
             ],
           },
         ],
+        postImageSections: [
+          {
+            heading: "Źródła i Inspiracje",
+            paragraphs: [
+              "Aby zgłębić historię stojącą za tymi włóknami, te źródła dostarczyły wiedzy i jasności:",
+            ],
+            links: SOURCES_TEXTILE_FREQUENCY,
+          },
+        ],
       },
     },
   },
@@ -351,6 +452,20 @@ export const BLOG_ARTICLES: BlogArticle[] = [
       "/wp-content/uploads/2024/10/jon-tyson-uEXc4WGAI2c-unsplash-768x1024.jpg",
     heroImage:
       "/wp-content/uploads/2024/10/jon-tyson-uEXc4WGAI2c-unsplash-768x1024.jpg",
+    keywords: [
+      "who made my clothes",
+      "fast fashion",
+      "ethical fashion",
+      "garment workers",
+      "Rana Plaza",
+      "fashion supply chain",
+      "sustainable fashion",
+      "slow fashion",
+      "textile waste",
+      "fashion transparency",
+      "conscious clothing",
+      "natural fibers",
+    ],
     extraImages: [
       "/wp-content/uploads/2024/10/fast-fashion.webp",
     ],
@@ -371,6 +486,13 @@ export const BLOG_ARTICLES: BlogArticle[] = [
           "We share these truths not to overwhelm, but because awareness is the first thread of change. When we know, we can choose differently. And every conscious choice — every garment bought with intention — is a quiet but powerful act of solidarity with the people and the planet on the other side of the label.",
         ],
         quote: "\"The most sustainable garment is the one already in your wardrobe. The most revolutionary act is choosing well.\"",
+      },
+      {
+        heading: "Sources and Inspiration",
+        paragraphs: [
+          "To go deeper into the story behind our clothes, these resources offered knowledge and clarity:",
+        ],
+        links: SOURCES_WHO_MADE,
       },
     ],
     sections: [
@@ -432,6 +554,13 @@ export const BLOG_ARTICLES: BlogArticle[] = [
             ],
             quote: "\"A peça mais sustentável é a que já está no seu guarda-roupa. O ato mais revolucionário é escolher bem.\"",
           },
+          {
+            heading: "Fontes e Inspiração",
+            paragraphs: [
+              "Para aprofundar a história por trás das nossas roupas, estes recursos ofereceram conhecimento e clareza:",
+            ],
+            links: SOURCES_WHO_MADE,
+          },
         ],
       },
       es: {
@@ -472,6 +601,13 @@ export const BLOG_ARTICLES: BlogArticle[] = [
               "Compartimos estas verdades no para abrumar, sino porque la conciencia es el primer hilo del cambio. Cuando sabemos, podemos elegir de manera diferente. Y cada elección consciente — cada prenda comprada con intención — es un acto silencioso pero poderoso de solidaridad con las personas y el planeta al otro lado de la etiqueta.",
             ],
             quote: "\"La prenda más sostenible es la que ya está en tu armario. El acto más revolucionario es elegir bien.\"",
+          },
+          {
+            heading: "Fuentes e Inspiración",
+            paragraphs: [
+              "Para profundizar en la historia detrás de nuestra ropa, estos recursos ofrecieron conocimiento y claridad:",
+            ],
+            links: SOURCES_WHO_MADE,
           },
         ],
       },
@@ -514,6 +650,685 @@ export const BLOG_ARTICLES: BlogArticle[] = [
             ],
             quote: "„Najbardziej zrównoważona rzecz to ta, która już wisi w Twojej szafie. Najbardziej rewolucyjny gest to wybierać dobrze.”",
           },
+          {
+            heading: "Źródła i Inspiracje",
+            paragraphs: [
+              "Aby zgłębić historię stojącą za naszymi ubraniami, te źródła dostarczyły wiedzy i jasności:",
+            ],
+            links: SOURCES_WHO_MADE,
+          },
+        ],
+      },
+    },
+  },
+  {
+    slug: "permaculture",
+    category: "REGENERATION",
+    publishedAt: "2026-07-18",
+    author: "Mayka",
+    title: "Permaculture — Permanent Culture",
+    subtitle:
+      "More than a way of growing food, permaculture is a way of remembering how to live — in rhythm with the earth, in care for each other, in designs that heal rather than extract.",
+    description:
+      "Permaculture is more than a way of growing food. It is a way of remembering how to live in rhythm with the earth — its ethics, its principles, and the dream of Saudade Land.",
+    cardImage: "/saudade-land-1.jpg",
+    heroImage: "/saudade-land-1.jpg",
+    keywords: [
+      "permaculture",
+      "permanent culture",
+      "what is permaculture",
+      "permaculture principles",
+      "permaculture ethics",
+      "Earth Care People Care Fair Share",
+      "regenerative agriculture",
+      "regenerative design",
+      "David Holmgren",
+      "Bill Mollison",
+      "food forest",
+      "soil regeneration",
+      "sustainable living",
+      "eco-village",
+      "Saudade Land",
+    ],
+    quote: '"Another world is already sprouting in the cracks of this one."',
+    // Inline images are interspersed through the sections below via each section's
+    // `image` field (see the four `image:` entries). All Unsplash, free license:
+    // hands in soil — Neslihan Gunaydin (@honeypoppet); polyculture bed — Pascale Amez
+    // (@pascale_amez); harvest — Markus Spiske (@markusspiske); kitchen garden —
+    // Fionn Große / (@urdonohue).
+    sections: [
+      {
+        paragraphs: [
+          "Permaculture is more than a way of growing food. It is a way of remembering how to live — in rhythm with the earth, in care for each other, in designs that heal rather than extract.",
+          "It belongs to no single person. It lives in every gardener who saves seeds, every artist who plants possibility, every community that chooses to regenerate instead of consume. It is the language of everyone who is awake — everyone who is saudade.",
+        ],
+      },
+      {
+        heading: "What Is Permaculture?",
+        paragraphs: [
+          "The word permaculture was coined in the late 1970s by Bill Mollison and David Holmgren as a contraction of \"permanent agriculture\" — and soon widened into \"permanent culture.\" At its heart, it is a way of designing human life so that it works with nature rather than against it.",
+        ],
+        bullets: [
+          "An ethically grounded design system for human habitats and food production that cooperates with living systems instead of exploiting them.",
+          "A whole-systems approach that weaves together organic agriculture, renewable energy, water management, natural building, community design, and social structure.",
+          "A global movement of people designing regenerative homes, farms, and communities rooted in three ethics: Earth Care, People Care, Fair Share.",
+        ],
+      },
+      {
+        quote:
+          "\"Permaculture is the harmonious integration of landscape and people — providing for their food, energy, shelter, and other material and non-material needs in a sustainable way.\" — Bill Mollison",
+        paragraphs: [
+          "But more than a definition, permaculture is a feeling: the certainty that we are not separate from the land, that healing the earth is healing ourselves, that another world is already sprouting in the cracks of this one.",
+        ],
+        image: "/permaculture-hands-soil.jpg",
+      },
+      {
+        heading: "Why It Matters Now",
+        paragraphs: [
+          "We live in a time of climate instability, resource depletion, and deep disconnection. Permaculture offers practical, hopeful pathways to survive and thrive — not just by minimizing harm, but by actively regenerating life. Its importance shows up on many levels:",
+        ],
+        bullets: [
+          "Regenerates soil and water — builds living soil, improves water retention, and reduces erosion and drought vulnerability.",
+          "Increases biodiversity — creates habitats where plants, animals, insects, and humans can coexist.",
+          "Helps address climate change — sequesters carbon through trees, perennial plants, and healthy soils.",
+          "Strengthens communities — fosters collaboration, local food security, education, and resilience.",
+          "Supports health — physically (cleaner air, water, and nutrient-dense food), mentally (belonging and purpose), and spiritually (meaningful connection to life).",
+        ],
+      },
+      {
+        paragraphs: [
+          "In a world shaped by extraction, permaculture is a quiet rebellion of care, slowness, and abundance. It is the work of grandmothers saving seeds, young people building community gardens, artists designing living systems, dreamers imagining cities that breathe. It is the collective vision of everyone who is saudade.",
+        ],
+        image: "/permaculture-garden.jpg",
+      },
+      {
+        heading: "The Ethics and Principles That Guide It",
+        paragraphs: ["Permaculture rests on three ethics:"],
+        bullets: [
+          "Earth Care — recognizing the planet as a living system with intrinsic value.",
+          "People Care — meeting human needs with compassion, collaboration, and dignity.",
+          "Fair Share — acknowledging limits, redistributing surplus, and caring for future generations.",
+        ],
+      },
+      {
+        paragraphs: [
+          "From these ethics flow twelve design principles, as articulated by David Holmgren:",
+        ],
+        bullets: [
+          "Observe and interact — learn from the land and the people before designing.",
+          "Catch and store energy — sun, water, biomass, knowledge, relationships.",
+          "Obtain a yield — ensure tangible benefits: food, shelter, health, joy.",
+          "Apply self-regulation and accept feedback — adapt and refine.",
+          "Use and value renewable resources — sun, wind, and water over fossil fuels.",
+          "Produce no waste — close loops; compost, reuse, share.",
+          "Design from patterns to details — see the whole before the parts.",
+          "Integrate rather than segregate — create relationships, not isolated elements.",
+          "Use small and slow solutions — scalable, adaptable, resilient.",
+          "Use and value diversity — ecological and social.",
+          "Use edges and value the marginal — creativity often lives at the borders.",
+          "Creatively use and respond to change — design for evolution, not stasis.",
+        ],
+        image: "/permaculture-harvest.jpg",
+      },
+      {
+        quote:
+          "These are not rules. They are invitations — ways to align our choices with the intelligence of life.",
+      },
+      {
+        heading: "How to Apply and Benefit From It",
+        paragraphs: [
+          "You don't need acres of land to practice permaculture. It begins as a way of seeing and grows into a way of living.",
+        ],
+      },
+      {
+        heading: "In Your Home and Daily Life",
+        bullets: [
+          "Observe your space — where do sun, wind, and water flow? Where do you waste energy or food?",
+          "Catch and store — collect rainwater, compost food scraps, save seeds, keep knowledge and skills alive.",
+          "Reduce waste — choose reusables, repair instead of replace, share what you don't need.",
+          "Grow something — even a small herb garden, balcony pots, or a windowsill follows permaculture logic: diversity, soil care, closed loops.",
+          "Choose slow, local, seasonal — food, clothing, and objects that last and carry meaning.",
+        ],
+      },
+      {
+        heading: "In Gardens and Small Farms",
+        bullets: [
+          "Design with patterns — beds, paths, and plant groupings that mimic natural systems.",
+          "Integrate functions — plants that feed, shade, fix nitrogen, and attract pollinators, together.",
+          "Value diversity — mix annuals and perennials, companion plant, invite wildlife.",
+          "Build soil — mulch, compost, cover crops, minimal tillage.",
+          "Manage water wisely — swales, basins, rainwater harvesting, drip irrigation.",
+        ],
+      },
+      {
+        heading: "In Communities and Larger Systems",
+        bullets: [
+          "Community gardens and CSAs — shared growspaces, local food networks, skill exchanges.",
+          "Eco-villages and co-housing — shared energy, water, food, and care systems.",
+          "Education and collaboration — workshops, design courses, seed libraries, tool shares.",
+          "Support regenerative businesses — brands and projects aligned with Earth Care, People Care, Fair Share, like the vision of Saudade: a creative sanctuary where art, clothing, and land come together in a living system that heals.",
+        ],
+      },
+    ],
+    postImageSections: [
+      {
+        heading: "Saudade and the Dream of Permanent Culture",
+        paragraphs: [
+          "At Saudade, permaculture is not an add-on. It is the heartbeat of the dream: a sanctuary where art, clothing, and land come together in a living system that heals. This dream does not belong to one person. It belongs to everyone who chooses, in small or large ways, to live as if the future matters —",
+        ],
+        bullets: [
+          "The artists who feel the earth in their work and refuse to create from extraction.",
+          "The healers who tend bodies, minds, and soils with the same reverence.",
+          "The dreamers who imagine homes, cities, and economies that honor life.",
+          "The gardeners, the parents, the teachers, the makers.",
+        ],
+        image: "/permaculture-kitchen-garden.jpg",
+      },
+      {
+        paragraphs: [
+          "Every purchase of Saudade's clothing, every seed planted, every act of care is a step toward Saudade Land — a self-sustaining hub where renewable energy, permaculture, and circular economies replace exploitation and waste.",
+          "In this sense, tending your garden, wearing clothes made with intention, sharing skills, and building community are all part of the same movement: creating a permanent culture — one that can endure, regenerate, and hold space for all of us who never quite had a place to belong.",
+          "Permaculture, then, is not someone else's project. It is everyone's vision. It is the vision of everyone who is awake, everyone who is saudade.",
+        ],
+      },
+      {
+        heading: "A Gentle Invitation",
+        paragraphs: [
+          "You don't have to change everything at once. Permaculture honors small, slow solutions. Start where you are:",
+        ],
+        bullets: [
+          "Notice one pattern in your life or space.",
+          "Catch one form of energy you usually let slip away.",
+          "Close one loop — compost, repair, share, plant.",
+          "Join or support one project that feels aligned with Earth Care, People Care, Fair Share.",
+        ],
+        quote:
+          "\"We came here to love the world back to life.\" If part of you never forgot this, permaculture is simply a language for that remembering — and you, with your hands, your heart, your choices, are already part of the movement.",
+      },
+      {
+        heading: "Sources and Inspiration",
+        paragraphs: [
+          "If you feel called to go deeper, these resources offered knowledge, clarity, and fuel for this text. May these paths support your own remembering.",
+        ],
+        links: SOURCES_PERMACULTURE,
+      },
+    ],
+    translations: {
+      pt: {
+        title: "Permacultura — Cultura Permanente",
+        subtitle:
+          "Mais do que um jeito de cultivar alimento, a permacultura é um jeito de lembrar como viver — em ritmo com a terra, em cuidado uns pelos outros, em desenhos que curam em vez de extrair.",
+        quote: '"Outro mundo já está brotando nas rachaduras deste."',
+        sections: [
+          {
+            paragraphs: [
+              "A permacultura é mais do que um jeito de cultivar alimento. É um jeito de lembrar como viver — em ritmo com a terra, em cuidado uns pelos outros, em desenhos que curam em vez de extrair.",
+              "Ela não pertence a ninguém em particular. Vive em cada jardineira que guarda sementes, em cada artista que planta possibilidade, em cada comunidade que escolhe regenerar em vez de consumir. É a língua de todos os que estão despertos — todos os que são saudade.",
+            ],
+          },
+          {
+            heading: "O Que É Permacultura?",
+            paragraphs: [
+              "A palavra permacultura foi cunhada no fim dos anos 1970 por Bill Mollison e David Holmgren como uma contração de \"agricultura permanente\" — e logo se ampliou para \"cultura permanente\". Em sua essência, é um jeito de desenhar a vida humana para que ela trabalhe com a natureza, e não contra ela.",
+            ],
+            bullets: [
+              "Um sistema de design com base ética para habitats humanos e produção de alimentos que coopera com os sistemas vivos em vez de explorá-los.",
+              "Uma abordagem de sistemas integrais que tece agricultura orgânica, energia renovável, gestão da água, construção natural, design comunitário e estruturas sociais.",
+              "Um movimento global de pessoas desenhando lares, fazendas e comunidades regenerativas enraizadas em três éticas: Cuidar da Terra, Cuidar das Pessoas, Partilha Justa.",
+            ],
+          },
+          {
+            quote:
+              "\"A permacultura é a integração harmoniosa entre paisagem e pessoas — provendo seu alimento, energia, abrigo e outras necessidades materiais e não materiais de forma sustentável.\" — Bill Mollison",
+            paragraphs: [
+              "Mas, mais do que uma definição, a permacultura é um sentimento: a certeza de que não somos separados da terra, de que curar a terra é curar a nós mesmos, de que outro mundo já está brotando nas rachaduras deste.",
+            ],
+          },
+          {
+            heading: "Por Que Importa Agora",
+            paragraphs: [
+              "Vivemos num tempo de instabilidade climática, esgotamento de recursos e desconexão profunda. A permacultura oferece caminhos práticos e esperançosos para sobreviver e prosperar — não apenas minimizando danos, mas regenerando a vida ativamente. Sua importância aparece em muitos níveis:",
+            ],
+            bullets: [
+              "Regenera solo e água — constrói solo vivo, melhora a retenção de água e reduz a erosão e a vulnerabilidade à seca.",
+              "Aumenta a biodiversidade — cria habitats onde plantas, animais, insetos e humanos podem coexistir.",
+              "Ajuda a enfrentar as mudanças climáticas — sequestra carbono por meio de árvores, plantas perenes e solos saudáveis.",
+              "Fortalece comunidades — estimula colaboração, segurança alimentar local, educação e resiliência.",
+              "Sustenta a saúde — física (ar e água mais limpos e alimento rico em nutrientes), mental (pertencimento e propósito) e espiritual (conexão significativa com a vida).",
+            ],
+          },
+          {
+            paragraphs: [
+              "Num mundo moldado pela extração, a permacultura é uma rebelião silenciosa de cuidado, lentidão e abundância. É o trabalho das avós que guardam sementes, dos jovens que constroem hortas comunitárias, dos artistas que desenham sistemas vivos, dos sonhadores que imaginam cidades que respiram. É a visão coletiva de todos os que são saudade.",
+            ],
+          },
+          {
+            heading: "As Éticas e Princípios Que a Guiam",
+            paragraphs: ["A permacultura repousa sobre três éticas:"],
+            bullets: [
+              "Cuidar da Terra — reconhecer o planeta como um sistema vivo com valor intrínseco.",
+              "Cuidar das Pessoas — atender às necessidades humanas com compaixão, colaboração e dignidade.",
+              "Partilha Justa — reconhecer limites, redistribuir o excedente e cuidar das gerações futuras.",
+            ],
+          },
+          {
+            paragraphs: [
+              "Dessas éticas fluem doze princípios de design, tal como articulados por David Holmgren:",
+            ],
+            bullets: [
+              "Observe e interaja — aprenda com a terra e com as pessoas antes de desenhar.",
+              "Capte e armazene energia — sol, água, biomassa, conhecimento, relações.",
+              "Obtenha um rendimento — garanta benefícios tangíveis: alimento, abrigo, saúde, alegria.",
+              "Aplique a autorregulação e aceite retorno — adapte e refine.",
+              "Use e valorize recursos renováveis — sol, vento e água em vez de combustíveis fósseis.",
+              "Não produza desperdício — feche ciclos; composte, reutilize, compartilhe.",
+              "Desenhe dos padrões aos detalhes — veja o todo antes das partes.",
+              "Integre em vez de segregar — crie relações, não elementos isolados.",
+              "Use soluções pequenas e lentas — escaláveis, adaptáveis, resilientes.",
+              "Use e valorize a diversidade — ecológica e social.",
+              "Use as bordas e valorize o marginal — a criatividade muitas vezes vive nas fronteiras.",
+              "Use com criatividade e responda à mudança — desenhe para a evolução, não para a estagnação.",
+            ],
+          },
+          {
+            quote:
+              "Estes não são regras. São convites — modos de alinhar nossas escolhas com a inteligência da vida.",
+          },
+          {
+            heading: "Como Aplicar e Se Beneficiar Dela",
+            paragraphs: [
+              "Você não precisa de hectares de terra para praticar permacultura. Ela começa como um jeito de ver e cresce até virar um jeito de viver.",
+            ],
+          },
+          {
+            heading: "Em Casa e no Dia a Dia",
+            bullets: [
+              "Observe seu espaço — por onde correm o sol, o vento e a água? Onde você desperdiça energia ou alimento?",
+              "Capte e armazene — colha água da chuva, composte restos de comida, guarde sementes, mantenha vivos conhecimento e habilidades.",
+              "Reduza o desperdício — escolha reutilizáveis, conserte em vez de substituir, compartilhe o que não precisa.",
+              "Cultive algo — mesmo uma pequena horta de temperos, vasos na varanda ou um parapeito de janela segue a lógica da permacultura: diversidade, cuidado com o solo, ciclos fechados.",
+              "Escolha o lento, o local, o sazonal — alimentos, roupas e objetos que duram e carregam significado.",
+            ],
+          },
+          {
+            heading: "Em Hortas e Pequenas Fazendas",
+            bullets: [
+              "Desenhe com padrões — canteiros, caminhos e agrupamentos de plantas que imitam sistemas naturais.",
+              "Integre funções — plantas que alimentam, sombreiam, fixam nitrogênio e atraem polinizadores, juntas.",
+              "Valorize a diversidade — misture anuais e perenes, faça consórcios, convide a vida selvagem.",
+              "Construa solo — cobertura morta, composto, adubação verde, mínimo revolvimento.",
+              "Gerencie a água com sabedoria — valas de infiltração, bacias, captação de chuva, irrigação por gotejamento.",
+            ],
+          },
+          {
+            heading: "Em Comunidades e Sistemas Maiores",
+            bullets: [
+              "Hortas comunitárias e CSAs — espaços de cultivo compartilhados, redes locais de alimento, trocas de saberes.",
+              "Ecovilas e cohousing — sistemas compartilhados de energia, água, alimento e cuidado.",
+              "Educação e colaboração — oficinas, cursos de design, bibliotecas de sementes, compartilhamento de ferramentas.",
+              "Apoie negócios regenerativos — marcas e projetos alinhados com Cuidar da Terra, Cuidar das Pessoas, Partilha Justa, como a visão da Saudade: um santuário criativo onde arte, roupa e terra se unem num sistema vivo que cura.",
+            ],
+          },
+        ],
+        postImageSections: [
+          {
+            heading: "A Saudade e o Sonho da Cultura Permanente",
+            paragraphs: [
+              "Na Saudade, a permacultura não é um acréscimo. É o coração do sonho: um santuário onde arte, roupa e terra se unem num sistema vivo que cura. Esse sonho não pertence a uma só pessoa. Pertence a todos que escolhem, em pequenos ou grandes gestos, viver como se o futuro importasse —",
+            ],
+            bullets: [
+              "As artistas que sentem a terra em seu trabalho e se recusam a criar a partir da extração.",
+              "Os curadores que cuidam de corpos, mentes e solos com a mesma reverência.",
+              "Os sonhadores que imaginam lares, cidades e economias que honram a vida.",
+              "As jardineiras, as mães e pais, os professores, os fazedores.",
+            ],
+          },
+          {
+            paragraphs: [
+              "Cada peça de roupa da Saudade, cada semente plantada, cada gesto de cuidado é um passo rumo à Saudade Land — um polo autossustentável onde energia renovável, permacultura e economias circulares substituem a exploração e o desperdício.",
+              "Nesse sentido, cuidar da sua horta, vestir roupas feitas com intenção, compartilhar habilidades e construir comunidade são todos parte do mesmo movimento: criar uma cultura permanente — que possa perdurar, regenerar e acolher todas nós que nunca tivemos bem um lugar para pertencer.",
+              "A permacultura, então, não é o projeto de outra pessoa. É a visão de todos. É a visão de todos os que estão despertos, todos os que são saudade.",
+            ],
+          },
+          {
+            heading: "Um Convite Suave",
+            paragraphs: [
+              "Você não precisa mudar tudo de uma vez. A permacultura honra soluções pequenas e lentas. Comece de onde você está:",
+            ],
+            bullets: [
+              "Perceba um padrão na sua vida ou no seu espaço.",
+              "Capte uma forma de energia que você costuma deixar escapar.",
+              "Feche um ciclo — composte, conserte, compartilhe, plante.",
+              "Junte-se a ou apoie um projeto que sinta alinhado com Cuidar da Terra, Cuidar das Pessoas, Partilha Justa.",
+            ],
+            quote:
+              "\"Viemos aqui para amar o mundo de volta à vida.\" Se uma parte de você nunca esqueceu isso, a permacultura é simplesmente uma língua para essa lembrança — e você, com suas mãos, seu coração, suas escolhas, já faz parte do movimento.",
+          },
+          {
+            heading: "Fontes e Inspiração",
+            paragraphs: [
+              "Se você se sentir chamada a ir mais fundo, estes recursos ofereceram conhecimento, clareza e combustível para este texto. Que estes caminhos apoiem a sua própria lembrança.",
+            ],
+            links: SOURCES_PERMACULTURE,
+          },
+        ],
+      },
+      es: {
+        title: "Permacultura — Cultura Permanente",
+        subtitle:
+          "Más que una forma de cultivar alimento, la permacultura es una forma de recordar cómo vivir — en ritmo con la tierra, en cuidado mutuo, en diseños que sanan en lugar de extraer.",
+        quote: '"Otro mundo ya está brotando en las grietas de este."',
+        sections: [
+          {
+            paragraphs: [
+              "La permacultura es más que una forma de cultivar alimento. Es una forma de recordar cómo vivir — en ritmo con la tierra, en cuidado mutuo, en diseños que sanan en lugar de extraer.",
+              "No pertenece a nadie en particular. Vive en cada jardinera que guarda semillas, en cada artista que planta posibilidad, en cada comunidad que elige regenerar en lugar de consumir. Es el idioma de todos los que están despiertos — todos los que son saudade.",
+            ],
+          },
+          {
+            heading: "¿Qué Es la Permacultura?",
+            paragraphs: [
+              "La palabra permacultura fue acuñada a finales de los años setenta por Bill Mollison y David Holmgren como una contracción de \"agricultura permanente\" — y pronto se amplió a \"cultura permanente\". En su esencia, es una forma de diseñar la vida humana para que trabaje con la naturaleza, no contra ella.",
+            ],
+            bullets: [
+              "Un sistema de diseño de base ética para hábitats humanos y producción de alimentos que coopera con los sistemas vivos en lugar de explotarlos.",
+              "Un enfoque de sistemas integrales que entreteje agricultura orgánica, energía renovable, gestión del agua, construcción natural, diseño comunitario y estructuras sociales.",
+              "Un movimiento global de personas que diseñan hogares, granjas y comunidades regenerativas arraigadas en tres éticas: Cuidado de la Tierra, Cuidado de las Personas, Reparto Justo.",
+            ],
+          },
+          {
+            quote:
+              "\"La permacultura es la integración armoniosa entre paisaje y personas — proveyendo su alimento, energía, refugio y otras necesidades materiales y no materiales de manera sostenible.\" — Bill Mollison",
+            paragraphs: [
+              "Pero, más que una definición, la permacultura es un sentimiento: la certeza de que no estamos separados de la tierra, de que sanar la tierra es sanarnos a nosotros mismos, de que otro mundo ya está brotando en las grietas de este.",
+            ],
+          },
+          {
+            heading: "Por Qué Importa Ahora",
+            paragraphs: [
+              "Vivimos en un tiempo de inestabilidad climática, agotamiento de recursos y desconexión profunda. La permacultura ofrece caminos prácticos y esperanzadores para sobrevivir y prosperar — no solo minimizando el daño, sino regenerando la vida activamente. Su importancia se manifiesta en muchos niveles:",
+            ],
+            bullets: [
+              "Regenera suelo y agua — construye suelo vivo, mejora la retención de agua y reduce la erosión y la vulnerabilidad a la sequía.",
+              "Aumenta la biodiversidad — crea hábitats donde plantas, animales, insectos y humanos pueden coexistir.",
+              "Ayuda a afrontar el cambio climático — secuestra carbono a través de árboles, plantas perennes y suelos sanos.",
+              "Fortalece las comunidades — fomenta la colaboración, la seguridad alimentaria local, la educación y la resiliencia.",
+              "Sostiene la salud — física (aire y agua más limpios y alimento rico en nutrientes), mental (pertenencia y propósito) y espiritual (conexión significativa con la vida).",
+            ],
+          },
+          {
+            paragraphs: [
+              "En un mundo moldeado por la extracción, la permacultura es una rebelión silenciosa de cuidado, lentitud y abundancia. Es el trabajo de las abuelas que guardan semillas, de los jóvenes que construyen huertos comunitarios, de los artistas que diseñan sistemas vivos, de los soñadores que imaginan ciudades que respiran. Es la visión colectiva de todos los que son saudade.",
+            ],
+          },
+          {
+            heading: "Las Éticas y los Principios Que la Guían",
+            paragraphs: ["La permacultura se apoya en tres éticas:"],
+            bullets: [
+              "Cuidado de la Tierra — reconocer el planeta como un sistema vivo con valor intrínseco.",
+              "Cuidado de las Personas — atender las necesidades humanas con compasión, colaboración y dignidad.",
+              "Reparto Justo — reconocer los límites, redistribuir el excedente y cuidar de las generaciones futuras.",
+            ],
+          },
+          {
+            paragraphs: [
+              "De estas éticas fluyen doce principios de diseño, tal como los articuló David Holmgren:",
+            ],
+            bullets: [
+              "Observa e interactúa — aprende de la tierra y de las personas antes de diseñar.",
+              "Capta y almacena energía — sol, agua, biomasa, conocimiento, relaciones.",
+              "Obtén un rendimiento — asegura beneficios tangibles: alimento, refugio, salud, alegría.",
+              "Aplica la autorregulación y acepta la retroalimentación — adapta y afina.",
+              "Usa y valora los recursos renovables — sol, viento y agua antes que combustibles fósiles.",
+              "No produzcas desperdicio — cierra ciclos; composta, reutiliza, comparte.",
+              "Diseña desde los patrones hasta los detalles — mira el todo antes que las partes.",
+              "Integra en lugar de segregar — crea relaciones, no elementos aislados.",
+              "Usa soluciones pequeñas y lentas — escalables, adaptables, resilientes.",
+              "Usa y valora la diversidad — ecológica y social.",
+              "Usa los bordes y valora lo marginal — la creatividad a menudo vive en las fronteras.",
+              "Usa con creatividad y responde al cambio — diseña para la evolución, no para la inmovilidad.",
+            ],
+          },
+          {
+            quote:
+              "Estas no son reglas. Son invitaciones — formas de alinear nuestras decisiones con la inteligencia de la vida.",
+          },
+          {
+            heading: "Cómo Aplicarla y Beneficiarse de Ella",
+            paragraphs: [
+              "No necesitas hectáreas de tierra para practicar la permacultura. Comienza como una forma de ver y crece hasta volverse una forma de vivir.",
+            ],
+          },
+          {
+            heading: "En Tu Hogar y en la Vida Diaria",
+            bullets: [
+              "Observa tu espacio — ¿por dónde fluyen el sol, el viento y el agua? ¿Dónde desperdicias energía o alimento?",
+              "Capta y almacena — recoge agua de lluvia, composta los restos de comida, guarda semillas, mantén vivos el conocimiento y las habilidades.",
+              "Reduce el desperdicio — elige reutilizables, repara en lugar de reemplazar, comparte lo que no necesitas.",
+              "Cultiva algo — incluso un pequeño huerto de hierbas, macetas en el balcón o el alféizar de una ventana sigue la lógica de la permacultura: diversidad, cuidado del suelo, ciclos cerrados.",
+              "Elige lo lento, lo local, lo de temporada — alimentos, ropa y objetos que duran y llevan significado.",
+            ],
+          },
+          {
+            heading: "En Huertos y Pequeñas Granjas",
+            bullets: [
+              "Diseña con patrones — bancales, senderos y agrupaciones de plantas que imitan los sistemas naturales.",
+              "Integra funciones — plantas que alimentan, dan sombra, fijan nitrógeno y atraen polinizadores, juntas.",
+              "Valora la diversidad — mezcla anuales y perennes, asocia cultivos, invita a la vida silvestre.",
+              "Construye suelo — acolchado, compost, abonos verdes, mínima labranza.",
+              "Gestiona el agua con sabiduría — zanjas de infiltración, cuencas, captación de lluvia, riego por goteo.",
+            ],
+          },
+          {
+            heading: "En Comunidades y Sistemas Más Amplios",
+            bullets: [
+              "Huertos comunitarios y CSA — espacios de cultivo compartidos, redes locales de alimento, intercambios de saberes.",
+              "Ecoaldeas y cohousing — sistemas compartidos de energía, agua, alimento y cuidado.",
+              "Educación y colaboración — talleres, cursos de diseño, bibliotecas de semillas, préstamo de herramientas.",
+              "Apoya negocios regenerativos — marcas y proyectos alineados con Cuidado de la Tierra, Cuidado de las Personas, Reparto Justo, como la visión de Saudade: un santuario creativo donde arte, ropa y tierra se unen en un sistema vivo que sana.",
+            ],
+          },
+        ],
+        postImageSections: [
+          {
+            heading: "Saudade y el Sueño de la Cultura Permanente",
+            paragraphs: [
+              "En Saudade, la permacultura no es un añadido. Es el corazón del sueño: un santuario donde arte, ropa y tierra se unen en un sistema vivo que sana. Este sueño no pertenece a una sola persona. Pertenece a todos los que eligen, en gestos pequeños o grandes, vivir como si el futuro importara —",
+            ],
+            bullets: [
+              "Las artistas que sienten la tierra en su trabajo y se niegan a crear desde la extracción.",
+              "Los sanadores que cuidan cuerpos, mentes y suelos con la misma reverencia.",
+              "Los soñadores que imaginan hogares, ciudades y economías que honran la vida.",
+              "Las jardineras, las madres y padres, los maestros, los hacedores.",
+            ],
+          },
+          {
+            paragraphs: [
+              "Cada prenda de Saudade, cada semilla plantada, cada gesto de cuidado es un paso hacia Saudade Land — un núcleo autosostenible donde la energía renovable, la permacultura y las economías circulares reemplazan la explotación y el desperdicio.",
+              "En este sentido, cuidar tu huerto, vestir ropa hecha con intención, compartir habilidades y construir comunidad son todos parte del mismo movimiento: crear una cultura permanente — que pueda perdurar, regenerar y acoger a todas las que nunca tuvimos del todo un lugar al que pertenecer.",
+              "La permacultura, entonces, no es el proyecto de otra persona. Es la visión de todos. Es la visión de todos los que están despiertos, todos los que son saudade.",
+            ],
+          },
+          {
+            heading: "Una Invitación Suave",
+            paragraphs: [
+              "No tienes que cambiarlo todo de una vez. La permacultura honra las soluciones pequeñas y lentas. Comienza desde donde estás:",
+            ],
+            bullets: [
+              "Nota un patrón en tu vida o en tu espacio.",
+              "Capta una forma de energía que sueles dejar escapar.",
+              "Cierra un ciclo — composta, repara, comparte, planta.",
+              "Únete a o apoya un proyecto que sientas alineado con Cuidado de la Tierra, Cuidado de las Personas, Reparto Justo.",
+            ],
+            quote:
+              "\"Vinimos aquí para amar al mundo de vuelta a la vida.\" Si una parte de ti nunca lo olvidó, la permacultura es simplemente un idioma para ese recuerdo — y tú, con tus manos, tu corazón, tus decisiones, ya eres parte del movimiento.",
+          },
+          {
+            heading: "Fuentes e Inspiración",
+            paragraphs: [
+              "Si te sientes llamada a profundizar, estos recursos ofrecieron conocimiento, claridad y combustible para este texto. Que estos caminos apoyen tu propio recordar.",
+            ],
+            links: SOURCES_PERMACULTURE,
+          },
+        ],
+      },
+      pl: {
+        title: "Permakultura — Kultura Trwała",
+        subtitle:
+          "Więcej niż sposób uprawy jedzenia, permakultura jest sposobem przypominania sobie, jak żyć — w rytmie z ziemią, w trosce o siebie nawzajem, w projektach, które leczą, zamiast wyzyskiwać.",
+        quote: "„Inny świat już kiełkuje w szczelinach tego.”",
+        sections: [
+          {
+            paragraphs: [
+              "Permakultura to więcej niż sposób uprawy jedzenia. To sposób przypominania sobie, jak żyć — w rytmie z ziemią, w trosce o siebie nawzajem, w projektach, które leczą, zamiast wyzyskiwać.",
+              "Nie należy do nikogo z osobna. Żyje w każdej ogrodniczce, która przechowuje nasiona, w każdym artyście, który sieje możliwość, w każdej wspólnocie, która wybiera regenerację zamiast konsumpcji. To język wszystkich przebudzonych — wszystkich, którzy są saudade.",
+            ],
+          },
+          {
+            heading: "Czym Jest Permakultura?",
+            paragraphs: [
+              "Słowo permakultura zostało ukute pod koniec lat 70. przez Billa Mollisona i Davida Holmgrena jako skrót od „rolnictwa trwałego” — i wkrótce rozszerzyło się do „kultury trwałej”. W swej istocie jest to sposób projektowania ludzkiego życia tak, by współpracowało z naturą, a nie przeciw niej.",
+            ],
+            bullets: [
+              "System projektowania oparty na etyce, dla ludzkich siedlisk i produkcji żywności, który współpracuje z żywymi systemami, zamiast je eksploatować.",
+              "Podejście całościowe, splatające rolnictwo ekologiczne, energię odnawialną, gospodarowanie wodą, budownictwo naturalne, projektowanie wspólnot i struktury społeczne.",
+              "Globalny ruch ludzi projektujących regeneracyjne domy, gospodarstwa i wspólnoty zakorzenione w trzech zasadach etycznych: Troska o Ziemię, Troska o Ludzi, Sprawiedliwy Podział.",
+            ],
+          },
+          {
+            quote:
+              "„Permakultura to harmonijna integracja krajobrazu i ludzi — zapewniająca ich pożywienie, energię, schronienie oraz inne materialne i niematerialne potrzeby w sposób zrównoważony.” — Bill Mollison",
+            paragraphs: [
+              "Ale permakultura to coś więcej niż definicja: to uczucie — pewność, że nie jesteśmy oddzieleni od ziemi, że leczenie ziemi jest leczeniem nas samych, że inny świat już kiełkuje w szczelinach tego.",
+            ],
+          },
+          {
+            heading: "Dlaczego To Ważne Teraz",
+            paragraphs: [
+              "Żyjemy w czasie niestabilności klimatu, wyczerpywania zasobów i głębokiego rozłączenia. Permakultura oferuje praktyczne, pełne nadziei ścieżki, by przetrwać i rozkwitać — nie tylko ograniczając szkody, lecz czynnie regenerując życie. Jej znaczenie ujawnia się na wielu poziomach:",
+            ],
+            bullets: [
+              "Regeneruje glebę i wodę — buduje żywą glebę, poprawia zatrzymywanie wody i zmniejsza erozję oraz podatność na suszę.",
+              "Zwiększa bioróżnorodność — tworzy siedliska, w których rośliny, zwierzęta, owady i ludzie mogą współistnieć.",
+              "Pomaga stawić czoła zmianom klimatu — wiąże węgiel poprzez drzewa, rośliny wieloletnie i zdrowe gleby.",
+              "Wzmacnia wspólnoty — sprzyja współpracy, lokalnemu bezpieczeństwu żywnościowemu, edukacji i odporności.",
+              "Wspiera zdrowie — fizyczne (czystsze powietrze, woda i pełnowartościowe jedzenie), psychiczne (przynależność i sens) oraz duchowe (znacząca więź z życiem).",
+            ],
+          },
+          {
+            paragraphs: [
+              "W świecie ukształtowanym przez wyzysk permakultura jest cichym buntem troski, powolności i obfitości. To dzieło babć przechowujących nasiona, młodych ludzi zakładających ogrody społeczne, artystów projektujących żywe systemy, marzycieli wyobrażających sobie miasta, które oddychają. To wspólna wizja wszystkich, którzy są saudade.",
+            ],
+          },
+          {
+            heading: "Etyka i Zasady, Które Ją Prowadzą",
+            paragraphs: ["Permakultura opiera się na trzech zasadach etycznych:"],
+            bullets: [
+              "Troska o Ziemię — uznanie planety za żywy system o wartości samej w sobie.",
+              "Troska o Ludzi — zaspokajanie ludzkich potrzeb ze współczuciem, współpracą i godnością.",
+              "Sprawiedliwy Podział — uznawanie granic, redystrybucja nadwyżek i troska o przyszłe pokolenia.",
+            ],
+          },
+          {
+            paragraphs: [
+              "Z tych zasad etycznych wypływa dwanaście zasad projektowych, sformułowanych przez Davida Holmgrena:",
+            ],
+            bullets: [
+              "Obserwuj i wchodź w interakcję — ucz się od ziemi i od ludzi, zanim zaczniesz projektować.",
+              "Chwytaj i magazynuj energię — słońce, wodę, biomasę, wiedzę, relacje.",
+              "Uzyskuj plon — zapewniaj wymierne korzyści: jedzenie, schronienie, zdrowie, radość.",
+              "Stosuj samoregulację i przyjmuj informację zwrotną — dostosowuj i udoskonalaj.",
+              "Używaj i ceń zasoby odnawialne — słońce, wiatr i wodę zamiast paliw kopalnych.",
+              "Nie wytwarzaj odpadów — zamykaj obiegi; kompostuj, używaj ponownie, dziel się.",
+              "Projektuj od wzorców do szczegółów — dostrzegaj całość, zanim zajmiesz się częściami.",
+              "Integruj, zamiast segregować — twórz relacje, a nie odosobnione elementy.",
+              "Stosuj małe i powolne rozwiązania — skalowalne, elastyczne, odporne.",
+              "Używaj i ceń różnorodność — ekologiczną i społeczną.",
+              "Wykorzystuj obrzeża i ceń to, co marginalne — kreatywność często żyje na granicach.",
+              "Twórczo wykorzystuj zmianę i odpowiadaj na nią — projektuj z myślą o ewolucji, nie o bezruchu.",
+            ],
+          },
+          {
+            quote:
+              "To nie są zasady. To zaproszenia — sposoby, by uzgodnić nasze wybory z inteligencją życia.",
+          },
+          {
+            heading: "Jak Ją Stosować i Czerpać z Niej Korzyści",
+            paragraphs: [
+              "Nie potrzebujesz hektarów ziemi, by praktykować permakulturę. Zaczyna się jako sposób patrzenia i wyrasta w sposób życia.",
+            ],
+          },
+          {
+            heading: "W Domu i w Codziennym Życiu",
+            bullets: [
+              "Obserwuj swoją przestrzeń — którędy płyną słońce, wiatr i woda? Gdzie marnujesz energię lub jedzenie?",
+              "Chwytaj i magazynuj — zbieraj deszczówkę, kompostuj resztki jedzenia, przechowuj nasiona, pielęgnuj wiedzę i umiejętności.",
+              "Ograniczaj odpady — wybieraj rzeczy wielokrotnego użytku, naprawiaj zamiast wymieniać, dziel się tym, czego nie potrzebujesz.",
+              "Uprawiaj coś — nawet mały ogródek ziołowy, doniczki na balkonie czy parapet kierują się logiką permakultury: różnorodność, troska o glebę, zamknięte obiegi.",
+              "Wybieraj to, co powolne, lokalne i sezonowe — jedzenie, ubrania i przedmioty, które trwają i niosą znaczenie.",
+            ],
+          },
+          {
+            heading: "W Ogrodach i Małych Gospodarstwach",
+            bullets: [
+              "Projektuj według wzorców — grządki, ścieżki i układy roślin naśladujące systemy naturalne.",
+              "Łącz funkcje — rośliny, które karmią, dają cień, wiążą azot i przyciągają zapylacze, razem.",
+              "Ceń różnorodność — mieszaj rośliny jednoroczne i wieloletnie, uprawiaj współrzędnie, zapraszaj dziką przyrodę.",
+              "Buduj glebę — ściółkowanie, kompost, rośliny okrywowe, minimalna uprawa.",
+              "Mądrze gospodaruj wodą — rowy chłonne, niecki, zbieranie deszczówki, nawadnianie kropelkowe.",
+            ],
+          },
+          {
+            heading: "We Wspólnotach i Większych Systemach",
+            bullets: [
+              "Ogrody społeczne i CSA — wspólne przestrzenie uprawy, lokalne sieci żywności, wymiana umiejętności.",
+              "Ekowioski i kohousing — wspólne systemy energii, wody, żywności i opieki.",
+              "Edukacja i współpraca — warsztaty, kursy projektowania, biblioteki nasion, współdzielenie narzędzi.",
+              "Wspieraj biznesy regeneracyjne — marki i projekty zgodne z Troską o Ziemię, Troską o Ludzi, Sprawiedliwym Podziałem, jak wizja Saudade: twórcze sanktuarium, w którym sztuka, ubranie i ziemia łączą się w żywy system, który leczy.",
+            ],
+          },
+        ],
+        postImageSections: [
+          {
+            heading: "Saudade i Marzenie o Kulturze Trwałej",
+            paragraphs: [
+              "W Saudade permakultura nie jest dodatkiem. Jest sercem marzenia: sanktuarium, w którym sztuka, ubranie i ziemia łączą się w żywy system, który leczy. To marzenie nie należy do jednej osoby. Należy do każdego, kto wybiera — w małych lub wielkich gestach — życie tak, jakby przyszłość miała znaczenie —",
+            ],
+            bullets: [
+              "Artystki, które czują ziemię w swojej pracy i odmawiają tworzenia z wyzysku.",
+              "Uzdrowiciele, którzy troszczą się o ciała, umysły i gleby z tą samą czcią.",
+              "Marzyciele, którzy wyobrażają sobie domy, miasta i gospodarki honorujące życie.",
+              "Ogrodniczki, matki i ojcowie, nauczyciele, twórcy.",
+            ],
+          },
+          {
+            paragraphs: [
+              "Każda część odzieży Saudade, każde zasiane ziarno, każdy gest troski to krok w stronę Saudade Land — samowystarczalnego ośrodka, w którym energia odnawialna, permakultura i gospodarka obiegu zamkniętego zastępują wyzysk i marnotrawstwo.",
+              "W tym sensie pielęgnowanie ogrodu, noszenie ubrań tworzonych z intencją, dzielenie się umiejętnościami i budowanie wspólnoty są częścią tego samego ruchu: tworzenia kultury trwałej — takiej, która potrafi przetrwać, regenerować się i dawać miejsce nam wszystkim, którzy nigdy do końca nie mieli dokąd przynależeć.",
+              "Permakultura nie jest więc czyimś cudzym projektem. Jest wizją każdego z nas. Jest wizją wszystkich przebudzonych, wszystkich, którzy są saudade.",
+            ],
+          },
+          {
+            heading: "Łagodne Zaproszenie",
+            paragraphs: [
+              "Nie musisz zmieniać wszystkiego naraz. Permakultura honoruje małe, powolne rozwiązania. Zacznij tam, gdzie jesteś:",
+            ],
+            bullets: [
+              "Zauważ jeden wzorzec w swoim życiu lub w swojej przestrzeni.",
+              "Uchwyć jedną formę energii, którą zwykle pozwalasz umknąć.",
+              "Zamknij jeden obieg — kompostuj, napraw, podziel się, zasadź.",
+              "Dołącz do jednego projektu lub wesprzyj go, jeśli czujesz, że jest zgodny z Troską o Ziemię, Troską o Ludzi, Sprawiedliwym Podziałem.",
+            ],
+            quote:
+              "„Przyszliśmy tu, by miłością przywrócić świat do życia.” Jeśli jakaś część ciebie nigdy o tym nie zapomniała, permakultura jest po prostu językiem tego przypominania — a ty, swoimi dłońmi, sercem, wyborami, już jesteś częścią tego ruchu.",
+          },
+          {
+            heading: "Źródła i Inspiracje",
+            paragraphs: [
+              "Jeśli czujesz wezwanie, by zajrzeć głębiej, te źródła dostarczyły wiedzy, jasności i paliwa dla tego tekstu. Niech te ścieżki wspierają twoje własne przypominanie.",
+            ],
+            links: SOURCES_PERMACULTURE,
+          },
         ],
       },
     },
@@ -540,13 +1355,26 @@ export function getLocalizedBlogArticle(slug: string, locale: string): BlogArtic
 
   if (!translation) return article;
 
+  // Image placement is defined once on the base (English) sections. Carry those
+  // images across to the translated sections by index so every language keeps the
+  // same interspersed layout without duplicating image paths per language.
+  const withBaseImages = (
+    translated: BlogSection[] | undefined,
+    base: BlogSection[] | undefined,
+  ) =>
+    translated?.map((section, index) =>
+      base?.[index]?.image ? { ...section, image: base[index].image } : section,
+    );
+
   return {
     ...article,
     title: translation.title ?? article.title,
     subtitle: translation.subtitle ?? article.subtitle,
     quote: translation.quote ?? article.quote,
-    sections: translation.sections ?? article.sections,
-    postImageSections: translation.postImageSections ?? article.postImageSections,
+    sections: withBaseImages(translation.sections, article.sections) ?? article.sections,
+    postImageSections:
+      withBaseImages(translation.postImageSections, article.postImageSections) ??
+      article.postImageSections,
   };
 }
 

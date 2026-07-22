@@ -48,11 +48,11 @@ export const metadata: Metadata = {
     apple: "/favicon-mandala.png",
   },
   title: {
-    default: "Saudade — Original Art & Sustainable Fashion | High Frequency Living",
+    default: "Saudade — Sustainable Fashion & Original Art | High Frequency Living",
     template: "%s | Saudade",
   },
   description:
-    "Saudade: original paintings and limited art prints by Adair, and sustainable GOTS-certified fashion made in Portugal. Conscious clothing and art with a higher purpose.",
+    "Saudade: sustainable GOTS-certified fashion made in Portugal, and original paintings and limited art prints by Adair. Conscious clothing and art with a higher purpose.",
   keywords: [
     "saudade",
     "sustainable fashion",
@@ -75,9 +75,9 @@ export const metadata: Metadata = {
     type: "website",
     locale: "en_US",
     siteName: "Saudade",
-    title: "Saudade — Original Art & Sustainable Fashion",
+    title: "Saudade — Sustainable Fashion & Original Art",
     description:
-      "Original paintings and limited art prints, and sustainable fashion made in Portugal.",
+      "Sustainable fashion made in Portugal, and original paintings and limited art prints.",
     images: [
       {
         url: "/opengraph-image",
@@ -89,9 +89,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Saudade — Original Art & Sustainable Fashion",
+    title: "Saudade — Sustainable Fashion & Original Art",
     description:
-      "Original paintings and limited art prints, and sustainable fashion made in Portugal.",
+      "Sustainable fashion made in Portugal, and original paintings and limited art prints.",
     images: ["/opengraph-image"],
   },
   robots: { index: true, follow: true },

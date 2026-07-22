@@ -9,10 +9,10 @@ import { setRequestLocale } from "next-intl/server";
 
 export const metadata: Metadata = {
   title: {
-    absolute: "Saudade — Original Art & Sustainable Fashion | High Frequency Living",
+    absolute: "Saudade — Sustainable Fashion & Original Art | High Frequency Living",
   },
   description:
-    "Original paintings and limited art prints by Adair. Sustainable, GOTS-certified fashion made in Portugal. Art and conscious clothing with a higher purpose — born in Portugal, rooted in Brazil.",
+    "Sustainable, GOTS-certified fashion made in Portugal. Original paintings and limited art prints by Adair. Conscious clothing and art with a higher purpose — born in Portugal, rooted in Brazil.",
 };
 
 type Props = {

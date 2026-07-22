@@ -814,10 +814,13 @@ function buildMasterProduct(
     seenImageUrls.add(img.url);
     images.push(img);
   };
-  const orderedSources = [
-    ...bucket.sources.filter((s) => s.product === template),
-    ...bucket.sources.filter((s) => s.product !== template),
-  ];
+  // Lead the gallery with the Canvas hero (original-painting look), then Framed
+  // Canvas, Framed Poster, Poster — so the first thumbnail matches the
+  // canvas-first default variant selected on the detail page.
+  const HERO_ORDER: Material[] = ["Canvas", "Framed Canvas", "Framed Poster", "Poster"];
+  const orderedSources = [...bucket.sources].sort(
+    (a, b) => HERO_ORDER.indexOf(a.material) - HERO_ORDER.indexOf(b.material),
+  );
   for (const { product } of orderedSources) {
     pushImage(product.images.edges[0]?.node);
   }
@@ -995,14 +998,15 @@ function buildMasterProduct(
     }
   }
 
-  // Sort variants for stable, sensible rendering: Framed Poster first (the
-  // master view), then Framed Canvas, Canvas, Poster; within each, by Frame
-  // then Size. Build a label→canonical map so localised material strings
-  // (e.g. "Póster enmarcado") still sort by their canonical position.
+  // Sort variants for stable, sensible rendering: Canvas first (the master
+  // view — gallery-wrapped canvas reads as an original painting), then Framed
+  // Canvas, Framed Poster, Poster; within each, by Frame then Size. Build a
+  // label→canonical map so localised material strings (e.g. "Póster
+  // enmarcado") still sort by their canonical position.
   const materialOrder: Record<Material, number> = {
-    "Framed Poster": 0,
+    Canvas: 0,
     "Framed Canvas": 1,
-    Canvas: 2,
+    "Framed Poster": 2,
     Poster: 3,
   };
   const orderByLabel = new Map<string, number>();

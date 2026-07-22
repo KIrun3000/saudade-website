@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { Suspense } from "react";
 import { setRequestLocale } from "next-intl/server";
 
 import { ShopGridClient } from "@/components/shop/ShopGridClient";
@@ -14,10 +13,12 @@ export const metadata: Metadata = {
 
 type ArtPageProps = {
   params: Promise<{ locale: string }>;
+  searchParams: Promise<{ category?: string }>;
 };
 
-export default async function ArtPage({ params }: ArtPageProps) {
+export default async function ArtPage({ params, searchParams }: ArtPageProps) {
   const { locale } = await params;
+  const { category } = await searchParams;
   setRequestLocale(locale);
 
   // EN catalog drives variant structure; locale catalog supplies translated
@@ -60,12 +61,14 @@ export default async function ArtPage({ params }: ArtPageProps) {
 
   return (
     <main>
-      <h1 className="sr-only">Art — Saudade</h1>
-      <Suspense fallback={null}>
-        <div className="pt-20">
-          <ShopGridClient locale={locale} products={products} collections={[]} />
-        </div>
-      </Suspense>
+      <div className="pt-20">
+        <ShopGridClient
+          locale={locale}
+          products={products}
+          collections={[]}
+          initialCategory={category}
+        />
+      </div>
     </main>
   );
 }

@@ -3,24 +3,26 @@
 import Link from "next/link";
 import { useMemo, useState, useEffect } from "react";
 import { useTranslations } from "next-intl";
-import { useSearchParams } from "next/navigation";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
 import { formatPrice, getFirstImage, type ShopifyCollection, type ShopifyPrice, type ShopifyProduct } from "@/lib/shopify";
 import { PALETTE_TAG_PREFIX } from "@/lib/groupProducts";
 import { MadeWithLoveBadge } from "@/components/ui/CertBadges";
 
-const PAGE_SIZE = 9;
+// Multiple of 6 so every non-final page fills complete rows in BOTH the mobile
+// 2-column grid and the desktop 3-column grid — no orphaned item that makes a
+// middle page look like the end of the catalog.
+const PAGE_SIZE = 12;
 
 // Canonical materials the grid can switch between. Order doubles as the
 // fallback priority when a painting lacks the chosen material.
 const MATERIAL_KEYS = ["Framed Poster", "Canvas", "Framed Canvas", "Poster"] as const;
 type MaterialKey = (typeof MATERIAL_KEYS)[number];
 
-// Default display priority — every card shows its Framed Poster look first,
-// then degrades gracefully. Fixes paintings (e.g. Naked Desert) that have no
-// framed-poster source and used to surface a canvas mockup.
-const DISPLAY_PRIORITY: MaterialKey[] = ["Framed Poster", "Poster", "Framed Canvas", "Canvas"];
+// Default display priority — every card shows its gallery-wrapped Canvas look
+// first (reads as an original painting, not a print), then degrades gracefully
+// for paintings that lack a canvas source.
+const DISPLAY_PRIORITY: MaterialKey[] = ["Canvas", "Framed Canvas", "Framed Poster", "Poster"];
 
 /** Return the display price for a product card — preferring the lowest
  *  Framed Canvas variant so the shown price reflects the premium product,
@@ -63,6 +65,11 @@ type ShopGridClientProps = {
   locale: string;
   products: ShopifyProduct[];
   collections: ShopifyCollection[];
+  /** Deep-link category (from the server-read ?category= query). Resolved to a
+   *  tab on mount. Passed as a prop instead of read via useSearchParams so the
+   *  grid stays server-rendered (useSearchParams would opt the subtree out of
+   *  SSR, leaving the static HTML empty). */
+  initialCategory?: string | null;
 };
 
 function normaliseLabel(label: string): string {
@@ -75,7 +82,7 @@ function normaliseLabel(label: string): string {
 const HIDDEN_TAB_LABELS = new Set(["recommended products", "print material"]);
 const isHiddenTab = (label: string) => HIDDEN_TAB_LABELS.has(label.trim().toLowerCase());
 
-export function ShopGridClient({ locale, products, collections }: ShopGridClientProps) {
+export function ShopGridClient({ locale, products, collections, initialCategory }: ShopGridClientProps) {
   const t = useTranslations("shopPage");
 
   const tabs = useMemo(() => {
@@ -113,20 +120,18 @@ export function ShopGridClient({ locale, products, collections }: ShopGridClient
   // When set, every card shows that material's mockup (falling back if absent).
   const [materialView, setMaterialView] = useState<MaterialKey | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
-  const searchParams = useSearchParams();
 
   useEffect(() => {
-    const category = searchParams.get("category");
-    if (category) {
+    if (initialCategory) {
       const match = tabs.find((tab) =>
-        tab.label.toLowerCase().includes(category.toLowerCase()) ||
-        tab.key.toLowerCase().includes(category.toLowerCase())
+        tab.label.toLowerCase().includes(initialCategory.toLowerCase()) ||
+        tab.key.toLowerCase().includes(initialCategory.toLowerCase())
       );
       if (match) { setActiveFilter(match.key); return; }
     }
     // Default landing on "All" so every product is visible without clicking.
     setActiveFilter("all");
-  }, [searchParams, tabs]);
+  }, [initialCategory, tabs]);
 
   const collectionMap = useMemo(() => {
     const map = new Map<string, Set<string>>();
@@ -180,8 +185,8 @@ export function ShopGridClient({ locale, products, collections }: ShopGridClient
     return pool;
   }, [activeFilter, collectionMap, products, paletteFilter, isArtTab, searchQuery, featuredHandles]);
 
-  // Pagination: 9 per page, reset to page 1 whenever the underlying filter or
-  // search input changes so the user doesn't end up on an empty page.
+  // Pagination: PAGE_SIZE per page, reset to page 1 whenever the underlying filter
+  // or search input changes so the user doesn't end up on an empty page.
   const totalPages = Math.max(1, Math.ceil(filteredProducts.length / PAGE_SIZE));
   useEffect(() => {
     setCurrentPage(1);
@@ -288,17 +293,17 @@ export function ShopGridClient({ locale, products, collections }: ShopGridClient
             </div>
 
             {/* Material display switch — swaps every card's mockup. Default
-                (null) shows the framed-poster look; choosing a material shows
-                that variation across the whole grid. */}
+                (null) shows the gallery-wrapped canvas look; choosing a material
+                shows that variation across the whole grid. */}
             <div className="mb-5 flex flex-wrap items-center gap-2.5">
               <span style={{ fontFamily: "var(--font-display)", fontSize: "10px", letterSpacing: "0.22em", opacity: 0.4 }} className="mr-1 uppercase">
                 {t("displayAs")}
               </span>
               {(
                 [
-                  { key: null, label: t("materialFramedPoster") },
-                  { key: "Canvas", label: t("materialCanvas") },
+                  { key: null, label: t("materialCanvas") },
                   { key: "Framed Canvas", label: t("materialFramedCanvas") },
+                  { key: "Framed Poster", label: t("materialFramedPoster") },
                   { key: "Poster", label: t("materialPoster") },
                 ] as const
               ).map((opt) => {
