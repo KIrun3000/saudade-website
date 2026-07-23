@@ -242,7 +242,7 @@ export function MushroomMascot() {
                 : { duration: 0.4 }
           }
         >
-          <MushroomSVG blink={blink} gaze={facing} smiling={smiling} />
+          <MushroomSVG blink={blink} gaze={facing * 2.5} smiling={smiling} />
         </motion.button>
       </div>
     </motion.div>
@@ -295,7 +295,7 @@ export function MushroomSVG({
   gazeY?: number;
   smiling?: boolean;
 }) {
-  const dx = gaze * 2.5; // pupils shift toward what he's looking at (no body flip → spots stay put)
+  const dx = gaze; // pupils shift toward what he's looking at, in SVG units (no body flip → spots stay put)
   const dy = gazeY;
   const eyesClosed = smiling || blink;
   return (

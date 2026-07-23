@@ -14,7 +14,10 @@ export function HeroSection({ locale }: HeroSectionProps) {
   const y = useTransform(scrollY, [0, 600], [0, -24]);
 
   return (
-    <section className="relative flex min-h-screen items-center overflow-hidden pt-20 text-accent">
+    <section
+      data-mushroom-noperch
+      className="relative flex min-h-screen items-center overflow-hidden pt-20 text-accent"
+    >
       <motion.div
         aria-hidden="true"
         style={{ y }}

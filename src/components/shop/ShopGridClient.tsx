@@ -105,12 +105,10 @@ export function ShopGridClient({ locale, products, collections, initialCategory 
       if (!unique.has(norm)) unique.set(norm, entry);
     }
 
-    return [
-      { key: "featured", label: t("featured") },
-      { key: "all", label: t("all") },
-      ...Array.from(unique.values()),
-    ];
-  }, [collections, products, t]);
+    // No Featured/All toggle — the grid shows every piece by default; only real
+    // category tabs (collections / product types) appear, if there are any.
+    return Array.from(unique.values());
+  }, [collections, products]);
 
   const [activeFilter, setActiveFilter] = useState("all");
   const [searchQuery, setSearchQuery] = useState("");
@@ -240,45 +238,49 @@ export function ShopGridClient({ locale, products, collections, initialCategory 
         {/* Products: sidebar + grid */}
         <div className="flex gap-10 lg:gap-14">
 
-          {/* Sidebar — desktop only */}
-          <aside className="hidden lg:block w-44 shrink-0">
-            <p style={{ fontFamily: "var(--font-display)", fontSize: "10px", letterSpacing: "0.3em", opacity: 0.35 }} className="uppercase mb-6">PRODUCTS</p>
-            <nav className="flex flex-col gap-0.5">
-              {tabs.map((tab) => (
-                <button
-                  key={tab.key}
-                  type="button"
-                  onClick={() => setActiveFilter(tab.key)}
-                  className={`text-left py-2.5 pl-4 font-display text-[11px] font-light uppercase tracking-[0.18em] transition-all duration-300 border-l-2 ${
-                    activeFilter === tab.key
-                      ? "border-[#d8cfc4] text-[#f2ece3]"
-                      : "border-transparent text-[#d8cfc4]/40 hover:border-[#d8cfc4]/40 hover:text-[#d8cfc4]/80"
-                  }`}
-                >
-                  {tab.label}
-                </button>
-              ))}
-            </nav>
-          </aside>
+          {/* Sidebar — desktop only, and only when real category tabs exist */}
+          {tabs.length > 0 && (
+            <aside className="hidden lg:block w-44 shrink-0">
+              <p style={{ fontFamily: "var(--font-display)", fontSize: "10px", letterSpacing: "0.3em", opacity: 0.35 }} className="uppercase mb-6">PRODUCTS</p>
+              <nav className="flex flex-col gap-0.5">
+                {tabs.map((tab) => (
+                  <button
+                    key={tab.key}
+                    type="button"
+                    onClick={() => setActiveFilter(tab.key)}
+                    className={`text-left py-2.5 pl-4 font-display text-[11px] font-light uppercase tracking-[0.18em] transition-all duration-300 border-l-2 ${
+                      activeFilter === tab.key
+                        ? "border-[#d8cfc4] text-[#f2ece3]"
+                        : "border-transparent text-[#d8cfc4]/40 hover:border-[#d8cfc4]/40 hover:text-[#d8cfc4]/80"
+                    }`}
+                  >
+                    {tab.label}
+                  </button>
+                ))}
+              </nav>
+            </aside>
+          )}
 
           <div className="flex-1 min-w-0">
-            {/* Mobile: scrollable filter tabs */}
-            <div className="mb-6 flex gap-2.5 overflow-x-auto pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden lg:hidden">
-              {tabs.map((tab) => (
-                <button
-                  key={tab.key}
-                  type="button"
-                  onClick={() => setActiveFilter(tab.key)}
-                  className={`shrink-0 rounded-full border px-4 py-1.5 font-display text-[10px] font-light uppercase tracking-[0.18em] transition-colors duration-300 ${
-                    activeFilter === tab.key
-                      ? "border-[#d8cfc4] bg-[#d8cfc4]/10 text-[#f2ece3]"
-                      : "border-[#d8cfc4]/25 text-[#d8cfc4]/50 hover:border-[#d8cfc4]/50 hover:text-[#d8cfc4]/80"
-                  }`}
-                >
-                  {tab.label}
-                </button>
-              ))}
-            </div>
+            {/* Mobile: scrollable filter tabs — only when real category tabs exist */}
+            {tabs.length > 0 && (
+              <div className="mb-6 flex gap-2.5 overflow-x-auto pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden lg:hidden">
+                {tabs.map((tab) => (
+                  <button
+                    key={tab.key}
+                    type="button"
+                    onClick={() => setActiveFilter(tab.key)}
+                    className={`shrink-0 rounded-full border px-4 py-1.5 font-display text-[10px] font-light uppercase tracking-[0.18em] transition-colors duration-300 ${
+                      activeFilter === tab.key
+                        ? "border-[#d8cfc4] bg-[#d8cfc4]/10 text-[#f2ece3]"
+                        : "border-[#d8cfc4]/25 text-[#d8cfc4]/50 hover:border-[#d8cfc4]/50 hover:text-[#d8cfc4]/80"
+                    }`}
+                  >
+                    {tab.label}
+                  </button>
+                ))}
+              </div>
+            )}
 
             {/* Search bar */}
             <div className="mb-5">
