@@ -386,7 +386,7 @@ export function MushroomSVG({
           <ellipse cx="100" cy="120" rx="8" ry="9.2" stroke="#3a2f2a" strokeWidth="2.2" fill="#fffdf8" />
           {/* pupils + catchlights ride together; the group glides so his gaze
               moves smoothly from the art below to you */}
-          <motion.g animate={{ x: dx, y: dy }} transition={{ type: "spring", stiffness: 120, damping: 15 }}>
+          <motion.g animate={{ x: dx, y: dy }} transition={{ type: "spring", stiffness: 90, damping: 17 }}>
             <circle cx="71" cy="122" r="5" fill="#3a2f2a" />
             <circle cx="101" cy="122" r="5" fill="#3a2f2a" />
             <ellipse cx="68.8" cy="118.8" rx="2.1" ry="2.6" fill="#ffffff" opacity="0.95" />
