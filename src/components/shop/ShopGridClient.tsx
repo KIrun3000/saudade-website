@@ -340,7 +340,7 @@ export function ShopGridClient({ locale, products, collections, initialCategory 
                           // eslint-disable-next-line @next/next/no-img-element
                           <img
                             src={image.url}
-                            alt={image.altText || product.title}
+                            alt={product.title}
                             loading="lazy"
                             decoding="async"
                             referrerPolicy="no-referrer"

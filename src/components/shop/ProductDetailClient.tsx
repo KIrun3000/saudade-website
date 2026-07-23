@@ -312,7 +312,7 @@ export function ProductDetailClient({
               {galleryImage ? (
                 <Image
                   src={galleryImage.url}
-                  alt={galleryImage.altText || product.title}
+                  alt={product.title}
                   width={galleryImage.width || 800}
                   height={galleryImage.height || 800}
                   priority
@@ -337,7 +337,7 @@ export function ProductDetailClient({
                 >
                   <Image
                     src={image.url}
-                    alt={image.altText || product.title}
+                    alt={product.title}
                     fill
                     className="object-cover"
                     sizes="120px"
@@ -417,7 +417,7 @@ export function ProductDetailClient({
                           <Image
                             key={galleryImage.url}
                             src={galleryImage.url}
-                            alt={galleryImage.altText || product.title}
+                            alt={product.title}
                             width={galleryImage.width || 600}
                             height={galleryImage.height || 600}
                             className="h-auto w-full object-cover"
@@ -481,7 +481,7 @@ export function ProductDetailClient({
                         {image ? (
                           <Image
                             src={image.url}
-                            alt={image.altText || item.title}
+                            alt={item.title}
                             fill
                             className="object-contain transition-transform duration-500 group-hover:scale-[1.03]"
                             style={{ filter: "drop-shadow(0 12px 28px rgba(0,0,0,0.15))" }}

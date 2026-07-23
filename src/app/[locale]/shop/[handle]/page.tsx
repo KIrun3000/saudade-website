@@ -118,7 +118,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     openGraph: {
       title: product.title,
       description: product.description,
-      images: image ? [{ url: image.url, alt: image.altText || product.title }] : undefined,
+      images: image ? [{ url: image.url, alt: product.title }] : undefined,
     },
   };
 }
