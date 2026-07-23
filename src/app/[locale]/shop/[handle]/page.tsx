@@ -9,6 +9,7 @@ import {
   groupProductsByPainting,
 } from "@/lib/groupProducts";
 import { getAllProducts, getProductByHandle, type ShopifyProduct } from "@/lib/shopify";
+import { SITE_URL, localeAlternates } from "@/lib/seo";
 
 /**
  * Shopify sometimes ships descriptionHtml with NEAR-duplicate compliance blocks
@@ -115,7 +116,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return {
     title: product.title,
     description: product.description,
+    alternates: localeAlternates(locale, `/shop/${product.handle}`),
     openGraph: {
+      type: "website",
+      url: `${SITE_URL}/${locale}/shop/${product.handle}`,
       title: product.title,
       description: product.description,
       images: image ? [{ url: image.url, alt: product.title }] : undefined,
@@ -243,11 +247,31 @@ export default async function ProductPage({ params }: Props) {
     },
   };
 
+  // Breadcrumb trail: Home › Art › this painting — shows the path in Google.
+  const breadcrumbSchema = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "Home", item: `${SITE_URL}/${locale}` },
+      { "@type": "ListItem", position: 2, name: "Art", item: `${SITE_URL}/${locale}/shop/art` },
+      {
+        "@type": "ListItem",
+        position: 3,
+        name: product.title,
+        item: `${SITE_URL}/${locale}/shop/${product.handle}`,
+      },
+    ],
+  };
+
   return (
     <>
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(productSchema) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
       />
       <ProductDetailClient
         locale={locale}

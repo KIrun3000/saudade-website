@@ -1,11 +1,21 @@
 import type { Metadata } from "next";
 
 import { LegalLayout, LegalSection } from "@/components/layout/LegalLayout";
+import { pageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
-  title: "Privacy Policy — Saudade",
-  description: "Privacy policy and data protection information for Saudade.",
-};
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  return pageMetadata({
+    locale,
+    path: "/datenschutz",
+    title: "Privacy Policy",
+    description: "Privacy policy and data protection information for Saudade.",
+  });
+}
 
 export default function DatenschutzPage() {
   return (

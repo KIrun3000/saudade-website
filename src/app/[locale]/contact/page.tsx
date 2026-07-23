@@ -14,12 +14,22 @@ function InstagramIcon({ className }: { className?: string }) {
 }
 
 import { ContactForm } from "@/components/contact/ContactForm";
+import { pageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
-  title: "Contact — Saudade",
-  description:
-    "Get in touch with Saudade. Contact details, social profiles, and a direct form for inquiries and collaborations.",
-};
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  return pageMetadata({
+    locale,
+    path: "/contact",
+    title: "Contact",
+    description:
+      "Get in touch with Saudade. Contact details, social profiles, and a direct form for inquiries and collaborations.",
+  });
+}
 
 export default async function ContactPage() {
   const t = await getTranslations("contactPage");

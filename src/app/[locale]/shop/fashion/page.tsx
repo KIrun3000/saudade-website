@@ -3,6 +3,7 @@ import Link from "next/link";
 import { Newsletter } from "@/components/ui/Newsletter";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { ReadMore, ReadMoreText } from "@/components/shop/ReadMore";
+import { pageMetadata } from "@/lib/seo";
 
 type Props = {
   params: Promise<{ locale: string }>;
@@ -11,10 +12,12 @@ type Props = {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "fashionPage" });
-  return {
+  return pageMetadata({
+    locale,
+    path: "/shop/fashion",
     title: t("metaTitle"),
     description: t("metaDescription"),
-  };
+  });
 }
 
 // Per-kimono static data (Roman numeral, canonical name, print motif image).

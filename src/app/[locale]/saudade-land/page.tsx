@@ -2,16 +2,22 @@ import Image from "next/image";
 import Link from "next/link";
 import type { Metadata } from "next";
 import { getTranslations, setRequestLocale } from "next-intl/server";
-
-export const metadata: Metadata = {
-  title: "Saudade Land",
-  description:
-    "Saudade Land is a regenerative sanctuary rooted in Brazil — a living experiment in conscious community, land stewardship, and a new way of being on Earth.",
-};
+import { pageMetadata } from "@/lib/seo";
 
 type Props = {
   params: Promise<{ locale: string }>;
 };
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { locale } = await params;
+  return pageMetadata({
+    locale,
+    path: "/saudade-land",
+    title: "Saudade Land — A Regenerative Sanctuary",
+    description:
+      "Saudade Land is a regenerative sanctuary rooted in Brazil — a living experiment in conscious community, land stewardship, and a new way of being on Earth.",
+  });
+}
 
 export default async function SaudadeLandPage({ params }: Props) {
   const { locale } = await params;

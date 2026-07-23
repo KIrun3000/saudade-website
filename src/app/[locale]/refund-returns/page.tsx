@@ -1,11 +1,21 @@
 import type { Metadata } from "next";
 
 import { LegalLayout, LegalSection } from "@/components/layout/LegalLayout";
+import { pageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
-  title: "Refund & Returns — Saudade",
-  description: "Refund and returns policy for Saudade purchases.",
-};
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  return pageMetadata({
+    locale,
+    path: "/refund-returns",
+    title: "Refund & Returns",
+    description: "Refund and returns policy for Saudade purchases.",
+  });
+}
 
 export default function RefundReturnsPage() {
   return (

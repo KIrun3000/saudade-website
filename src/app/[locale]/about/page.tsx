@@ -2,16 +2,22 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { setRequestLocale, getTranslations } from "next-intl/server";
-
-export const metadata: Metadata = {
-  title: "About — Saudade",
-  description:
-    "Saudade is about building the bridge — between Portugal and Brazil, between Europe and South America, between the world we live in and the one we know is possible.",
-};
+import { pageMetadata } from "@/lib/seo";
 
 type Props = {
   params: Promise<{ locale: string }>;
 };
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { locale } = await params;
+  return pageMetadata({
+    locale,
+    path: "/about",
+    title: "Our Story — Art, Fashion & a Regenerative Dream",
+    description:
+      "Saudade is about building the bridge — between Portugal and Brazil, between Europe and South America, between the world we live in and the one we know is possible.",
+  });
+}
 
 export default async function AboutPage({ params }: Props) {
   const { locale } = await params;

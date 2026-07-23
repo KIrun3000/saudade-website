@@ -3,16 +3,22 @@ import Link from "next/link";
 import { Newsletter } from "@/components/ui/Newsletter";
 import { Reveal } from "@/components/ui/Reveal";
 import { getTranslations, setRequestLocale } from "next-intl/server";
-
-export const metadata: Metadata = {
-  title: "Collaborate — Saudade",
-  description:
-    "Saudade is just beginning, and it is being built with the people who believe in it. An open invitation to artists, musicians, healers, builders and investors who want to help create it.",
-};
+import { pageMetadata } from "@/lib/seo";
 
 type Props = {
   params: Promise<{ locale: string }>;
 };
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { locale } = await params;
+  return pageMetadata({
+    locale,
+    path: "/community",
+    title: "Collaborate & Join the Community",
+    description:
+      "Saudade is just beginning, and it is being built with the people who believe in it. An open invitation to artists, musicians, healers, builders and investors who want to help create it.",
+  });
+}
 
 export default async function CommunityPage({ params }: Props) {
   const { locale } = await params;

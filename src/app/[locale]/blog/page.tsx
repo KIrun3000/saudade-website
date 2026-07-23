@@ -4,16 +4,22 @@ import { getTranslations } from "next-intl/server";
 
 import { BLOG_ARTICLES, getProxiedBlogImageSrc } from "@/lib/blog-articles";
 import { Newsletter } from "@/components/ui/Newsletter";
-
-export const metadata: Metadata = {
-  title: "Articles",
-  description:
-    "Read Saudade articles on philosophy, textile frequency, and conscious fashion.",
-};
+import { pageMetadata } from "@/lib/seo";
 
 type Props = {
   params: Promise<{ locale: string }>;
 };
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { locale } = await params;
+  return pageMetadata({
+    locale,
+    path: "/blog",
+    title: "Journal — Art, Conscious Fashion & Slow Living",
+    description:
+      "Read Saudade articles on the meaning of saudade, textile frequency, ethical fashion, and permaculture living.",
+  });
+}
 
 export default async function BlogPage({ params }: Props) {
   const { locale } = await params;

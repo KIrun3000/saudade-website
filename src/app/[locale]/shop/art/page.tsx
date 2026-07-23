@@ -4,17 +4,23 @@ import { setRequestLocale } from "next-intl/server";
 import { ShopGridClient } from "@/components/shop/ShopGridClient";
 import { buildLocaleOverlay, groupProductsByPainting } from "@/lib/groupProducts";
 import { getAllProducts, type ShopifyProduct } from "@/lib/shopify";
-
-export const metadata: Metadata = {
-  title: "Art — Transmission, Not Decoration",
-  description:
-    "Original paintings by Adair — born from pure vision, printed in limited quantities. Framed canvas, framed poster, and more.",
-};
+import { pageMetadata } from "@/lib/seo";
 
 type ArtPageProps = {
   params: Promise<{ locale: string }>;
   searchParams: Promise<{ category?: string }>;
 };
+
+export async function generateMetadata({ params }: ArtPageProps): Promise<Metadata> {
+  const { locale } = await params;
+  return pageMetadata({
+    locale,
+    path: "/shop/art",
+    title: "Original Art & Limited Prints by Adair",
+    description:
+      "Original paintings by Adair — born from pure vision, printed in limited quantities. Framed canvas, framed poster, and more.",
+  });
+}
 
 export default async function ArtPage({ params, searchParams }: ArtPageProps) {
   const { locale } = await params;

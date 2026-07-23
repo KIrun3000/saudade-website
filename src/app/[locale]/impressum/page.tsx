@@ -1,11 +1,21 @@
 import type { Metadata } from "next";
 
 import { LegalLayout, LegalSection } from "@/components/layout/LegalLayout";
+import { pageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
-  title: "Impressum — Saudade",
-  description: "Legal notice and operator details for Saudade.",
-};
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  return pageMetadata({
+    locale,
+    path: "/impressum",
+    title: "Legal Notice",
+    description: "Legal notice and operator details for Saudade.",
+  });
+}
 
 export default function ImpressumPage() {
   return (

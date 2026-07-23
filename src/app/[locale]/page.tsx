@@ -6,18 +6,25 @@ import { ShopPreview } from "@/components/home/ShopPreview";
 import { Newsletter } from "@/components/ui/Newsletter";
 import { Reveal } from "@/components/ui/Reveal";
 import { setRequestLocale } from "next-intl/server";
-
-export const metadata: Metadata = {
-  title: {
-    absolute: "Saudade — Sustainable Fashion & Original Art | High Frequency Living",
-  },
-  description:
-    "Sustainable, GOTS-certified fashion made in Portugal. Original paintings and limited art prints by Adair. Conscious clothing and art with a higher purpose — born in Portugal, rooted in Brazil.",
-};
+import { SITE_URL, localeAlternates } from "@/lib/seo";
 
 type Props = {
   params: Promise<{ locale: string }>;
 };
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { locale } = await params;
+  const title = "Saudade — Sustainable Fashion & Original Art | High Frequency Living";
+  const description =
+    "Sustainable, GOTS-certified fashion made in Portugal. Original paintings and limited art prints by Adair. Conscious clothing and art with a higher purpose — born in Portugal, rooted in Brazil.";
+  return {
+    title: { absolute: title },
+    description,
+    alternates: localeAlternates(locale, ""),
+    openGraph: { type: "website", url: `${SITE_URL}/${locale}`, title, description },
+    twitter: { title, description },
+  };
+}
 
 export default async function LocaleHomePage({ params }: Props) {
   const { locale } = await params;
