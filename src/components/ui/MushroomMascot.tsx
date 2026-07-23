@@ -282,8 +282,21 @@ export function MushroomBubble({ text, align }: { text: string; align: "left" | 
   );
 }
 
-export function MushroomSVG({ blink, gaze = 1, smiling = false }: { blink: boolean; gaze?: number; smiling?: boolean }) {
+export function MushroomSVG({
+  blink,
+  gaze = 1,
+  gazeY = 0,
+  smiling = false,
+}: {
+  blink: boolean;
+  /** horizontal glance: -1 left … +1 right */
+  gaze?: number;
+  /** vertical glance in SVG units: + looks down (at the art), − looks up (at you) */
+  gazeY?: number;
+  smiling?: boolean;
+}) {
   const dx = gaze * 2.5; // pupils shift toward what he's looking at (no body flip → spots stay put)
+  const dy = gazeY;
   const eyesClosed = smiling || blink;
   return (
     // The original friendly toadstool, with a glossy 3D cap: gradient dome,
@@ -371,12 +384,16 @@ export function MushroomSVG({ blink, gaze = 1, smiling = false }: { blink: boole
         <>
           <ellipse cx="70" cy="120" rx="8" ry="9.2" stroke="#3a2f2a" strokeWidth="2.2" fill="#fffdf8" />
           <ellipse cx="100" cy="120" rx="8" ry="9.2" stroke="#3a2f2a" strokeWidth="2.2" fill="#fffdf8" />
-          <circle cx={71 + dx} cy="122" r="5" fill="#3a2f2a" />
-          <circle cx={101 + dx} cy="122" r="5" fill="#3a2f2a" />
-          <ellipse cx={68.8 + dx} cy="118.8" rx="2.1" ry="2.6" fill="#ffffff" opacity="0.95" />
-          <ellipse cx={98.8 + dx} cy="118.8" rx="2.1" ry="2.6" fill="#ffffff" opacity="0.95" />
-          <circle cx={73.6 + dx} cy="124.6" r="1.1" fill="#ffffff" opacity="0.8" />
-          <circle cx={103.6 + dx} cy="124.6" r="1.1" fill="#ffffff" opacity="0.8" />
+          {/* pupils + catchlights ride together; the group glides so his gaze
+              moves smoothly from the art below to you */}
+          <motion.g animate={{ x: dx, y: dy }} transition={{ type: "spring", stiffness: 120, damping: 15 }}>
+            <circle cx="71" cy="122" r="5" fill="#3a2f2a" />
+            <circle cx="101" cy="122" r="5" fill="#3a2f2a" />
+            <ellipse cx="68.8" cy="118.8" rx="2.1" ry="2.6" fill="#ffffff" opacity="0.95" />
+            <ellipse cx="98.8" cy="118.8" rx="2.1" ry="2.6" fill="#ffffff" opacity="0.95" />
+            <circle cx="73.6" cy="124.6" r="1.1" fill="#ffffff" opacity="0.8" />
+            <circle cx="103.6" cy="124.6" r="1.1" fill="#ffffff" opacity="0.8" />
+          </motion.g>
         </>
       )}
 
