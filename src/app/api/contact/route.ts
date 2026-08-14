@@ -24,46 +24,50 @@ async function sendEmail(to: string, subject: string, html: string) {
 
 async function addToKlaviyo(email: string, firstName?: string) {
   try {
-    // Step 1: Create or find profile
-    const profileRes = await fetch("https://a.klaviyo.com/api/profiles/", {
-      method: "POST",
-      headers: {
-        "Authorization": `Klaviyo-API-Key ${KLAVIYO_API_KEY}`,
-        "Content-Type": "application/json",
-        "revision": "2025-01-15",
-      },
-      body: JSON.stringify({
-        data: {
-          type: "profile",
-          attributes: { email, ...(firstName ? { first_name: firstName } : {}) },
+    // Subscribe with email-marketing consent so Klaviyo welcome flows fire.
+    // (The relationships endpoint only adds to a list without consent, which
+    // means subscribed-only flows skip the profile and never send.)
+    const subRes = await fetch(
+      "https://a.klaviyo.com/api/profile-subscription-bulk-create-jobs/",
+      {
+        method: "POST",
+        headers: {
+          "Authorization": `Klaviyo-API-Key ${KLAVIYO_API_KEY}`,
+          "Content-Type": "application/json",
+          "revision": "2025-01-15",
         },
-      }),
-    });
+        body: JSON.stringify({
+          data: {
+            type: "profile-subscription-bulk-create-job",
+            attributes: {
+              custom_source: "Website — Contact form",
+              profiles: {
+                data: [
+                  {
+                    type: "profile",
+                    attributes: {
+                      email,
+                      ...(firstName ? { first_name: firstName } : {}),
+                      subscriptions: {
+                        email: { marketing: { consent: "SUBSCRIBED" } },
+                      },
+                    },
+                  },
+                ],
+              },
+            },
+            relationships: {
+              list: { data: { type: "list", id: KLAVIYO_LIST_ID } },
+            },
+          },
+        }),
+      }
+    );
 
-    let profileId: string;
-    if (profileRes.status === 201) {
-      const profileData = await profileRes.json();
-      profileId = profileData.data.id;
-    } else if (profileRes.status === 409) {
-      const profileData = await profileRes.json();
-      profileId = profileData.errors?.[0]?.meta?.duplicate_profile_id;
-    } else {
-      console.error("[contact] Klaviyo profile error:", profileRes.status);
-      return;
+    if (subRes.status !== 202) {
+      const text = await subRes.text();
+      console.error("[contact] Klaviyo subscribe error:", subRes.status, text);
     }
-
-    // Step 2: Add to list
-    await fetch(`https://a.klaviyo.com/api/lists/${KLAVIYO_LIST_ID}/relationships/profiles/`, {
-      method: "POST",
-      headers: {
-        "Authorization": `Klaviyo-API-Key ${KLAVIYO_API_KEY}`,
-        "Content-Type": "application/json",
-        "revision": "2025-01-15",
-      },
-      body: JSON.stringify({
-        data: [{ type: "profile", id: profileId }],
-      }),
-    });
   } catch (err) {
     console.error("[contact] Klaviyo error:", err);
   }
@@ -107,7 +111,6 @@ export async function POST(req: NextRequest) {
     const safeName = esc(name);
     const safeEmail = esc(email);
     const safeMessage = esc(message).replace(/\n/g, "<br>");
-    const safeFirstName = esc(firstName);
 
     // Notify you
     await sendEmail(
@@ -120,17 +123,9 @@ export async function POST(req: NextRequest) {
        <p>${safeMessage}</p>`
     );
 
-    // Auto-reply to visitor
-    await sendEmail(
-      email,
-      "Thank you for reaching out — Saudade Voces",
-      `<p>Dear ${safeFirstName},</p>
-       <p>Thank you for reaching out to us. We have received your message and will get back to you within 48 hours.</p>
-       <p>In the meantime, feel free to explore our world at <a href="https://www.saudadevoces.com">saudadevoces.com</a>.</p>
-       <br>
-       <p>With love,</p>
-       <p><strong>Saudade Voces</strong></p>`
-    );
+    // Visitor auto-reply is intentionally handled by the Klaviyo flow (triggered
+    // when the profile is subscribed below), not by a hardcoded email here, so
+    // the confirmation message can be edited in Klaviyo without a code change.
 
     // Add to Klaviyo welcome flow
     await addToKlaviyo(email, firstName);

@@ -22,56 +22,54 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: errorMessage }, { status: spam.status });
     }
 
-    // Step 1: Create or update the profile
-    const profileRes = await fetch("https://a.klaviyo.com/api/profiles/", {
-      method: "POST",
-      headers: {
-        "Authorization": `Klaviyo-API-Key ${KLAVIYO_API_KEY}`,
-        "Content-Type": "application/json",
-        "revision": "2025-01-15",
-      },
-      body: JSON.stringify({
-        data: {
-          type: "profile",
-          attributes: { email },
+    // Subscribe the profile to the list WITH email-marketing consent.
+    // The relationships endpoint only adds a profile to a list; it does not
+    // record consent, so Klaviyo welcome flows (which target subscribed
+    // profiles) never fire. This bulk-subscribe job sets consent = SUBSCRIBED,
+    // and the list's opt-in setting in Klaviyo controls single vs double opt-in.
+    const subRes = await fetch(
+      "https://a.klaviyo.com/api/profile-subscription-bulk-create-jobs/",
+      {
+        method: "POST",
+        headers: {
+          "Authorization": `Klaviyo-API-Key ${KLAVIYO_API_KEY}`,
+          "Content-Type": "application/json",
+          "revision": "2025-01-15",
         },
-      }),
-    });
+        body: JSON.stringify({
+          data: {
+            type: "profile-subscription-bulk-create-job",
+            attributes: {
+              custom_source: "Website — Newsletter form",
+              profiles: {
+                data: [
+                  {
+                    type: "profile",
+                    attributes: {
+                      email,
+                      subscriptions: {
+                        email: { marketing: { consent: "SUBSCRIBED" } },
+                      },
+                    },
+                  },
+                ],
+              },
+            },
+            relationships: {
+              list: { data: { type: "list", id: KLAVIYO_LIST_ID } },
+            },
+          },
+        }),
+      }
+    );
 
-    let profileId: string;
+    console.log("[subscribe] subscribe job status:", subRes.status);
 
-    if (profileRes.status === 201) {
-      const profileData = await profileRes.json();
-      profileId = profileData.data.id;
-    } else if (profileRes.status === 409) {
-      // Profile already exists — extract id from conflict response
-      const profileData = await profileRes.json();
-      profileId = profileData.errors?.[0]?.meta?.duplicate_profile_id;
-    } else {
-      const text = await profileRes.text();
-      console.error("[subscribe] profile error:", profileRes.status, text);
-      return NextResponse.json({ error: "Failed to create profile" }, { status: 500 });
-    }
-
-    // Step 2: Add profile to list
-    const listRes = await fetch(`https://a.klaviyo.com/api/lists/${KLAVIYO_LIST_ID}/relationships/profiles/`, {
-      method: "POST",
-      headers: {
-        "Authorization": `Klaviyo-API-Key ${KLAVIYO_API_KEY}`,
-        "Content-Type": "application/json",
-        "revision": "2025-01-15",
-      },
-      body: JSON.stringify({
-        data: [{ type: "profile", id: profileId }],
-      }),
-    });
-
-    console.log("[subscribe] list add status:", listRes.status);
-
-    if (listRes.status !== 204 && listRes.status !== 200) {
-      const text = await listRes.text();
-      console.error("[subscribe] list error:", text);
-      return NextResponse.json({ error: "Failed to add to list" }, { status: 500 });
+    // 202 Accepted = job queued successfully.
+    if (subRes.status !== 202) {
+      const text = await subRes.text();
+      console.error("[subscribe] subscribe error:", subRes.status, text);
+      return NextResponse.json({ error: "Failed to subscribe" }, { status: 500 });
     }
 
     return NextResponse.json({ success: true });
