@@ -3,6 +3,7 @@ import Link from "next/link";
 import type { Metadata } from "next";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { pageMetadata } from "@/lib/seo";
+import { linkifyPermaculture } from "@/components/ui/linkify-permaculture";
 
 type Props = {
   params: Promise<{ locale: string }>;
@@ -158,7 +159,7 @@ export default async function SaudadeLandPage({ params }: Props) {
                   {item.title}
                 </h3>
                 <p className="max-w-xl text-base leading-relaxed text-text-on-light/70">
-                  {item.text}
+                  {linkifyPermaculture(item.text, locale)}
                 </p>
               </li>
             ))}

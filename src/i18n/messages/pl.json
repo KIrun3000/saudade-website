@@ -81,7 +81,7 @@
   "eventHighlight": {
     "label": "Wydarzenie Specjalne",
     "title": "Premiera Saudade",
-    "description": "Kameralny wieczór w Porto — świetna muzyka, ciepła energia, piękni ludzie i kimona Chaka Arcana wreszcie w Twoich rękach. Przyjedź poznać mnie, przymierz kolekcję i poczuj, co naprawdę oznacza moda wysokiej częstotliwości.",
+    "description": "Kameralny wieczór w Porto — świetna muzyka, ciepła energia, piękni ludzie i pięć kimon Chaka Arcana odsłoniętych po raz pierwszy. Przyjedź poznać mnie, zobaczyć kolekcję z bliska i zarezerwować swoje w przedsprzedaży — i poczuj, co naprawdę oznacza moda wysokiej częstotliwości.",
     "countdown": "Odliczanie ruszyło — 28 · 08 · 2026 · Porto, Portugalia",
     "exploreCta": "ZOBACZ WYDARZENIA",
     "collaborateCta": "WOLONTARIAT LUB WSPÓŁPRACA",
@@ -268,13 +268,18 @@
     "heroTitle": "WYDARZENIA",
     "introTitle": "Where we gather",
     "introText": "This is just the beginning. Saudade’s first gatherings — art, music, and community coming to life. Come be part of it from the very start.",
+    "visionLabel": "Jeszcze przed nami",
+    "visionTitle": "Co przyniosą nasze spotkania",
+    "visionText": "Poza wydarzeniem inauguracyjnym — spojrzenie na świat, w który wyrastają spotkania Saudade: przestrzeń, dźwięk, ruch, tworzenie.",
+    "metaTitle": "Wydarzenia w Portugalii — Wydarzenie Inauguracyjne Saudade w Porto",
+    "metaDescription": "Szukasz wydarzeń w Portugalii? Dołącz do Wydarzenia Inauguracyjnego Saudade — kameralnego wieczoru w Porto 28 sierpnia 2026, z muzyką, sztuką, kimonami Chaka Arcana i świadomą społecznością. Odkryj świadome wydarzenia i spotkania w całej Portugalii z Saudade.",
     "festivalTitle": "Premiera Saudade",
-    "festivalText": "Kameralny wieczór w Porto — świetna muzyka, ciepła energia, piękni ludzie i kimona Chaka Arcana wreszcie w Twoich rękach. Przyjedź poznać mnie, przymierz kolekcję i poczuj, co naprawdę oznacza moda wysokiej częstotliwości.",
+    "festivalText": "Kameralny wieczór w Porto — świetna muzyka, ciepła energia, piękni ludzie i pięć kimon Chaka Arcana odsłoniętych po raz pierwszy. Przyjedź poznać mnie, zobaczyć kolekcję z bliska i zarezerwować swoje w przedsprzedaży — i poczuj, co naprawdę oznacza moda wysokiej częstotliwości.",
     "festivalImageAlt": "Scena Festiwalu Saudade",
     "spaceTitle": "Przestrzeń",
     "spaceText": "Pierwsze wydarzenie odbywa się w Portugalii — żeby stworzyć magiczne doświadczenie.",
     "spaceCta": "Chcesz pomóc jako wolontariusz_ka? Napisz do nas.",
-    "musicTitle": "Muzyka",
+    "musicTitle": "Dźwięk i Taniec",
     "musicText": "Tu każdy znajdzie coś, do czego zatańczy.",
     "musicCta": "Chcesz zagrać na festiwalu? Wyślij nam wiadomość.",
     "yogaTitle": "Ruch i Uziemienie",
@@ -288,10 +293,10 @@
     "collaborateCta": "DOŁĄCZ",
     "spaceLabel": "Miejsce",
     "spaceImageAlt": "Przestrzeń Festiwalu Saudade",
-    "musicLabel": "Muzyka",
-    "musicImageAlt": "DJ i muzyka na Festiwalu Saudade",
-    "workshopLabel": "Warsztaty",
-    "workshopImageAlt": "Warsztaty i wellness w naturze",
+    "musicLabel": "Dźwięk i Taniec",
+    "musicImageAlt": "Festiwalowe spotkanie wśród drzew o złotej godzinie",
+    "workshopLabel": "Pracownia",
+    "workshopImageAlt": "Dłonie malujące płótno na warsztacie artystycznym Saudade",
     "yogaLabel": "Wellness",
     "yogaText": "Przestrzeń, w której można się zatrzymać, oddychać i wrócić do siebie. Jesteś nauczyciel_ką jogi, uzdrowiciel_ką lub przewodni_czką ruchu? Bardzo chętnie zaprosimy Cię do trzymania tej przestrzeni razem z nami.",
     "yogaCta": "",
@@ -447,6 +452,8 @@
     "post3Excerpt": "Najważniejsze fakty o branży odzieżowej i o świadomych alternatywach.",
     "post4Title": "Permakultura",
     "post4Excerpt": "Kultura trwała — sposób, by przypomnieć sobie, jak żyć w rytmie z ziemią, zakorzeniony w Trosce o Ziemię, Trosce o Ludzi i Sprawiedliwym Podziale.",
+    "post5Title": "Chaka Arcana — Historia Kimon",
+    "post5Excerpt": "Historia pięciu kimon Chaka Arcana — droga założycielki i saudade, którą można nosić.",
     "readMore": "CZYTAJ DALEJ"
   },
   "blogArticle": {
@@ -458,7 +465,7 @@
     "exploreShop": "ZOBACZ SKLEP"
   },
   "fashionPage": {
-    "metaTitle": "Chaka Arcana — Moda Wysokiej Częstotliwości od Saudade",
+    "metaTitle": "Chaka Arcana — Moda Wysokiej Częstotliwości",
     "metaDescription": "Pięć świętych kimon. Pięć portali. Jeden most między światami. Inauguracyjna kolekcja Chaka Arcana od Saudade Creative Studio — talizmany do noszenia, zrodzone z pradawnej mądrości Ameryki Południowej.",
     "studioLabel": "Saudade Creative Studio",
     "heroTitle": "Chaka Arcana",
@@ -510,7 +517,7 @@
     "wholeLine1Rest": "— cztery kierunki, pory roku, żywioły, żywa mapa.",
     "wholeLine2Em": "Ixchel Cipher",
     "wholeLine2Rest": "— święta wiedza wpleciona w istnienie.",
-    "wholeLine3Em": "Chakana Ignis",
+    "wholeLine3Em": "Selva Nina",
     "wholeLine3Rest": "— ogień przemiany i ochrony.",
     "wholeLine4Em": "Pacha Azul",
     "wholeLine4Rest": "— przypomnienie, że jesteśmy z gwiazd.",
@@ -563,7 +570,10 @@
       }
     },
     "readMore": "Czytaj więcej",
-    "readLess": "Czytaj mniej"
+    "readLess": "Czytaj mniej",
+    "comingSoonEyebrow": "Chaka Arcana · Pierwsza Kolekcja",
+    "comingSoonTitle": "Już Wkrótce",
+    "comingSoonBody": "Pięć kimon, każde noszalną częstotliwością utkaną ze starożytnych symboli i żywego koloru. Ubrania są gotowe — właśnie kończymy sesję zdjęciową. Dołącz do przedsprzedaży, aby jako pierwsza zobaczyć ich odsłonę."
   },
   "mushroom": {
     "plantGood": [

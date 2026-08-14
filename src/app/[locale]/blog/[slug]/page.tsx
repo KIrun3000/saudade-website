@@ -100,6 +100,7 @@ export default async function BlogArticlePage({ params }: Props) {
     "textile-frequency": { title: tBlog("post2Title"), excerpt: tBlog("post2Excerpt") },
     "who-made-my-clothes": { title: tBlog("post3Title"), excerpt: tBlog("post3Excerpt") },
     "permaculture": { title: tBlog("post4Title"), excerpt: tBlog("post4Excerpt") },
+    "chaka-arcana-kimonos": { title: tBlog("post5Title"), excerpt: tBlog("post5Excerpt") },
   };
 
   const relatedPosts = BLOG_ARTICLES

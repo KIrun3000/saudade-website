@@ -1,11 +1,15 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
 import { useForm } from "react-hook-form";
 
 type NewsletterValues = {
   email: string;
+  /** Honeypot — hidden from users; only bots fill it. */
+  company?: string;
+  /** ms-epoch when the form mounted; used server-side for timing checks. */
+  startedAt?: number;
 };
 
 type NewsletterProps = {
@@ -24,8 +28,15 @@ export function Newsletter({ variant = "light", submitLabel }: NewsletterProps) 
     register,
     handleSubmit,
     reset,
+    setValue,
     formState: { errors },
   } = useForm<NewsletterValues>();
+
+  // Record mount time server-side timing checks use to reject instant bot
+  // submissions. Carried through the form as a registered hidden field.
+  useEffect(() => {
+    setValue("startedAt", Date.now());
+  }, [setValue]);
 
   const onSubmit = async (data: NewsletterValues) => {
     setIsLoading(true);
@@ -60,6 +71,18 @@ export function Newsletter({ variant = "light", submitLabel }: NewsletterProps) 
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="w-full max-w-xl space-y-3">
+      {/* Honeypot — hidden from real users; bots that fill it are dropped. */}
+      <div aria-hidden="true" className="absolute left-[-9999px] top-[-9999px] h-0 w-0 overflow-hidden" style={{ position: "absolute" }}>
+        <label htmlFor="newsletter-company">Company</label>
+        <input
+          id="newsletter-company"
+          type="text"
+          tabIndex={-1}
+          autoComplete="off"
+          {...register("company")}
+        />
+        <input type="hidden" {...register("startedAt", { valueAsNumber: true })} />
+      </div>
       <label htmlFor="newsletter-email" className="sr-only">
         {t("label")}
       </label>

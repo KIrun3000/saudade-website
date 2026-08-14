@@ -57,6 +57,7 @@ export default async function LocaleHomePage({ params }: Props) {
 
       <div className="relative z-10">
       <HeroSection locale={locale} />
+      <PillarsSection locale={locale} />
       <ShopPreview locale={locale} />
       <EventHighlight locale={locale} />
 
@@ -76,8 +77,6 @@ export default async function LocaleHomePage({ params }: Props) {
           </div>
         </Reveal>
       </section>
-
-      <PillarsSection locale={locale} />
       </div>
     </main>
   );

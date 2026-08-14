@@ -29,6 +29,7 @@ export default async function BlogPage({ params }: Props) {
     { title: t("post2Title"), excerpt: t("post2Excerpt") },
     { title: t("post3Title"), excerpt: t("post3Excerpt") },
     { title: t("post4Title"), excerpt: t("post4Excerpt") },
+    { title: t("post5Title"), excerpt: t("post5Excerpt") },
   ];
 
   const posts = BLOG_ARTICLES.map((post, index) => ({

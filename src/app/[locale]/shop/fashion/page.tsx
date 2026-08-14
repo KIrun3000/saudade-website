@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { Newsletter } from "@/components/ui/Newsletter";
 import { getTranslations, setRequestLocale } from "next-intl/server";
-import { ReadMore, ReadMoreText } from "@/components/shop/ReadMore";
 import { pageMetadata } from "@/lib/seo";
 
 type Props = {
@@ -12,25 +11,23 @@ type Props = {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "fashionPage" });
-  return pageMetadata({
-    locale,
-    path: "/shop/fashion",
-    title: t("metaTitle"),
-    description: t("metaDescription"),
-  });
+  return {
+    ...pageMetadata({
+      locale,
+      path: "/shop/fashion",
+      title: t("metaTitle"),
+      description: t("metaDescription"),
+      imageAlt: "Chaka Arcana — the five-kimono collection by Saudade",
+    }),
+    // Keep the placeholder out of search results while the collection is hidden.
+    robots: { index: false, follow: false },
+  };
 }
 
-// Per-kimono static data (Roman numeral, canonical name, print motif image).
-// Names are proper nouns and never translated; all prose lives in i18n under
-// fashionPage.kimonos.k1…k5.
-const KIMONOS = [
-  { key: "k1", number: "I", name: "Chakana", symbol: "/chakana-print.webp" },
-  { key: "k2", number: "II", name: "Ixchel Cipher", symbol: null },
-  { key: "k3", number: "III", name: "Chakana Ignis", symbol: null },
-  { key: "k4", number: "IV", name: "Pacha Azul", symbol: null },
-  { key: "k5", number: "V", name: "Pacha Verde", symbol: null },
-] as const;
-
+// ── Coming-soon splash ──
+// The full Chaka Arcana collection page is preserved in
+// `page.published.tsx.bak` in this folder. Restore it (rename back to
+// page.tsx) once the garment photography is ready.
 export default async function FashionPage({ params }: Props) {
   const { locale } = await params;
   setRequestLocale(locale);
@@ -39,9 +36,7 @@ export default async function FashionPage({ params }: Props) {
   return (
     <main className="relative" style={{ backgroundColor: "#0a1f23", color: "#d8cfc4" }}>
 
-      {/* ── Background texture — Ixchel surface, recoloured to the page teal.
-           Scrolls with the page. Reverse vignette: invisible in the centre,
-           fading in toward the edges. ── */}
+      {/* ── Background texture — same Ixchel teal surface as the full page ── */}
       <div
         aria-hidden="true"
         className="pointer-events-none absolute inset-0 z-0"
@@ -58,353 +53,67 @@ export default async function FashionPage({ params }: Props) {
         }}
       />
 
-      {/* All page content sits above the texture */}
       <div className="relative z-10">
+        <section className="relative flex min-h-screen flex-col items-center justify-center px-5 py-24 text-center">
+          <div className="pointer-events-none absolute inset-0" style={{ background: "radial-gradient(ellipse at 50% 55%, rgba(20,55,60,0.5) 0%, transparent 70%)" }} />
 
-      {/* ── Hero ── */}
-      <section className="relative flex min-h-screen flex-col items-center justify-center px-5 pt-20 text-center">
-        <div className="pointer-events-none absolute inset-0" style={{ background: "radial-gradient(ellipse at 50% 60%, rgba(20,55,60,0.5) 0%, transparent 70%)" }} />
-        <div className="relative flex flex-col items-center">
+          <div className="relative flex w-full max-w-xl flex-col items-center">
 
-          {/* Top rule */}
-          <div className="mb-10 flex items-center gap-6">
-            <div className="h-px w-16 bg-current opacity-15" />
-            <p style={{ fontFamily: "var(--font-display)", fontSize: "10px", letterSpacing: "0.3em", opacity: 0.4 }} className="uppercase">
-              {t("studioLabel")}
+            {/* Eyebrow */}
+            <div className="mb-10 flex items-center gap-6">
+              <div className="h-px w-16 bg-current opacity-15" />
+              <p style={{ fontFamily: "var(--font-display)", fontSize: "10px", letterSpacing: "0.3em", opacity: 0.45 }} className="uppercase">
+                {t("comingSoonEyebrow")}
+              </p>
+              <div className="h-px w-16 bg-current opacity-15" />
+            </div>
+
+            {/* Title */}
+            <h1
+              style={{
+                fontFamily: "var(--font-heading)",
+                fontWeight: 300,
+                lineHeight: 1.05,
+                letterSpacing: "0.02em",
+              }}
+              className="text-[clamp(3rem,9vw,6rem)]"
+            >
+              {t("comingSoonTitle")}
+            </h1>
+
+            {/* Thin rule */}
+            <div className="my-10 h-px w-12 opacity-20" style={{ backgroundColor: "currentColor" }} />
+
+            {/* Teaser */}
+            <p
+              style={{
+                fontFamily: "var(--font-heading)",
+                fontWeight: 300,
+                fontSize: "clamp(1rem,1.6vw,1.2rem)",
+                lineHeight: 1.9,
+                opacity: 0.6,
+              }}
+            >
+              {t("comingSoonBody")}
             </p>
-            <div className="h-px w-16 bg-current opacity-15" />
-          </div>
 
-          {/* Collection name — pure Cormorant Garamond, very large, light weight */}
-          <h1
-            style={{
-              fontFamily: "var(--font-heading)",
-              fontWeight: 300,
-              lineHeight: 1,
-              letterSpacing: "0.02em",
-            }}
-            className="text-[clamp(4rem,12vw,9rem)]"
-          >
-            {t("heroTitle")}
-          </h1>
+            {/* Presale signup */}
+            <div className="mt-12 flex w-full justify-center">
+              <Newsletter variant="dark" submitLabel={t("presaleSubmit")} />
+            </div>
 
-          {/* Subtitle in italic */}
-          <p
-            style={{
-              fontFamily: "var(--font-heading)",
-              fontStyle: "italic",
-              fontWeight: 300,
-              fontSize: "clamp(1rem,2.5vw,1.5rem)",
-              letterSpacing: "0.05em",
-              opacity: 0.5,
-              marginTop: "1.5rem",
-            }}
-          >
-            {t("heroSubtitle")}
-          </p>
-
-          {/* Thin rule */}
-          <div className="my-10 h-px w-12 opacity-20" style={{ backgroundColor: "currentColor" }} />
-
-          {/* CTA */}
-          <a
-            href="#collection"
-            style={{
-              fontFamily: "var(--font-display)",
-              fontSize: "10px",
-              letterSpacing: "0.28em",
-              opacity: 0.55,
-            }}
-            className="mt-2 uppercase transition-opacity duration-300 hover:opacity-90"
-          >
-            {t("heroCta")}
-          </a>
-        </div>
-      </section>
-
-      {/* ── High Frequency Clothing — brand line (top, before the story) ── */}
-      <section style={{ borderTop: "1px solid rgba(216,207,196,0.1)" }} className="py-20">
-        <div className="mx-auto max-w-3xl px-5 text-center md:px-8">
-          <div className="mx-auto mb-7 h-px w-10" style={{ backgroundColor: "rgba(216,207,196,0.25)" }} />
-          <p
-            style={{
-              fontFamily: "var(--font-display)",
-              fontWeight: 300,
-              fontSize: "clamp(1.1rem, 3vw, 2rem)",
-              letterSpacing: "clamp(0.22em, 0.7vw, 0.4em)",
-              opacity: 0.85,
-            }}
-            className="uppercase"
-          >
-            {t("hfcTitle")}
-          </p>
-          <p style={{ fontFamily: "var(--font-heading)", fontStyle: "italic", fontWeight: 300, fontSize: "clamp(1rem,2vw,1.25rem)", opacity: 0.5, marginTop: "1.25rem" }}>
-            {t("hfcSubtitle")}
-          </p>
-        </div>
-      </section>
-
-      {/* ── The Story ── */}
-      <section style={{ borderTop: "1px solid rgba(216,207,196,0.1)" }} className="py-28">
-        <div className="mx-auto max-w-2xl px-5 md:px-8">
-
-          <p style={{ fontFamily: "var(--font-display)", fontSize: "9px", letterSpacing: "0.32em", opacity: 0.35 }} className="uppercase mb-10">
-            {t("storyLabel")}
-          </p>
-
-          <div style={{ fontFamily: "var(--font-heading)", fontWeight: 300, fontSize: "clamp(1.05rem,1.5vw,1.2rem)", lineHeight: 1.9 }}>
-            <ReadMore
-              teaser={
-                <div className="space-y-6">
-                  <p style={{ opacity: 0.8 }}>
-                    {t("story1Lead")}{" "}
-                    <em>{t("story1Word")}</em> {t("story1Rest")}
-                  </p>
-                  <p style={{ opacity: 0.8 }}>
-                    {t("story2")}
-                  </p>
-                </div>
-              }
-            >
-              <div className="space-y-6 mt-6">
-                <p style={{ opacity: 0.7 }}>{t("story3")}</p>
-                <p style={{ opacity: 0.7 }}>
-                  {t("story4Pre")} <em>{t("story4Chakana")}</em> {t("story4Mid")} <em>{t("story4Chaka")}</em>
-                </p>
-                <p style={{ opacity: 0.8 }}>{t("story5")}</p>
-                <p style={{ opacity: 0.7 }}>{t("story6")}</p>
-                <p style={{ opacity: 0.8 }}>
-                  {t("story7Pre")} <em>{t("story7Em")}</em> {t("story7Rest")}
-                </p>
-                <p style={{ opacity: 0.8 }}>{t("story8")}</p>
-                <p style={{ opacity: 0.7 }}>
-                  {t("story9Pre")} <em>{t("story9Em")}</em>{t("story9Rest")}
-                </p>
-                <p style={{ opacity: 0.7 }}>{t("story10")}</p>
-              </div>
-            </ReadMore>
-          </div>
-
-          {/* Definitions */}
-          <div style={{ borderTop: "1px solid rgba(216,207,196,0.1)", marginTop: "3rem", paddingTop: "3rem" }} className="grid gap-10 sm:grid-cols-2">
-            {[
-              { word: t("def1Word"), lang: t("def1Lang"), meaning: t("def1Meaning") },
-              { word: t("def2Word"), lang: t("def2Lang"), meaning: t("def2Meaning") },
-            ].map((d) => (
-              <div key={d.word}>
-                <p style={{ fontFamily: "var(--font-heading)", fontSize: "2rem", fontWeight: 300 }}>{d.word}</p>
-                <p style={{ fontFamily: "var(--font-display)", fontSize: "9px", letterSpacing: "0.2em", opacity: 0.35, marginTop: "0.25rem" }} className="uppercase">{d.lang}</p>
-                <p style={{ fontFamily: "var(--font-heading)", fontWeight: 300, fontSize: "0.95rem", lineHeight: 1.8, opacity: 0.6, marginTop: "0.75rem" }}>{d.meaning}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <section id="collection" style={{ borderTop: "1px solid rgba(216,207,196,0.1)" }} className="py-28">
-        <div className="mx-auto max-w-6xl px-5 md:px-8">
-
-          <p style={{ fontFamily: "var(--font-display)", fontSize: "9px", letterSpacing: "0.32em", opacity: 0.35 }} className="uppercase mb-4">
-            {t("collectionLabel")}
-          </p>
-          <h2 style={{ fontFamily: "var(--font-heading)", fontWeight: 300, fontSize: "clamp(2.5rem,5vw,4rem)" }}>
-            {t("collectionTitle")}
-          </h2>
-
-          <div style={{ marginTop: "5rem" }} className="space-y-32">
-            {KIMONOS.map((kimono, i) => (
-              <article
-                key={kimono.name}
-                className={`grid gap-12 lg:grid-cols-2 lg:items-center ${i % 2 === 1 ? "lg:grid-flow-dense" : ""}`}
+            {/* Back link */}
+            <div className="mt-14">
+              <Link
+                href={`/${locale}/shop`}
+                style={{ fontFamily: "var(--font-display)", fontSize: "9px", letterSpacing: "0.28em", opacity: 0.4, borderBottom: "1px solid rgba(216,207,196,0.2)", paddingBottom: "3px" }}
+                className="uppercase transition-opacity duration-300 hover:opacity-70"
               >
-                {/* Photo placeholder — hidden on mobile (empty box just adds dead space when stacked) */}
-                <div className={`hidden lg:block ${i % 2 === 1 ? "lg:col-start-2" : ""}`}>
-                  <div
-                    className="relative"
-                    style={{
-                      aspectRatio: "3/4",
-                      borderRadius: "4px",
-                      border: "1px solid rgba(216,207,196,0.08)",
-                      background: "rgba(216,207,196,0.02)",
-                      overflow: "hidden",
-                    }}
-                  >
-                    {/* Roman numeral watermark */}
-                    <div className="absolute inset-0 flex items-center justify-center">
-                      <span style={{ fontFamily: "var(--font-heading)", fontSize: "clamp(6rem,15vw,10rem)", fontWeight: 300, opacity: 0.04, letterSpacing: "0.05em" }}>
-                        {kimono.number}
-                      </span>
-                    </div>
-                    <p style={{ fontFamily: "var(--font-display)", fontSize: "9px", letterSpacing: "0.25em", opacity: 0.2, position: "absolute", bottom: "2rem", left: 0, right: 0, textAlign: "center" }} className="uppercase">
-                      {t("imageComingSoon")}
-                    </p>
-                  </div>
-                </div>
-
-                {/* Text */}
-                <div className={`relative space-y-6 ${i % 2 === 1 ? "lg:col-start-1 lg:row-start-1" : ""}`}>
-                  {/* Print motif — centered above the name. On desktop it floats as
-                      an absolute crest just above the name (does not push it down);
-                      on mobile it sits in flow above the name, centered. */}
-                  {kimono.symbol && (
-                    <div
-                      aria-hidden="true"
-                      className="pointer-events-none relative mb-4 lg:absolute lg:bottom-full lg:left-1/2 lg:mb-0 lg:-translate-x-1/2 lg:pb-6"
-                      style={{ textAlign: "center" }}
-                    >
-                      {/* soft halo grounding the motif in the page */}
-                      <div
-                        aria-hidden="true"
-                        className="pointer-events-none absolute"
-                        style={{
-                          width: "clamp(13rem, 65vw, 30rem)",
-                          aspectRatio: "1",
-                          top: "50%",
-                          left: "50%",
-                          transform: "translate(-50%, -50%)",
-                          background: "radial-gradient(circle, rgba(22,60,66,0.6) 0%, transparent 68%)",
-                          filter: "blur(8px)",
-                        }}
-                      />
-                      <img
-                        src={kimono.symbol}
-                        alt=""
-                        aria-hidden="true"
-                        style={{
-                          position: "relative",
-                          display: "block",
-                          marginLeft: "auto",
-                          marginRight: "auto",
-                          width: "clamp(11rem, 55vw, 24rem)",
-                          opacity: 0.95,
-                          filter: "drop-shadow(0 12px 36px rgba(0,0,0,0.4))",
-                        }}
-                      />
-                    </div>
-                  )}
-                  {/* Name */}
-                  <h3 style={{ fontFamily: "var(--font-heading)", fontWeight: 300, fontSize: "clamp(2.5rem,4.5vw,3.5rem)", lineHeight: 1.05, letterSpacing: "0.01em" }}>
-                    {kimono.name}
-                  </h3>
-
-                  {/* Tagline */}
-                  <p style={{ fontFamily: "var(--font-heading)", fontStyle: "italic", fontSize: "1.1rem", opacity: 0.45, lineHeight: 1.6 }}>
-                    {t(`kimonos.${kimono.key}.tagline`)}
-                  </p>
-
-                  {/* Frequency + palette */}
-                  <div style={{ borderTop: "1px solid rgba(216,207,196,0.1)", paddingTop: "1.25rem" }} className="flex flex-col gap-3 sm:flex-row sm:gap-8">
-                    <div>
-                      <p style={{ fontFamily: "var(--font-display)", fontSize: "8px", letterSpacing: "0.22em", opacity: 0.3, marginBottom: "0.3rem" }} className="uppercase">{t("labelPrintArt")}</p>
-                      <p style={{ fontFamily: "var(--font-heading)", fontWeight: 300, opacity: 0.7 }}>{t(`kimonos.${kimono.key}.frequency`)}</p>
-                    </div>
-                    <div>
-                      <p style={{ fontFamily: "var(--font-display)", fontSize: "8px", letterSpacing: "0.22em", opacity: 0.3, marginBottom: "0.3rem" }} className="uppercase">{t("labelPalette")}</p>
-                      <p style={{ fontFamily: "var(--font-heading)", fontWeight: 300, opacity: 0.7 }}>{t(`kimonos.${kimono.key}.colors`)}</p>
-                    </div>
-                  </div>
-
-                  {/* Description */}
-                  <ReadMoreText
-                    text={t(`kimonos.${kimono.key}.description`)}
-                    textStyle={{ fontFamily: "var(--font-heading)", fontWeight: 300, fontSize: "1.05rem", lineHeight: 1.85, opacity: 0.65 }}
-                  />
-
-                  <div style={{ paddingTop: "1rem" }}>
-                    <Link
-                      href={`/${locale}/contact`}
-                      style={{
-                        fontFamily: "var(--font-display)",
-                        fontSize: "10px",
-                        letterSpacing: "0.28em",
-                        display: "inline-flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        padding: "0.75rem 2rem",
-                        border: "1px solid rgba(216,207,196,0.55)",
-                        borderRadius: "9999px",
-                        color: "inherit",
-                        transition: "background 0.3s, border-color 0.3s",
-                      }}
-                      className="uppercase hover:bg-[rgba(216,207,196,0.08)] hover:border-[rgba(216,207,196,0.85)]"
-                    >
-                      {t("makeItYours")}
-                    </Link>
-                  </div>
-                </div>
-              </article>
-            ))}
+                {t("backToShop")}
+              </Link>
+            </div>
           </div>
-        </div>
-      </section>
-
-      {/* ── Presale Newsletter ── */}
-      <section style={{ borderTop: "1px solid rgba(216,207,196,0.1)", borderBottom: "1px solid rgba(216,207,196,0.1)" }} className="py-24">
-        <div className="mx-auto max-w-lg px-5 text-center md:px-8">
-          <p style={{ fontFamily: "var(--font-display)", fontSize: "9px", letterSpacing: "0.3em", opacity: 0.35 }} className="uppercase">
-            {t("presaleLabel")}
-          </p>
-          <h2 style={{ fontFamily: "var(--font-heading)", fontWeight: 300, fontSize: "clamp(1.8rem,3.5vw,2.5rem)", lineHeight: 1.25, marginTop: "1.25rem" }}>
-            {t("presaleTitleLine1")}<br />
-            <em style={{ opacity: 0.5 }}>{t("presaleTitleLine2")}</em>
-          </h2>
-          <p style={{ fontFamily: "var(--font-heading)", fontWeight: 300, fontSize: "1rem", lineHeight: 1.8, opacity: 0.45, marginTop: "1.25rem" }}>
-            {t("presaleText")}
-          </p>
-          <div className="mt-10 flex justify-center">
-            <Newsletter variant="dark" submitLabel={t("presaleSubmit")} />
-          </div>
-        </div>
-      </section>
-
-      {/* ── Five as One ── */}
-      <section style={{ borderTop: "1px solid rgba(216,207,196,0.1)" }} className="py-28">
-        <div className="mx-auto max-w-2xl px-5 text-center md:px-8">
-          <p style={{ fontFamily: "var(--font-display)", fontSize: "9px", letterSpacing: "0.32em", opacity: 0.35 }} className="uppercase">
-            {t("wholeLabel")}
-          </p>
-          <h2 style={{ fontFamily: "var(--font-heading)", fontWeight: 300, fontSize: "clamp(2.2rem,4vw,3.2rem)", lineHeight: 1.2, marginTop: "1.5rem" }}>
-            {t("wholeTitleLine1")}
-            <br />
-            <em style={{ opacity: 0.55 }}>{t("wholeTitleLine2")}</em>
-          </h2>
-
-          <div style={{ fontFamily: "var(--font-heading)", fontWeight: 300, fontSize: "1.05rem", lineHeight: 1.9, opacity: 0.55, marginTop: "2.5rem" }} className="space-y-2 text-center">
-            <p><em>{t("wholeLine1Em")}</em> {t("wholeLine1Rest")}</p>
-            <p><em>{t("wholeLine2Em")}</em> {t("wholeLine2Rest")}</p>
-            <p><em>{t("wholeLine3Em")}</em> {t("wholeLine3Rest")}</p>
-            <p><em>{t("wholeLine4Em")}</em> {t("wholeLine4Rest")}</p>
-            <p><em>{t("wholeLine5Em")}</em> {t("wholeLine5Rest")}</p>
-          </div>
-
-          <div style={{ width: "2.5rem", height: "1px", backgroundColor: "rgba(216,207,196,0.2)", margin: "3rem auto" }} />
-
-          <blockquote style={{ fontFamily: "var(--font-heading)", fontStyle: "italic", fontWeight: 300, fontSize: "clamp(1.2rem,2vw,1.5rem)", lineHeight: 1.7, opacity: 0.45 }}>
-            &ldquo;{t("wholeQuote")}&rdquo;
-          </blockquote>
-          <p style={{ fontFamily: "var(--font-display)", fontSize: "9px", letterSpacing: "0.22em", opacity: 0.25, marginTop: "1rem" }} className="uppercase">
-            {t("wholeAttribution")}
-          </p>
-
-          <div className="mt-14 flex flex-wrap justify-center gap-6">
-            <Link
-              href={`/${locale}/contact`}
-              style={{ fontFamily: "var(--font-display)", fontSize: "9px", letterSpacing: "0.28em", borderBottom: "1px solid rgba(216,207,196,0.4)", paddingBottom: "3px" }}
-              className="uppercase transition-opacity duration-300 hover:opacity-60"
-            >
-              {t("contactToOrder")}
-            </Link>
-            <Link
-              href={`/${locale}/shop/fashion`}
-              style={{ fontFamily: "var(--font-display)", fontSize: "9px", letterSpacing: "0.28em", opacity: 0.35, borderBottom: "1px solid rgba(216,207,196,0.15)", paddingBottom: "3px" }}
-              className="uppercase transition-opacity duration-300 hover:opacity-60"
-            >
-              {t("backToShop")}
-            </Link>
-          </div>
-        </div>
-      </section>
-
+        </section>
       </div>
     </main>
   );

@@ -19,13 +19,16 @@ export type BlogSection = {
 export type BlogArticleTranslation = {
   title: string;
   subtitle?: string;
+  /** Localized meta description (OG/Twitter/SEO). Falls back to the base
+   *  English description when omitted. */
+  description?: string;
   quote?: string;
   sections: BlogSection[];
   postImageSections?: BlogSection[];
 };
 
 export type BlogArticle = {
-  slug: "saudade-meaning" | "textile-frequency" | "who-made-my-clothes" | "permaculture";
+  slug: "saudade-meaning" | "textile-frequency" | "who-made-my-clothes" | "permaculture" | "chaka-arcana-kimonos";
   category: "PHILOSOPHY" | "CONSCIOUS FASHION" | "REGENERATION";
   publishedAt: string;
   author: "Mayka";
@@ -1333,6 +1336,304 @@ export const BLOG_ARTICLES: BlogArticle[] = [
       },
     },
   },
+  {
+    slug: "chaka-arcana-kimonos",
+    category: "CONSCIOUS FASHION",
+    publishedAt: "2026-08-07",
+    author: "Mayka",
+    title: "Chaka Arcana — The Story of the Kimonos",
+    subtitle:
+      "Five sacred kimonos, born from a long journey — and from the feeling that started everything.",
+    description:
+      "The story behind Chaka Arcana — a self-taught founder's journey through doubt and discovery, and five sacred kimonos born from the feeling of saudade.",
+    // Placeholder imagery until the kimono photography is ready — reuses the
+    // Ixchel print-surface (teal) already shipped for the fashion pages.
+    cardImage: "/ixchel-bg-teal.webp",
+    heroImage: "/ixchel-bg-teal.webp",
+    keywords: [
+      "Chaka Arcana",
+      "kimono",
+      "saudade",
+      "high frequency fashion",
+      "sustainable kimono",
+      "Chakana",
+      "Andean",
+      "conscious fashion",
+      "limited edition",
+      "energy protector",
+    ],
+    sections: [
+      {
+        paragraphs: [
+          "For years I was searching for the thing I was meant to do — and longer still to believe I could do it.",
+        ],
+      },
+      {
+        heading: "The learning",
+        paragraphs: [
+          "I knew I needed to make something that gives me purpose — or else I wouldn't do it, and I would waste my life. So I taught myself, piece by piece. And the more I learned about the fashion industry, the more I understood how harmful it can be.",
+        ],
+      },
+      {
+        heading: "Everything changed",
+        paragraphs: [
+          "Then quarantine came, and I was forced to look at the world as it truly is. After much pain, much research, and — mostly — much meditation, the idea for Saudade Land came to me. It gave me hope and inspiration — and I realised this was the only way to go. This vision was never only mine; it is the only way for us to evolve as human beings — the only solution, and the only hope.",
+        ],
+      },
+      {
+        heading: "Almost giving up",
+        paragraphs: [
+          "There was a moment I nearly walked away. I did not want to be part of that. Then a special man named Oskar told me: “You are right, Mayka. We don't need more. But we do need different.”",
+          "That was all I needed to hear to never doubt my dream again.",
+        ],
+      },
+      {
+        heading: "The bridge",
+        paragraphs: [
+          "In Bolivia I lived close to the Chakana — the Andean stepped cross, the living map of the four directions and the three worlds. It is the bridge. Chaka. That word — Chaka, bridge — became the soul of this project. Each kimono is an energy protector, and a message: we have not forgotten.",
+        ],
+      },
+      {
+        heading: "Finding the right hands",
+        paragraphs: [
+          "Making it real was the hardest part. I contacted endless companies and travelled to different countries trying to source a truly sustainable collection — and almost no one had the textiles. They were painfully slow to respond, or never responded at all. Again and again they sent me synthetic samples, even when I had said clearly: natural materials only, zero plastic. I lost so much time, energy, and money. Most companies want fast fashion and enormous orders; I am making something small and organic — which, in this industry, is almost impossible.",
+          "Then, finally, I found the right people: a company in India, a team of talented, wonderful women who understand my vision and are a true joy to work with. Soon I will visit them there.",
+        ],
+      },
+      {
+        heading: "Five Frequencies",
+        paragraphs: ["There are five, and each is a portal:"],
+        bullets: [
+          "I · Chakana — The sacred cross. The four directions. The living map of all that exists.",
+          "II · Ixchel Cipher — The secret code of the weaving goddess.",
+          "III · Selva Nina — The power of fire. The old world burning away, and the strength to rise and protect the living forest.",
+          "IV · Pacha Azul — The blue world. The cosmos alive.",
+          "V · Pacha Verde — The green world. The living earth in full bloom.",
+        ],
+      },
+      {
+        heading: "Made to be kept",
+        paragraphs: [
+          "These are not fast fashion, and they are not endless. 100 pieces per design. Once they are gone, they are gone.",
+          "Wear this. Be protected. Elevate the room. Remember who you are.",
+        ],
+      },
+      {
+        paragraphs: [
+          "The collection launches August 28th. This is only the beginning of the story — and if something in you recognises it, you already belong.",
+        ],
+      },
+    ],
+    translations: {
+      pt: {
+        title: "Chaka Arcana — A História dos Kimonos",
+        subtitle:
+          "Cinco kimonos sagrados, nascidos de uma longa jornada — e do sentimento que começou tudo.",
+        description:
+          "A história por trás de Chaka Arcana — a jornada autodidata de uma fundadora, e cinco kimonos sagrados nascidos do sentimento de saudade.",
+        sections: [
+          {
+            paragraphs: [
+              "Durante anos procurei aquilo que eu deveria fazer — e demorei ainda mais para acreditar que era capaz.",
+            ],
+          },
+          {
+            heading: "O aprendizado",
+            paragraphs: [
+              "Eu sabia que precisava criar algo que me desse propósito — caso contrário, não o faria, e desperdiçaria a minha vida. Então aprendi sozinha, peça por peça. E quanto mais eu aprendia sobre a indústria da moda, mais entendia o quão nociva ela pode ser.",
+            ],
+          },
+          {
+            heading: "Tudo mudou",
+            paragraphs: [
+              "Então veio a quarentena, e fui forçada a olhar o mundo como ele realmente é. Depois de muita dor, muita pesquisa e — sobretudo — muita meditação, veio a mim a ideia da Saudade Land. Ela me deu esperança e inspiração — e compreendi que este era o único caminho a seguir. Esta visão nunca foi só minha; é o único caminho para evoluirmos como seres humanos — a única solução, e a única esperança.",
+            ],
+          },
+          {
+            heading: "Quase desistir",
+            paragraphs: [
+              "Houve um momento em que quase desisti. Eu não queria fazer parte daquilo. Então um homem especial chamado Oskar me disse: “Você tem razão, Mayka. Não precisamos de mais. Mas precisamos de algo diferente.”",
+              "Foi tudo o que eu precisava ouvir para nunca mais duvidar do meu sonho.",
+            ],
+          },
+          {
+            heading: "A ponte",
+            paragraphs: [
+              "Na Bolívia vivi perto da Chakana — a cruz escalonada andina, o mapa vivo das quatro direções e dos três mundos. É a ponte. Chaka. Essa palavra — Chaka, ponte — tornou-se a alma deste projeto. Cada kimono é um protetor de energia, e uma mensagem: não nos esquecemos.",
+            ],
+          },
+          {
+            heading: "Encontrar as mãos certas",
+            paragraphs: [
+              "Torná-la real foi a parte mais difícil. Contactei inúmeras empresas e viajei por vários países a tentar produzir uma coleção verdadeiramente sustentável — e quase ninguém tinha os têxteis. Respondiam com uma lentidão dolorosa, ou simplesmente não respondiam. Vezes sem conta enviavam-me amostras sintéticas, mesmo depois de eu dizer claramente: apenas materiais naturais, zero plástico. Perdi imenso tempo, energia e dinheiro. A maioria das empresas quer fast fashion e encomendas enormes; eu faço algo pequeno e orgânico — o que, nesta indústria, é quase impossível.",
+              "Então, finalmente, encontrei as pessoas certas: uma empresa na Índia, uma equipa de mulheres talentosas e maravilhosas que compreendem a minha visão e com quem trabalhar é uma verdadeira alegria. Em breve vou visitá-las lá.",
+            ],
+          },
+          {
+            heading: "Cinco Frequências",
+            paragraphs: ["São cinco, e cada um é um portal:"],
+            bullets: [
+              "I · Chakana — A cruz sagrada. As quatro direções. O mapa vivo de tudo o que existe.",
+              "II · Ixchel Cipher — O código secreto da deusa tecelã.",
+              "III · Selva Nina — O poder do fogo. O velho mundo a arder, e a força para erguer-se e proteger a floresta viva.",
+              "IV · Pacha Azul — O mundo azul. O cosmos vivo.",
+              "V · Pacha Verde — O mundo verde. A terra viva em plena floração.",
+            ],
+          },
+          {
+            heading: "Feitos para guardar",
+            paragraphs: [
+              "Isto não é fast fashion, e não é infinito. 100 peças por design. Quando acabam, acabam.",
+              "Veste isto. Sente-te protegido. Eleva o espaço. Lembra-te de quem és.",
+            ],
+          },
+          {
+            paragraphs: [
+              "A coleção é lançada a 28 de agosto. Este é apenas o começo da história — e se algo em ti reconhece isto, tu já pertences.",
+            ],
+          },
+        ],
+      },
+      es: {
+        title: "Chaka Arcana — La Historia de los Kimonos",
+        subtitle:
+          "Cinco kimonos sagrados, nacidos de un largo viaje — y del sentimiento que lo empezó todo.",
+        description:
+          "La historia detrás de Chaka Arcana — el viaje autodidacta de una fundadora, y cinco kimonos sagrados nacidos del sentimiento de saudade.",
+        sections: [
+          {
+            paragraphs: [
+              "Durante años busqué aquello que estaba destinada a hacer — y tardé aún más en creer que podía lograrlo.",
+            ],
+          },
+          {
+            heading: "El aprendizaje",
+            paragraphs: [
+              "Sabía que necesitaba crear algo que me diera propósito — de lo contrario, no lo haría, y desperdiciaría mi vida. Así que aprendí sola, pieza por pieza. Y cuanto más aprendía sobre la industria de la moda, más entendía lo dañina que puede ser.",
+            ],
+          },
+          {
+            heading: "Todo cambió",
+            paragraphs: [
+              "Entonces llegó la cuarentena, y me vi forzada a mirar el mundo como realmente es. Tras mucho dolor, mucha investigación y — sobre todo — mucha meditación, me llegó la idea de Saudade Land. Me dio esperanza e inspiración — y comprendí que este era el único camino a seguir. Esta visión nunca fue solo mía; es el único camino para evolucionar como seres humanos — la única solución, y la única esperanza.",
+            ],
+          },
+          {
+            heading: "Casi rendirme",
+            paragraphs: [
+              "Hubo un momento en que estuve a punto de rendirme. No quería ser parte de eso. Entonces un hombre especial llamado Oskar me dijo: “Tienes razón, Mayka. No necesitamos más. Pero sí necesitamos algo diferente.”",
+              "Eso fue todo lo que necesitaba escuchar para no volver a dudar de mi sueño.",
+            ],
+          },
+          {
+            heading: "El puente",
+            paragraphs: [
+              "En Bolivia viví cerca de la Chakana — la cruz escalonada andina, el mapa vivo de las cuatro direcciones y los tres mundos. Es el puente. Chaka. Esa palabra — Chaka, puente — se volvió el alma de este proyecto. Cada kimono es un protector de energía, y un mensaje: no hemos olvidado.",
+            ],
+          },
+          {
+            heading: "Encontrar las manos correctas",
+            paragraphs: [
+              "Hacerla realidad fue la parte más difícil. Contacté con incontables empresas y viajé a distintos países intentando producir una colección verdaderamente sostenible — y casi nadie tenía los textiles. Respondían con una lentitud dolorosa, o no respondían en absoluto. Una y otra vez me enviaban muestras sintéticas, aunque yo había dicho claramente: solo materiales naturales, cero plástico. Perdí muchísimo tiempo, energía y dinero. La mayoría de las empresas quiere fast fashion y pedidos enormes; yo hago algo pequeño y orgánico — lo que, en esta industria, es casi imposible.",
+              "Entonces, por fin, encontré a las personas indicadas: una empresa en la India, un equipo de mujeres talentosas y maravillosas que entienden mi visión y con quienes trabajar es una verdadera alegría. Pronto iré a visitarlas allí.",
+            ],
+          },
+          {
+            heading: "Cinco Frecuencias",
+            paragraphs: ["Son cinco, y cada uno es un portal:"],
+            bullets: [
+              "I · Chakana — La cruz sagrada. Las cuatro direcciones. El mapa vivo de todo lo que existe.",
+              "II · Ixchel Cipher — El código secreto de la diosa tejedora.",
+              "III · Selva Nina — El poder del fuego. El viejo mundo ardiendo, y la fuerza para alzarse y proteger el bosque vivo.",
+              "IV · Pacha Azul — El mundo azul. El cosmos vivo.",
+              "V · Pacha Verde — El mundo verde. La tierra viva en plena floración.",
+            ],
+          },
+          {
+            heading: "Hechos para conservar",
+            paragraphs: [
+              "Esto no es fast fashion, y no es infinito. 100 piezas por diseño. Cuando se acaban, se acaban.",
+              "Viste esto. Siéntete protegido. Eleva la sala. Recuerda quién eres.",
+            ],
+          },
+          {
+            paragraphs: [
+              "La colección se lanza el 28 de agosto. Este es solo el comienzo de la historia — y si algo en ti lo reconoce, ya perteneces.",
+            ],
+          },
+        ],
+      },
+      pl: {
+        title: "Chaka Arcana — Historia Kimon",
+        subtitle:
+          "Pięć świętych kimon, zrodzonych z długiej podróży — i z uczucia, od którego wszystko się zaczęło.",
+        description:
+          "Historia Chaka Arcana — samodzielna droga założycielki i pięć świętych kimon zrodzonych z uczucia saudade.",
+        sections: [
+          {
+            paragraphs: [
+              "Przez lata szukałam tego, co miałam robić — a jeszcze dłużej trwało, zanim uwierzyłam, że potrafię.",
+            ],
+          },
+          {
+            heading: "Nauka",
+            paragraphs: [
+              "Wiedziałam, że muszę stworzyć coś, co da mi cel — inaczej bym tego nie zrobiła i zmarnowałabym swoje życie. Więc uczyłam się sama, krok po kroku. A im więcej dowiadywałam się o przemyśle modowym, tym lepiej rozumiałam, jak bardzo potrafi być szkodliwy.",
+            ],
+          },
+          {
+            heading: "Wszystko się zmieniło",
+            paragraphs: [
+              "Potem przyszła kwarantanna i zostałam zmuszona spojrzeć na świat takim, jaki jest naprawdę. Po wielkim bólu, wielu badaniach i — przede wszystkim — wielu medytacjach przyszedł do mnie pomysł Saudade Land. Dał mi nadzieję i inspirację — i zrozumiałam, że to jedyna droga. Ta wizja nigdy nie była tylko moja; to jedyna droga, byśmy ewoluowali jako ludzie — jedyne rozwiązanie i jedyna nadzieja.",
+            ],
+          },
+          {
+            heading: "Prawie się poddałam",
+            paragraphs: [
+              "Był moment, w którym niemal odeszłam. Nie chciałam być częścią tego. Wtedy pewien wyjątkowy człowiek o imieniu Oskar powiedział mi: “Masz rację, Mayka. Nie potrzebujemy więcej. Ale potrzebujemy inaczej.”",
+              "To było wszystko, czego potrzebowałam usłyszeć, by już nigdy nie zwątpić w swoje marzenie.",
+            ],
+          },
+          {
+            heading: "Most",
+            paragraphs: [
+              "W Boliwii żyłam blisko Chakany — andyjskiego schodkowego krzyża, żywej mapy czterech kierunków i trzech światów. To jest most. Chaka. To słowo — Chaka, most — stało się duszą tego projektu. Każde kimono jest ochroną energii i przesłaniem: nie zapomnieliśmy.",
+            ],
+          },
+          {
+            heading: "Znaleźć właściwe ręce",
+            paragraphs: [
+              "Urzeczywistnienie tego było najtrudniejsze. Skontaktowałam się z niezliczonymi firmami i podróżowałam do różnych krajów, próbując wyprodukować naprawdę zrównoważoną kolekcję — i niemal nikt nie miał odpowiednich tkanin. Odpowiadali boleśnie wolno albo w ogóle nie odpowiadali. Raz za razem przysyłali mi syntetyczne próbki, choć wyraźnie mówiłam: tylko materiały naturalne, zero plastiku. Straciłam mnóstwo czasu, energii i pieniędzy. Większość firm chce fast fashion i ogromnych zamówień; ja tworzę coś małego i organicznego — co w tej branży jest niemal niemożliwe.",
+              "Wtedy wreszcie znalazłam właściwych ludzi: firmę w Indiach, zespół utalentowanych i cudownych kobiet, które rozumieją moją wizję, a praca z nimi to czysta radość. Wkrótce odwiedzę je w Indiach.",
+            ],
+          },
+          {
+            heading: "Pięć Częstotliwości",
+            paragraphs: ["Jest ich pięć, a każde to portal:"],
+            bullets: [
+              "I · Chakana — Święty krzyż. Cztery kierunki. Żywa mapa wszystkiego, co istnieje.",
+              "II · Ixchel Cipher — Tajemny kod tkającej bogini.",
+              "III · Selva Nina — Moc ognia. Stary świat spalany, i siła, by powstać i chronić żywy las.",
+              "IV · Pacha Azul — Niebieski świat. Żywy kosmos.",
+              "V · Pacha Verde — Zielony świat. Żywa ziemia w pełnym rozkwicie.",
+            ],
+          },
+          {
+            heading: "Stworzone, by je zachować",
+            paragraphs: [
+              "To nie fast fashion i nie jest to nieskończone. 100 sztuk na każdy wzór. Gdy się skończą, znikają na zawsze.",
+              "Załóż to. Bądź chroniony. Podnieś przestrzeń. Pamiętaj, kim jesteś.",
+            ],
+          },
+          {
+            paragraphs: [
+              "Kolekcja debiutuje 28 sierpnia. To dopiero początek tej historii — a jeśli coś w tobie to rozpoznaje, już należysz.",
+            ],
+          },
+        ],
+      },
+    },
+  },
 ];
 
 export const BLOG_SLUGS = BLOG_ARTICLES.map((article) => article.slug);
@@ -1370,6 +1671,7 @@ export function getLocalizedBlogArticle(slug: string, locale: string): BlogArtic
     ...article,
     title: translation.title ?? article.title,
     subtitle: translation.subtitle ?? article.subtitle,
+    description: translation.description ?? article.description,
     quote: translation.quote ?? article.quote,
     sections: withBaseImages(translation.sections, article.sections) ?? article.sections,
     postImageSections:

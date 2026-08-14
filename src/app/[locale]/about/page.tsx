@@ -3,6 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { setRequestLocale, getTranslations } from "next-intl/server";
 import { pageMetadata } from "@/lib/seo";
+import { linkifyPermaculture } from "@/components/ui/linkify-permaculture";
 
 type Props = {
   params: Promise<{ locale: string }>;
@@ -179,13 +180,13 @@ export default async function AboutPage({ params }: Props) {
               {t("landTitle")}
             </h2>
             <p className="leading-relaxed text-accent/85">
-              {t("landText1")}
+              {linkifyPermaculture(t("landText1"), locale)}
             </p>
             <p className="leading-relaxed text-accent/85">
-              {t("landText2")}
+              {linkifyPermaculture(t("landText2"), locale)}
             </p>
             <p className="leading-relaxed text-accent/85">
-              {t("landText3")}
+              {linkifyPermaculture(t("landText3"), locale)}
             </p>
             <div className="pt-3">
               <Link

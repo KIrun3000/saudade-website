@@ -19,7 +19,7 @@ export async function generateMetadata({
 
 export default function DatenschutzPage() {
   return (
-    <LegalLayout eyebrow="Datenschutz" title="Privacy Policy" meta="Last updated · April 2026">
+    <LegalLayout eyebrow="Datenschutz" title="Privacy Policy" meta="Last updated · August 2026">
       <LegalSection heading="1 · Controller">
         <p>
           Saudade Creative Studio (Mayka), Portugal.
@@ -32,7 +32,11 @@ export default function DatenschutzPage() {
         <ul className="list-disc space-y-1.5 pl-5">
           <li>Contact form submissions (name, email, message)</li>
           <li>Newsletter subscriptions (email)</li>
-          <li>Usage data via analytics (if applicable)</li>
+          <li>
+            Anonymous, aggregated usage and page-performance data via Vercel Web Analytics and
+            Speed Insights — cookieless, with no personal data collected and no tracking across
+            other websites
+          </li>
         </ul>
       </LegalSection>
 
@@ -55,7 +59,7 @@ export default function DatenschutzPage() {
       <LegalSection heading="5 · Data sharing">
         <p>We do not sell personal data. Data may be processed by:</p>
         <ul className="list-disc space-y-1.5 pl-5">
-          <li>Vercel — hosting</li>
+          <li>Vercel — hosting and cookieless analytics (Web Analytics, Speed Insights)</li>
           <li>Shopify — shop, when applicable</li>
         </ul>
       </LegalSection>
@@ -69,7 +73,12 @@ export default function DatenschutzPage() {
       </LegalSection>
 
       <LegalSection heading="7 · Cookies">
-        <p>This website uses essential cookies only. No tracking cookies are set without consent.</p>
+        <p>
+          This website uses essential cookies only. No tracking cookies are set without consent.
+          Our analytics (Vercel Web Analytics and Speed Insights) are cookieless — they measure page
+          views and page performance in aggregate, without storing cookies or tracking you across
+          websites.
+        </p>
       </LegalSection>
 
       <LegalSection heading="8 · Changes">

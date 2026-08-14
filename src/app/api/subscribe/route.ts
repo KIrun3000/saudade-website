@@ -1,14 +1,25 @@
 import { NextRequest, NextResponse } from "next/server";
+import { checkSpam } from "@/lib/spam-guard";
 
 const KLAVIYO_API_KEY = process.env.KLAVIYO_PRIVATE_API_KEY!;
 const KLAVIYO_LIST_ID = process.env.KLAVIYO_LIST_ID!;
 
 export async function POST(req: NextRequest) {
   try {
-    const { email } = await req.json();
+    const { email, company, startedAt } = await req.json();
 
-    if (!email) {
-      return NextResponse.json({ error: "Email required" }, { status: 400 });
+    // Spam protection: honeypot, submit-timing, email validation, rate limiting.
+    const spam = checkSpam(req, { email, honeypot: company, startedAt });
+    if (!spam.ok) {
+      // Silently accept honeypot/timing hits so bots don't learn they failed.
+      if (spam.reason === "honeypot" || spam.reason === "timing") {
+        return NextResponse.json({ success: true });
+      }
+      const errorMessage =
+        spam.status === 429
+          ? "Too many requests. Please try again shortly."
+          : "Please enter a valid email address.";
+      return NextResponse.json({ error: errorMessage }, { status: spam.status });
     }
 
     // Step 1: Create or update the profile

@@ -221,7 +221,11 @@ export function ShopGridClient({ locale, products, collections, initialCategory 
             className="text-[clamp(3rem,9vw,6.5rem)]"
           >
             {t("galleryTitle")}{" "}
-            <em style={{ opacity: 0.55 }}>{t("galleryTitleItalic")}</em>
+            {/* A single warm accent on "in Colour" — a muted antique-gold drawn
+                from the paintings' own palette. Just enough to let the word
+                carry a touch of the colour it names, without breaking the
+                site's monochrome restraint. */}
+            <em style={{ color: "#c9a06a", opacity: 0.85 }}>{t("galleryTitleItalic")}</em>
           </h1>
           <p
             style={{ fontFamily: "var(--font-heading)", fontStyle: "italic", fontWeight: 300, fontSize: "clamp(0.95rem,2vw,1.25rem)", letterSpacing: "0.03em" }}

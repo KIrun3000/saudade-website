@@ -25,6 +25,14 @@ export function localeAlternates(
   };
 }
 
+// og:locale codes per site locale (Brazilian Portuguese for the brand's roots).
+const OG_LOCALE: Record<string, string> = {
+  en: "en_US",
+  pt: "pt_BR",
+  es: "es_ES",
+  pl: "pl_PL",
+};
+
 type PageMetaOptions = {
   locale: string;
   /** Path after the locale segment, starting with "/" ("" for home). */
@@ -32,6 +40,8 @@ type PageMetaOptions = {
   title: string;
   description: string;
   images?: string[];
+  /** Alt text for the OpenGraph/Twitter image(s). Defaults to the title. */
+  imageAlt?: string;
   type?: "website" | "article";
 };
 
@@ -39,6 +49,11 @@ type PageMetaOptions = {
  * Full page Metadata: title + description + canonical/hreflang alternates +
  * matching OpenGraph/Twitter cards. Title flows through the root layout's
  * "%s | Saudade" template unless passed as { absolute }.
+ *
+ * Because Next replaces (rather than deep-merges) the root `openGraph`, every
+ * page that sets its own must re-supply the image, siteName and locale — so we
+ * do that here. When a page passes no `images`, we fall back to the branded
+ * 1200×630 /opengraph-image so social shares always have a preview card.
  */
 export function pageMetadata({
   locale,
@@ -46,9 +61,15 @@ export function pageMetadata({
   title,
   description,
   images,
+  imageAlt,
   type = "website",
 }: PageMetaOptions): Metadata {
   const url = `${SITE_URL}/${locale}${path}`;
+  const alt = imageAlt ?? title;
+  const ogImages =
+    images && images.length
+      ? images.map((image) => ({ url: image, alt }))
+      : [{ url: `${SITE_URL}/opengraph-image`, alt, width: 1200, height: 630 }];
   return {
     title,
     description,
@@ -56,14 +77,17 @@ export function pageMetadata({
     openGraph: {
       type,
       url,
+      siteName: "Saudade",
+      locale: OG_LOCALE[locale] ?? "en_US",
       title,
       description,
-      ...(images ? { images } : {}),
+      images: ogImages,
     },
     twitter: {
+      card: "summary_large_image",
       title,
       description,
-      ...(images ? { images } : {}),
+      images: ogImages.map((image) => image.url),
     },
   };
 }

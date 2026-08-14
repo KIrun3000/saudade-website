@@ -19,6 +19,7 @@ export async function generateMetadata({ params }: ArtPageProps): Promise<Metada
     title: "Original Art & Limited Prints by Adair",
     description:
       "Original paintings by Adair — born from pure vision, printed in limited quantities. Framed canvas, framed poster, and more.",
+    imageAlt: "Original paintings and limited art prints by Adair — Saudade",
   });
 }
 

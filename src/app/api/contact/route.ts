@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { checkSpam } from "@/lib/spam-guard";
 
 const RESEND_API_KEY = process.env.RESEND_API_KEY!;
 const KLAVIYO_API_KEY = process.env.KLAVIYO_PRIVATE_API_KEY!;
@@ -70,30 +71,60 @@ async function addToKlaviyo(email: string, firstName?: string) {
 
 export async function POST(req: NextRequest) {
   try {
-    const { name, email, message } = await req.json();
+    const { name, email, message, company, startedAt } = await req.json();
 
-    if (!name || !email || !message) {
-      return NextResponse.json({ error: "Missing fields" }, { status: 400 });
+    // Spam protection: honeypot, submit-timing, email validation,
+    // length limits, and per-IP rate limiting.
+    const spam = checkSpam(
+      req,
+      { name, email, message, honeypot: company, startedAt },
+      { requireName: true, requireMessage: true }
+    );
+    if (!spam.ok) {
+      // Return a generic success for silently-dropped spam (honeypot/timing)
+      // so bots don't learn they were caught; surface real errors otherwise.
+      if (spam.reason === "honeypot" || spam.reason === "timing") {
+        return NextResponse.json({ success: true });
+      }
+      const errorMessage =
+        spam.status === 429
+          ? "Too many requests. Please try again shortly."
+          : "Please check your details and try again.";
+      return NextResponse.json({ error: errorMessage }, { status: spam.status });
     }
 
     const firstName = name.split(" ")[0];
 
+    // Escape user-supplied values before embedding them in HTML emails so spam
+    // can't inject markup or links into the notification you receive.
+    const esc = (s: string) =>
+      s
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;");
+
+    const safeName = esc(name);
+    const safeEmail = esc(email);
+    const safeMessage = esc(message).replace(/\n/g, "<br>");
+    const safeFirstName = esc(firstName);
+
     // Notify you
     await sendEmail(
       "hello@saudadevoces.com",
-      `New message from ${name}`,
+      `New message from ${safeName}`,
       `<h2>New Contact Form Submission</h2>
-       <p><strong>Name:</strong> ${name}</p>
-       <p><strong>Email:</strong> <a href="mailto:${email}">${email}</a></p>
+       <p><strong>Name:</strong> ${safeName}</p>
+       <p><strong>Email:</strong> <a href="mailto:${safeEmail}">${safeEmail}</a></p>
        <p><strong>Message:</strong></p>
-       <p>${message.replace(/\n/g, "<br>")}</p>`
+       <p>${safeMessage}</p>`
     );
 
     // Auto-reply to visitor
     await sendEmail(
       email,
       "Thank you for reaching out — Saudade Voces",
-      `<p>Dear ${firstName},</p>
+      `<p>Dear ${safeFirstName},</p>
        <p>Thank you for reaching out to us. We have received your message and will get back to you within 48 hours.</p>
        <p>In the meantime, feel free to explore our world at <a href="https://www.saudadevoces.com">saudadevoces.com</a>.</p>
        <br>

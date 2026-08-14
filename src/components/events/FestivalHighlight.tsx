@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import { getTranslations } from "next-intl/server";
 
@@ -27,12 +28,34 @@ export async function FestivalHighlight({ locale, transparent = false }: Festiva
       className={`relative overflow-hidden py-24 text-accent ${transparent ? "" : "bg-primary-light"}`}
       style={transparent ? { borderTop: "1px solid rgba(216,207,196,0.08)" } : undefined}
     >
+      {/* Events variant: an atmospheric festival backdrop behind the countdown */}
+      {!transparent && (
+        <>
+          <div aria-hidden="true" className="pointer-events-none absolute inset-0 bg-[#0a1f23]" />
+          <Image
+            src="/images/events-bar-night.jpg"
+            alt=""
+            aria-hidden="true"
+            fill
+            sizes="100vw"
+            className="pointer-events-none select-none object-cover object-[50%_38%]"
+          />
+          <div
+            aria-hidden="true"
+            className="pointer-events-none absolute inset-0"
+            style={{
+              background:
+                "linear-gradient(180deg, rgba(9,26,29,0.6) 0%, rgba(9,26,29,0.52) 42%, rgba(9,26,29,0.5) 58%, rgba(9,26,29,0.66) 78%, rgba(9,26,29,0.9) 100%)",
+            }}
+          />
+        </>
+      )}
       <div
         className="pointer-events-none absolute inset-0"
         style={{
           background: transparent
             ? "radial-gradient(circle at 16% 25%, rgba(210,187,178,0.06), transparent 42%)"
-            : "radial-gradient(circle at 16% 25%, rgba(210,187,178,0.2), transparent 42%), radial-gradient(circle at 78% 70%, rgba(106,139,91,0.18), transparent 45%)",
+            : "radial-gradient(circle at 16% 22%, rgba(210,187,178,0.14), transparent 44%), radial-gradient(circle at 82% 74%, rgba(214,150,88,0.16), transparent 48%)",
         }}
       />
       {/* Home variant: a soft luminous glow behind the countdown for drama */}
@@ -48,7 +71,10 @@ export async function FestivalHighlight({ locale, transparent = false }: Festiva
           }}
         />
       )}
-      <div className="relative mx-auto max-w-3xl px-5 md:px-8">
+      <div
+        className="relative mx-auto max-w-3xl px-5 md:px-8"
+        style={transparent ? undefined : { textShadow: "0 1px 16px rgba(6,18,20,0.82)" }}
+      >
           <p className="luxury-label text-[10px] text-accent-muted">
             {t("festivalLabel")}
           </p>
@@ -62,7 +88,7 @@ export async function FestivalHighlight({ locale, transparent = false }: Festiva
           <p className="mt-6 max-w-2xl text-base leading-relaxed text-accent/86">
             {t("festivalText")}
           </p>
-          <p className="mt-6 luxury-label text-[10px] text-accent-muted">{t("countdown")}</p>
+          <p className={`mt-6 luxury-label text-[10px] ${transparent ? "text-accent-muted" : "text-accent/85"}`}>{t("countdown")}</p>
           <div className="mt-5 max-w-xl">
             <Countdown target={festivalSeason} />
           </div>

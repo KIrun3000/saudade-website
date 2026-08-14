@@ -81,7 +81,7 @@
   "eventHighlight": {
     "label": "Evento Destacado",
     "title": "Evento de Lanzamiento Saudade",
-    "description": "Una velada íntima en Oporto — gran música, vibras cálidas, personas hermosas y los kimonos Chaka Arcana por fin en tus manos. Ven a conocerme, prueba la colección y siente lo que significa de verdad la moda de alta frecuencia.",
+    "description": "Una velada íntima en Oporto — gran música, vibras cálidas, personas hermosas y los cinco kimonos Chaka Arcana revelados por primera vez. Ven a conocerme, ver la colección de cerca y reservar el tuyo en la preventa — y siente lo que significa de verdad la moda de alta frecuencia.",
     "countdown": "La cuenta atrás ha comenzado — 28 · 08 · 2026 · Porto, Portugal",
     "exploreCta": "EXPLORAR EVENTOS",
     "collaborateCta": "SER VOLUNTARIO O COLABORAR",
@@ -268,13 +268,18 @@
     "heroTitle": "EVENTOS",
     "introTitle": "Donde nos encontramos",
     "introText": "Esto es solo el comienzo. Los primeros encuentros de Saudade — arte, música y comunidad cobrando vida. Ven a ser parte desde el inicio.",
+    "visionLabel": "Aún por venir",
+    "visionTitle": "Lo que traerán los encuentros",
+    "visionText": "Más allá del evento de lanzamiento — un vistazo al mundo en que se convertirán los encuentros Saudade: el espacio, el sonido, el movimiento, la creación.",
+    "metaTitle": "Eventos en Portugal — el Evento de Lanzamiento Saudade en Oporto",
+    "metaDescription": "¿Buscas eventos en Portugal? Únete al Evento de Lanzamiento Saudade — una velada íntima en Oporto el 28 de agosto de 2026, con música, arte, los kimonos Chaka Arcana y una comunidad consciente. Descubre eventos y encuentros conscientes por todo Portugal con Saudade.",
     "festivalTitle": "Evento de Lanzamiento Saudade",
-    "festivalText": "Una velada íntima en Oporto — gran música, vibras cálidas, personas hermosas y los kimonos Chaka Arcana por fin en tus manos. Ven a conocerme, prueba la colección y siente lo que significa de verdad la moda de alta frecuencia.",
+    "festivalText": "Una velada íntima en Oporto — gran música, vibras cálidas, personas hermosas y los cinco kimonos Chaka Arcana revelados por primera vez. Ven a conocerme, ver la colección de cerca y reservar el tuyo en la preventa — y siente lo que significa de verdad la moda de alta frecuencia.",
     "festivalImageAlt": "Escena del Saudade Festival",
     "spaceTitle": "Espacio",
     "spaceText": "El primer evento se realizará en Portugal para crear una experiencia mágica.",
     "spaceCta": "¿Te interesa hacer voluntariado? Envíanos un mensaje.",
-    "musicTitle": "Música",
+    "musicTitle": "Sonido y Danza",
     "musicText": "¡Hay baile para todos en este evento!",
     "musicCta": "¿Te gustaría tocar en el festival? Envíanos un mensaje.",
     "yogaTitle": "Movimiento & Enraizamiento",
@@ -288,10 +293,10 @@
     "collaborateCta": "PARTICIPA",
     "spaceLabel": "El Espacio",
     "spaceImageAlt": "Espacio del Festival Saudade",
-    "musicLabel": "Música",
-    "musicImageAlt": "DJ y música en el Festival Saudade",
-    "workshopLabel": "Talleres",
-    "workshopImageAlt": "Taller y bienestar en la naturaleza",
+    "musicLabel": "Sonido y Danza",
+    "musicImageAlt": "Encuentro festivalero entre los árboles a la hora dorada",
+    "workshopLabel": "El Estudio",
+    "workshopImageAlt": "Manos pintando un lienzo en un taller de arte de Saudade",
     "yogaLabel": "Bienestar",
     "yogaText": "Un espacio para llegar, respirar y volver a ti mismo. ¿Eres profesor de yoga, sanador o guía de movimiento? Nos encantaría tenerte sosteniendo este espacio con nosotros.",
     "yogaCta": "",
@@ -447,6 +452,8 @@
     "post3Excerpt": "Datos importantes sobre la industria de la moda y alternativas conscientes.",
     "post4Title": "Permacultura",
     "post4Excerpt": "Cultura permanente — una forma de recordar cómo vivir en ritmo con la tierra, arraigada en Cuidado de la Tierra, Cuidado de las Personas y Reparto Justo.",
+    "post5Title": "Chaka Arcana — La Historia de los Kimonos",
+    "post5Excerpt": "La historia detrás de los cinco kimonos Chaka Arcana — el viaje de una fundadora, y la saudade hecha para vestir.",
     "readMore": "LEER MÁS"
   },
   "blogArticle": {
@@ -458,7 +465,7 @@
     "exploreShop": "EXPLORAR SHOP"
   },
   "fashionPage": {
-    "metaTitle": "Chaka Arcana — Moda de Alta Frecuencia de Saudade",
+    "metaTitle": "Chaka Arcana — Moda de Alta Frecuencia",
     "metaDescription": "Cinco kimonos sagrados. Cinco portales. Un puente entre mundos. La colección inaugural Chaka Arcana de Saudade Creative Studio — talismanes para vestir, nacidos de la sabiduría ancestral de Sudamérica.",
     "studioLabel": "Saudade Creative Studio",
     "heroTitle": "Chaka Arcana",
@@ -510,7 +517,7 @@
     "wholeLine1Rest": "— las cuatro direcciones, las estaciones, los elementos, el mapa vivo.",
     "wholeLine2Em": "Ixchel Cipher",
     "wholeLine2Rest": "— el saber sagrado entretejido en la existencia.",
-    "wholeLine3Em": "Chakana Ignis",
+    "wholeLine3Em": "Selva Nina",
     "wholeLine3Rest": "— el fuego de la transformación y la protección.",
     "wholeLine4Em": "Pacha Azul",
     "wholeLine4Rest": "— el recordatorio de que estamos hechos de estrellas.",
@@ -563,7 +570,10 @@
       }
     },
     "readMore": "Leer más",
-    "readLess": "Leer menos"
+    "readLess": "Leer menos",
+    "comingSoonEyebrow": "Chaka Arcana · Primera Colección",
+    "comingSoonTitle": "Muy Pronto",
+    "comingSoonBody": "Cinco kimonos, cada uno una frecuencia para vestir, trazada desde símbolos ancestrales y color vivo. Las prendas están listas — estamos terminando la fotografía. Únete a la preventa para ser la primera en verlas reveladas."
   },
   "mushroom": {
     "plantGood": [
