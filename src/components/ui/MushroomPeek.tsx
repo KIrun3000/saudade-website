@@ -6,14 +6,14 @@ import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 
 import { MushroomBubble, MushroomSVG, useMushroomVoice } from "@/components/ui/MushroomMascot";
 
-// He's a rare little joy — appears once a while after you've settled in, then
-// stays away long enough that each return feels like a small gift.
-const FIRST_MIN = 20_000;
-const FIRST_MAX = 32_000;
-const DWELL_MIN = 90_000; // ~1.5 min
-const DWELL_MAX = 180_000; // ~3 min
-const VISIBLE_MS = 7_000; // how long he lingers (silent) before tucking away
-const SPEAK_MS = 7_000; // once clicked, how long his words stay
+// He drops by about once a minute, shares a thought tied to the page, and
+// tucks away — the gap between visits stays close to 60s.
+const FIRST_MIN = 10_000;
+const FIRST_MAX = 14_000;
+const DWELL_MIN = 50_000;
+const DWELL_MAX = 56_000;
+const VISIBLE_MS = 9_000; // how long he stays so his words can be read
+const SPEAK_MS = 9_000; // once clicked (to hear another), how long it stays
 
 const EDGE = 18; // px inset from the corner
 
@@ -22,12 +22,13 @@ type Side = "left" | "right";
 const rnd = (min: number, max: number) => min + Math.random() * (max - min);
 
 /**
- * A gentle, non-invasive cameo. He peeks up from a BOTTOM CORNER — always in
- * the empty margin, never over a painting or in the middle of the grid — glances
- * toward the centre of the page (at what you're looking at), then turns to look
- * at you and beams. He only speaks if you click him, then tucks back down and
- * drops by again a while later. Sits out entirely when the tab is hidden or the
- * footer mushroom is already on screen, so he never doubles up.
+ * The saudade guru's cameo. About once a minute he peeks up from a BOTTOM
+ * CORNER — always in the empty margin, never over a painting or in the middle
+ * of the grid — glances toward the page (what you're reading), then turns to
+ * you and shares a thought tied to it (or his wider wisdom). Click him to hear
+ * another. He tucks away after a few seconds and returns a minute later. Sits
+ * out entirely when the tab is hidden or the footer mushroom is on screen, so
+ * he never doubles up.
  */
 export function MushroomPeek() {
   const pathname = usePathname();
@@ -78,15 +79,19 @@ export function MushroomPeek() {
       setPhrase(null);
       setSmile(false);
 
-      // he peeks up, glances toward the centre of the page (at your view),
-      // then turns to look at you and beams
+      // He rises glancing toward the page (what you're reading)...
       const toCentre = s === "left" ? 3 : -3;
       setGaze({ x: toCentre, y: -1 });
-      timers.current.push(window.setTimeout(() => setGaze({ x: toCentre * 0.5, y: -1.2 }), 1200));
-      timers.current.push(window.setTimeout(() => setGaze({ x: 0, y: -0.5 }), 2000));
-      timers.current.push(window.setTimeout(() => setSmile(true), 2300));
-
       setVisible(true);
+
+      // ...then turns to you, beams, and shares a thought tied to this page.
+      timers.current.push(
+        window.setTimeout(() => {
+          setGaze({ x: 0, y: -0.5 });
+          setSmile(true);
+          setPhrase(nextPhrase());
+        }, 850),
+      );
       timers.current.push(window.setTimeout(() => hideRef.current(), VISIBLE_MS));
     };
 
@@ -98,7 +103,7 @@ export function MushroomPeek() {
     setPhrase(null);
     timers.current.push(window.setTimeout(() => showRef.current(), rnd(FIRST_MIN, FIRST_MAX)));
     return clearTimers;
-  }, [pathname, clearTimers]);
+  }, [pathname, clearTimers, nextPhrase]);
 
   // Soft blink while he's up.
   useEffect(() => {

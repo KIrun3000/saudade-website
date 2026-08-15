@@ -24,50 +24,51 @@ function pageKeyFromPath(pathname: string): string {
   return "home";
 }
 
+// Remembers every line the guru has already spoken this browser session, so he
+// never repeats himself until his whole repertoire is exhausted (then resets).
+const SPOKEN_KEY = "saudade_guru_spoken_v1";
+function loadSpoken(): Set<string> {
+  if (typeof sessionStorage === "undefined") return new Set();
+  try {
+    return new Set(JSON.parse(sessionStorage.getItem(SPOKEN_KEY) || "[]") as string[]);
+  } catch {
+    return new Set();
+  }
+}
+function saveSpoken(s: Set<string>) {
+  if (typeof sessionStorage === "undefined") return;
+  try {
+    sessionStorage.setItem(SPOKEN_KEY, JSON.stringify([...s]));
+  } catch {
+    /* storage full / unavailable — dedup just becomes best-effort */
+  }
+}
+
 /**
- * Shared "voice" for the mushroom. He speaks in two registers and alternates
- * between them, starting with context: lines about the page being read plus
- * warm affirmations ("You are love, and you are loved."), then his general
- * lunar-guru repertoire (real moon phase, planting days, cheeky nudges).
- * Each register keeps a shuffled queue so every line is said once before any
- * repeat; the context queue resets when the visitor changes page. Used by both
- * the footer stroller and the timed peek (each caller keeps its own queues).
+ * The saudade guru's voice. He speaks something tied to the page you're reading
+ * first, then shares his wider wisdom (guru reflections, warm affirmations,
+ * moon guidance, gentle nudges). Every line is remembered in sessionStorage, so
+ * within one visit he never repeats himself until he's said everything — then
+ * the rotation begins anew. Callback identity is stable (latest-ref pattern)
+ * since next-intl hands back a fresh translator each render.
  */
 export function useMushroomVoice() {
   const t = useTranslations("mushroom");
   const pathname = usePathname();
-  // Latest-ref pattern: next-intl hands back a fresh translator every render,
-  // so depending on it directly would give callers an unstable callback (and
-  // reset any timer keyed on it). The callback stays identity-stable and reads
-  // the current translator/pathname through refs instead.
   const tRef = useRef(t);
   tRef.current = t;
   const pathRef = useRef(pathname);
   pathRef.current = pathname;
-  const ctxQueue = useRef<string[]>([]);
-  const genQueue = useRef<string[]>([]);
-  const lastPageKey = useRef("");
-  const lastMsg = useRef("");
-  const turn = useRef(0);
 
   return useCallback((): string | null => {
     const tRaw = tRef.current.raw as (key: string) => unknown;
-    const pathname = pathRef.current;
     const asArr = (v: unknown) => (Array.isArray(v) ? (v as string[]) : []);
     const asObj = (v: unknown) => (v && typeof v === "object" ? (v as Record<string, unknown>) : {});
 
-    const pageKey = pageKeyFromPath(pathname);
-    if (pageKey !== lastPageKey.current) {
-      // New page → fresh context; he opens with something relevant to it.
-      lastPageKey.current = pageKey;
-      ctxQueue.current = [];
-      turn.current = 0;
-    }
-
+    const pageKey = pageKeyFromPath(pathRef.current);
     const pageLines = asArr(asObj(tRaw("pages"))[pageKey]);
-    const warm = asArr(tRaw("warm"));
 
-    // Moon-dependent advice. He only names the moon on its two big nights
+    // Moon-dependent guidance. He only names the moon on its two big nights
     // (full and new); the rest of the cycle he just hints at the energy.
     const moon = getMoon();
     const moonKey =
@@ -75,31 +76,32 @@ export function useMushroomVoice() {
       : moon.phase === "new" ? "moonNew"
       : moon.waxing ? "moonWaxing"
       : "moonWaning";
-    const moonLines = asArr(tRaw(moonKey));
-    const plantLines = asArr(tRaw(moon.goodToPlant ? "plantGood" : "plantBad"));
-    const cheeky = asArr(tRaw("cheeky"));
+    const guruPool = [
+      ...asArr(tRaw("guru")),
+      ...asArr(tRaw("warm")),
+      ...asArr(tRaw(moonKey)),
+      ...asArr(tRaw(moon.goodToPlant ? "plantGood" : "plantBad")),
+      ...asArr(tRaw("cheeky")),
+    ];
+    if (pageLines.length === 0 && guruPool.length === 0) return null;
 
-    const context = [...pageLines, ...warm];
-    const general = [...moonLines, ...plantLines, ...cheeky];
-    if (context.length === 0 && general.length === 0) return null;
+    const spoken = loadSpoken();
+    const pickRandom = (pool: string[]) => pool[Math.floor(Math.random() * pool.length)];
 
-    const shuffle = (pool: string[]) => {
-      const s = [...pool];
-      for (let i = s.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [s[i], s[j]] = [s[j], s[i]];
-      }
-      if (s[0] === lastMsg.current && s.length > 1) [s[0], s[1]] = [s[1], s[0]];
-      return s;
-    };
+    // Page-relevant lines first (what you're reading), then the guru's wider
+    // wisdom — always preferring something he hasn't said yet this session.
+    let pool = pageLines.filter((p) => !spoken.has(p));
+    if (pool.length === 0) pool = guruPool.filter((p) => !spoken.has(p));
+    if (pool.length === 0) {
+      // Everything he could say here has been said — clear this context's lines
+      // from memory and begin the rotation again.
+      [...pageLines, ...guruPool].forEach((p) => spoken.delete(p));
+      pool = pageLines.length ? pageLines : guruPool;
+    }
 
-    // Even turns → context register, odd turns → general (unless one is empty).
-    const useContext = general.length === 0 || (context.length > 0 && turn.current % 2 === 0);
-    turn.current++;
-    const queue = useContext ? ctxQueue : genQueue;
-    if (queue.current.length === 0) queue.current = shuffle(useContext ? context : general);
-    const pick = queue.current.shift() as string;
-    lastMsg.current = pick;
+    const pick = pickRandom(pool);
+    spoken.add(pick);
+    saveSpoken(spoken);
     return pick;
   }, []);
 }
